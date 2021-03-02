@@ -37,14 +37,14 @@ public class GameBoard extends GridPane {
     private final double width;
 
     /**
-     * The visual heigh of the board - has to be specified due to being a Canvas
+     * The visual height of the board - has to be specified due to being a Canvas
      */
     private final double height;
 
     /**
      * The grid this GameBoard represents
      */
-    Grid grid;
+    final Grid grid;
 
     /**
      * The blocks inside the grid
@@ -126,8 +126,8 @@ public class GameBoard extends GridPane {
 
     /**
      * Create a block at the given x and y position in the GameBoard
-     * @param x
-     * @param y
+     * @param x column
+     * @param y row
      */
     protected GameBlock createBlock(int x, int y) {
         var blockWidth = width / cols;
@@ -152,8 +152,8 @@ public class GameBoard extends GridPane {
     }
 
     /**
-     * Add a listener to handle an event when a block is clicked
-     * @param listener
+     * Set the listener to handle an event when a block is clicked
+     * @param listener listener to add
      */
     public void setOnBlockClick(BlockClickedListener listener) {
         this.blockClickedListener = listener;
@@ -161,8 +161,8 @@ public class GameBoard extends GridPane {
 
     /**
      * Triggered when a block is clicked. Call the attached listener.
-     * @param event
-     * @param block
+     * @param event mouse event
+     * @param block block clicked on
      */
     private void blockClicked(MouseEvent event, GameBlock block) {
         logger.info("Block clicked: {}", block);

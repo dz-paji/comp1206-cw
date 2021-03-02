@@ -1,14 +1,11 @@
 package uk.ac.soton.comp1206;
 
-import com.neovisionaries.ws.client.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import uk.ac.soton.comp1206.game.Game;
-import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
 /**
@@ -19,12 +16,12 @@ public class App extends Application {
     /**
      * Base resolution width
      */
-    private int width = 800;
+    private final int width = 800;
 
     /**
      * Base resolution height
      */
-    private int height = 600;
+    private final int height = 600;
 
     private static App instance;
     private static final Logger logger = LogManager.getLogger(App.class);
@@ -39,11 +36,11 @@ public class App extends Application {
         launch();
     }
 
-    @Override
     /**
      * Called by JavaFX with the primary stage as a parameter. Begins the game by opening the Game Window
      * @param stage the default stage, main window
      */
+    @Override
     public void start(Stage stage) {
         instance = this;
         this.stage = stage;
@@ -75,7 +72,7 @@ public class App extends Application {
 
     /**
      * Get the singleton App instance
-     * @return
+     * @return the app
      */
     public static App getInstance() {
         return instance;

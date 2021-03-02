@@ -7,7 +7,7 @@ public interface CommunicationsListener {
 
     /**
      * Handle an incoming message received by the Communicator
-     * @param communication
+     * @param communication the message that was received
      */
     public void receiveCommunication(String communication);
 }

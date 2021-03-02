@@ -19,17 +19,17 @@ public class ChallengeScene extends BaseScene {
 
     /**
      * Create a new Single Player challenge scene
-     * @param gameWindow
+     * @param gameWindow the Game Window
      */
     public ChallengeScene(GameWindow gameWindow) {
         super(gameWindow);
         logger.info("Creating Menu Scene");
     }
 
-    @Override
     /**
-     * Builld the Challenge window
+     * Build the Challenge window
      */
+    @Override
     public void build() {
         logger.info("Building " + this.getClass().getName());
 
@@ -55,7 +55,7 @@ public class ChallengeScene extends BaseScene {
 
     /**
      * Handle when a block is clicked
-     * @param gameBlock
+     * @param gameBlock the Game Block that was clocked
      */
     private void blockClicked(GameBlock gameBlock) {
         game.blockClicked(gameBlock);
@@ -71,10 +71,10 @@ public class ChallengeScene extends BaseScene {
         game = new Game(5, 5);
     }
 
-    @Override
     /**
      * Initialise the scene and start the game
      */
+    @Override
     public void initialise() {
         logger.info("Initialising Challenge");
         game.start();

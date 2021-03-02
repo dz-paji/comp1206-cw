@@ -17,7 +17,7 @@ public abstract class BaseScene {
 
     /**
      * Create a new scene, passing in the GameWindow the scene will be displayed in
-     * @param gameWindow
+     * @param gameWindow the game window
      */
     public BaseScene(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -35,7 +35,7 @@ public abstract class BaseScene {
 
     /**
      * Create a new JavaFX scene using the root contained within this scene
-     * @return
+     * @return JavaFX scene
      */
     public Scene setScene() {
         var previous = gameWindow.getScene();
@@ -47,7 +47,7 @@ public abstract class BaseScene {
 
     /**
      * Get the JavaFX scene contained inside
-     * @return
+     * @return JavaFX scene
      */
     public Scene getScene() {
         return this.scene;

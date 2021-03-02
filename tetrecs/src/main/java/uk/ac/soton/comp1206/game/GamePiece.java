@@ -36,77 +36,91 @@ public class GamePiece {
     public static GamePiece createPiece(int piece) {
         switch (piece) {
             //Line
-            case 0: {
+            case 0 -> {
                 int[][] blocks = {{0, 0, 0}, {1, 1, 1}, {0, 0, 0}};
                 return new GamePiece("Line", blocks, 1);
             }
+
             //C
-            case 1: {
+            case 1 -> {
                 int[][] blocks = {{0, 0, 0}, {1, 1, 1}, {1, 0, 1}};
                 return new GamePiece("C", blocks, 2);
             }
+
             //Plus
-            case 2: {
+            case 2 -> {
                 int[][] blocks = {{0, 1, 0}, {1, 1, 1}, {0, 1, 0}};
                 return new GamePiece("Plus", blocks, 3);
             }
+
             //Dot
-            case 3: {
+            case 3 -> {
                 int[][] blocks = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}};
                 return new GamePiece("Dot", blocks, 4);
             }
+
             //Square
-            case 4: {
+            case 4 -> {
                 int[][] blocks = {{1, 1, 0}, {1, 1, 0}, {0, 0, 0}};
                 return new GamePiece("Square", blocks, 5);
             }
+
             //L
-            case 5: {
+            case 5 -> {
                 int[][] blocks = {{0, 0, 0}, {1, 1, 1}, {0, 0, 1}};
                 return new GamePiece("L", blocks, 6);
             }
+
             //J
-            case 6: {
+            case 6 -> {
                 int[][] blocks = {{0, 0, 1}, {1, 1, 1}, {0, 0, 0}};
                 return new GamePiece("J", blocks, 7);
             }
+
             //S
-            case 7: {
+            case 7 -> {
                 int[][] blocks = {{0, 0, 0}, {0, 1, 1}, {1, 1, 0}};
                 return new GamePiece("S", blocks, 8);
             }
+
             //Z
-            case 8: {
+            case 8 -> {
                 int[][] blocks = {{1, 1, 0}, {0, 1, 1}, {0, 0, 0}};
                 return new GamePiece("Z", blocks, 9);
             }
+
             //T
-            case 9: {
+            case 9 -> {
                 int[][] blocks = {{1, 0, 0}, {1, 1, 0}, {1, 0, 0}};
                 return new GamePiece("T", blocks, 10);
             }
+
             //X
-            case 10: {
+            case 10 -> {
                 int[][] blocks = {{1, 0, 1}, {0, 1, 0}, {1, 0, 1}};
                 return new GamePiece("X", blocks, 11);
             }
+
             //Corner
-            case 11: {
+            case 11 -> {
                 int[][] blocks = {{0, 0, 0}, {1, 1, 0}, {1, 0, 0}};
                 return new GamePiece("Corner", blocks, 12);
             }
+
             //Inverse Corner
-            case 12: {
+            case 12 -> {
                 int[][] blocks = {{1, 0, 0}, {1, 1, 0}, {0, 0, 0}};
                 return new GamePiece("Inverse Corner", blocks, 13);
             }
+
             //Diagonal
-            case 13: {
+            case 13 -> {
                 int[][] blocks = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
                 return new GamePiece("Diagonal", blocks, 14);
             }
+
             //Double
-            case 14: {
+            case 14 -> {
                 int[][] blocks = {{0, 1, 0}, {0, 1, 0}, {0, 0, 0}};
                 return new GamePiece("Double", blocks, 15);
             }
@@ -168,7 +182,7 @@ public class GamePiece {
 
     /**
      * Rotate this piece the given number of rotations
-     * @param rotations
+     * @param rotations number of rotations
      */
     public void rotate(int rotations) {
         for(int rotated = 0; rotated < rotations; rotated ++) {

@@ -91,9 +91,9 @@ public class GameBlock extends Canvas {
 
     /**
      * When the value of this block is updated,
-     * @param observable
-     * @param oldValue
-     * @param newValue
+     * @param observable what was updated
+     * @param oldValue the old value
+     * @param newValue the new value
      */
     private void updateValue(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         paint();
@@ -132,7 +132,7 @@ public class GameBlock extends Canvas {
 
     /**
      * Paint this canvas with the given colour
-     * @param colour
+     * @param colour the colour to paint
      */
     private void paintColor(Paint colour) {
         var gc = getGraphicsContext2D();
@@ -167,7 +167,7 @@ public class GameBlock extends Canvas {
 
     /**
      * Get the current value held by this block, representing it's colour
-     * @return
+     * @return value
      */
     public int getValue() {
         return this.value.get();

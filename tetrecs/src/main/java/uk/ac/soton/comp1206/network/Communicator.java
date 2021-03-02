@@ -94,7 +94,7 @@ public class Communicator {
 
     /**
      * Add a new listener to receive messages from the server
-     * @param listener
+     * @param listener the listener to add
      */
     public void addListener(CommunicationsListener listener) {
         this.handlers.add(listener);

@@ -26,12 +26,12 @@ public class GamePane extends StackPane {
     private final int width;
     private final int height;
     private double scalar = 1;
-    private boolean autoScale = true;
+    private final boolean autoScale = true;
 
     /**
      * Create a new scalable GamePane with the given drawing width and height.
-     * @param width
-     * @param height
+     * @param width width
+     * @param height height
      */
     public GamePane(int width, int height) {
         super();
@@ -44,17 +44,17 @@ public class GamePane extends StackPane {
 
     /**
      * Update the scalar being used by this draw pane
-     * @param scalar
+     * @param scalar scalar
      */
     protected void setScalar(double scalar) {
         this.scalar = scalar;
     }
 
-    @Override
     /**
      * Use a Graphics Transformation to scale everything inside this pane. Padding is added to the edges to maintain
      * the correct aspect ratio and keep the display centred.
      */
+    @Override
     public void layoutChildren() {
         super.layoutChildren();
 

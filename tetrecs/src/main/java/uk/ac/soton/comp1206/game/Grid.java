@@ -29,12 +29,12 @@ public class Grid {
     /**
      * The grid is a 2D arrow with rows and columns of SimpleIntegerProperties.
      */
-    private SimpleIntegerProperty[][] grid;
+    private final SimpleIntegerProperty[][] grid;
 
     /**
      * Create a new Grid with the specified number of columns and rows and initialise them
-     * @param cols
-     * @param rows
+     * @param cols number of columns
+     * @param rows number of rows
      */
     public Grid(int cols, int rows) {
         this.cols = cols;
@@ -89,7 +89,7 @@ public class Grid {
 
     /**
      * Get the number of columns in this game
-     * @return
+     * @return number of columns
      */
     public int getCols() {
         return cols;
@@ -97,7 +97,7 @@ public class Grid {
 
     /**
      * Get the number of rows in this game
-     * @return
+     * @return number of rows
      */
     public int getRows() {
         return rows;

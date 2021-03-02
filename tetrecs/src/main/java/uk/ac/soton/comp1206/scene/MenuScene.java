@@ -24,10 +24,10 @@ public class MenuScene extends BaseScene {
         logger.info("Creating Menu Scene");
     }
 
-    @Override
     /**
      * Build the menu layout
      */
+    @Override
     public void build() {
         logger.info("Building " + this.getClass().getName());
 
@@ -50,10 +50,10 @@ public class MenuScene extends BaseScene {
         button.setOnAction(this::startGame);
     }
 
-    @Override
     /**
      * Initialise the menu
      */
+    @Override
     public void initialise() {
 
     }

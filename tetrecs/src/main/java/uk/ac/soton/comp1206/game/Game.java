@@ -15,17 +15,17 @@ public class Game {
     /**
      * Number of rows
      */
-    protected int rows;
+    protected final int rows;
 
     /**
      * Number of columns
      */
-    protected int cols;
+    protected final int cols;
 
     /**
      * The grid model linked to the game
      */
-    protected Grid grid;
+    protected final Grid grid;
 
     /**
      * Create a new game with the specified rows and columns. Creates a corresponding grid model.
@@ -57,7 +57,7 @@ public class Game {
 
     /**
      * Handle what should happen when a particular block is clicked
-     * @param gameBlock
+     * @param gameBlock the block that was clicked
      */
     public void blockClicked(GameBlock gameBlock) {
         //Get the position of this block

@@ -30,13 +30,13 @@ public class GameWindow {
     private BaseScene currentScene;
     private Scene scene;
 
-    Communicator communicator = null;
+    final Communicator communicator;
 
     /**
      * Create a new GameWindow attached to the given stage with the specified width and height
-     * @param stage
-     * @param width
-     * @param height
+     * @param stage stage
+     * @param width width
+     * @param height height
      */
     public GameWindow(Stage stage, int width, int height) {
         this.width = width;
@@ -76,14 +76,12 @@ public class GameWindow {
         stage.setTitle("TetrECS");
         stage.setMinWidth(width);
         stage.setMinHeight(height + 20);
-        stage.setOnCloseRequest(ev -> {
-            App.getInstance().shutdown();
-        });
+        stage.setOnCloseRequest(ev -> App.getInstance().shutdown());
     }
 
     /**
      * Load a given scene which extends BaseScene and switch over.
-     * @param newScene
+     * @param newScene new scene to load
      */
     public void loadScene(BaseScene newScene) {
         //Cleanup remains of the previous scene
@@ -96,17 +94,14 @@ public class GameWindow {
         stage.setScene(scene);
 
         //Initialise the scene when ready
-        Platform.runLater(() -> {
-            currentScene.initialise();
-        });
+        Platform.runLater(() -> currentScene.initialise());
     }
 
     /**
      * Setup the default scene (an empty black scene) when no scene is loaded
      */
     public void setupDefaultScene() {
-        var scene = new Scene(new Pane(),width,height, Color.BLACK);
-        this.scene = scene;
+        this.scene = new Scene(new Pane(),width,height, Color.BLACK);
         stage.setScene(this.scene);
     }
 
@@ -120,7 +115,7 @@ public class GameWindow {
 
     /**
      * Get the current scene being displayed
-     * @return
+     * @return scene
      */
     public Scene getScene() {
         return scene;
@@ -128,7 +123,7 @@ public class GameWindow {
 
     /**
      * Get the width of the Game Window
-     * @return
+     * @return width
      */
     public int getWidth() {
         return this.width;
@@ -136,7 +131,7 @@ public class GameWindow {
 
     /**
      * Get the height of the Game Window
-     * @return
+     * @return height
      */
     public int getHeight() {
         return this.height;
@@ -144,7 +139,7 @@ public class GameWindow {
 
     /**
      * Get the communicator
-     * @return
+     * @return communicator
      */
     public Communicator getCommunicator() {
         return communicator;
