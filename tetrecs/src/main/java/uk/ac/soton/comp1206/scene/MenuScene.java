@@ -3,6 +3,7 @@ package uk.ac.soton.comp1206.scene;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.ui.GamePane;
@@ -41,6 +42,11 @@ public class MenuScene extends BaseScene {
 
         var mainPane = new BorderPane();
         menuPane.getChildren().add(mainPane);
+
+        //Awful title
+        var title = new Text("TetrECS");
+        title.getStyleClass().add("title");
+        mainPane.setTop(title);
 
         //For now, let us just add a button that starts the game. I'm sure you'll do something way better.
         var button = new Button("Play");

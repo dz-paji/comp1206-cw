@@ -1,22 +1,3 @@
-@font-face {
-    font-family: "Orbitron";
-    src: url("Orbitron-Regular.ttf");
-}
-
-@font-face {
-    font-family: "Orbitron Bold";
-    font-style: normal;
-    font-weight: 700;
-    src: url("Orbitron-Bold.ttf");
-}
-
-@font-face {
-    font-family: "Orbitron ExtraBold";
-    font-style: normal;
-    font-weight: 900;
-    src: url("Orbitron-ExtraBold.ttf");
-}
-
 .gamepane {
     -fx-background-color: black;
 }

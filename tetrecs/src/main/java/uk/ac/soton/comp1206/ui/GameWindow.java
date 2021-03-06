@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,6 +48,9 @@ public class GameWindow {
         //Setup window
         setupStage();
 
+        //Setup resources
+        setupResources();
+
         //Setup default scene
         setupDefaultScene();
 
@@ -55,6 +59,16 @@ public class GameWindow {
 
         //Go to menu
         startMenu();
+    }
+
+    /**
+     * Setup the font and any other resources we need
+     */
+    private void setupResources() {
+        logger.info("Loading resources");
+        Font.loadFont(getClass().getResourceAsStream("/style/Orbitron-Regular.ttf"),32);
+        Font.loadFont(getClass().getResourceAsStream("/style/Orbitron-Bold.ttf"),32);
+        Font.loadFont(getClass().getResourceAsStream("/style/Orbitron-ExtraBold.ttf"),32);
     }
 
     /**
