@@ -2,3 +2,8 @@ update.sh
 .DS_Store
 .idea/
 *.iml
+target/
+.classpath
+.factorypath
+.project
+.settings/

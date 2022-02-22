@@ -55,7 +55,7 @@ public class GameWindow {
         setupDefaultScene();
 
         //Setup communicator
-        communicator = new Communicator("ws://discord.ecs.soton.ac.uk:9700");
+        communicator = new Communicator("ws://ofb-labs.soton.ac.uk:9700");
 
         //Go to menu
         startMenu();
