@@ -2,8 +2,8 @@
 .idea/
 /update
 *.iml
-target
-.settings
+target/
+.settings/
 .factorypath
 .classpath
 .project
