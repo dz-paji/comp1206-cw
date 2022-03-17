@@ -134,4 +134,46 @@ public class Game {
         this.currentPiece = spawnPiece();
     }
 
+    /**
+     * Clear any fully occupied lines.
+     */
+    public void afterPiece() {
+        Boolean isVOccupied = true;
+        Boolean isHOccupied = true;
+
+        // Check for vertical lines
+        for (int i = 0; i < this.rows; i++) {
+            // Loop through every y at given x
+            for (int j = 0; j < this.cols; j++) {
+                if (this.grid.get(i, j) == 0) {
+                    isVOccupied = false;
+                }
+            }
+
+            if (isVOccupied == true) {
+                for (int j = 0; j < this.cols; j++) {
+                    this.grid.set(i, j, 0);
+                }
+                logger.info("Clearing vertical line no.{}", i);
+            }
+        }
+
+        // Check for hotizental lines
+        for (int j = 0; j < this.cols; j ++) {
+            // Loop through every x at given y
+            for (int i = 0; i < this.rows; i++) {
+                if (this.grid.get(i, j) == 0) {
+                    isHOccupied = false;
+                }
+            }
+
+            if (isHOccupied == true) {
+                for (int i = 0; i < this.rows; i++) {
+                    this.grid.set(i, j, 0);
+                }
+                logger.info("Clearing horizontal line no.{}", j);
+            }
+        }
+    }
+
 }
