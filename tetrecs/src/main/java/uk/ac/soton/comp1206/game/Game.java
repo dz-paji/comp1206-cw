@@ -1,5 +1,7 @@
 package uk.ac.soton.comp1206.game;
 
+import java.util.Random;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.GameBlock;
@@ -27,6 +29,8 @@ public class Game {
      */
     protected final Grid grid;
 
+    protected GamePiece currentPiece;
+
     /**
      * Create a new game with the specified rows and columns. Creates a corresponding grid model.
      * @param cols number of columns
@@ -38,6 +42,9 @@ public class Game {
 
         //Create a new grid model to represent the game state
         this.grid = new Grid(cols,rows);
+
+        // Spawn a new piece
+        this.currentPiece = spawnPiece();
     }
 
     /**
@@ -64,15 +71,24 @@ public class Game {
         int x = gameBlock.getX();
         int y = gameBlock.getY();
 
-        //Get the new value for this block
-        int previousValue = grid.get(x,y);
-        int newValue = previousValue + 1;
-        if (newValue  > GamePiece.PIECES) {
-            newValue = 0;
+        // Check if the new piece can be placed
+        if (this.grid.canPlayPiece(this.currentPiece, x, y)) {
+            this.grid.canPlayPiece(this.currentPiece, x, y);
+            logger.info("{} will be placed at {},{}", this.currentPiece.toString(), x, y);
+        } else {
+            logger.warn("{} can't be placed at {},{}", this.currentPiece.toString(), x, y);
         }
 
+
+        //Get the new value for this block
+        // int previousValue = grid.get(x,y);
+        // int newValue = previousValue + 1;
+        // if (newValue  > GamePiece.PIECES) {
+        //     newValue = 0;
+        // }
+
         //Update the grid with the new value
-        grid.set(x,y,newValue);
+        // grid.set(x,y,newValue);
     }
 
     /**
@@ -99,5 +115,23 @@ public class Game {
         return rows;
     }
 
+    /**
+     * Create a new piece
+     * @return the new piece
+     */
+    public GamePiece spawnPiece() {
+        Random rndPiece = new Random();
+        
+        GamePiece newPiece = GamePiece.createPiece(rndPiece.nextInt(14));
+        logger.info("New piece spawned {}", newPiece.toString() );
+        return newPiece;
+    }
+
+    /**
+     * Subsitute currentPiece with a new spawned piece.
+     */
+    public void nextPiece() {
+        this.currentPiece = spawnPiece();
+    }
 
 }
