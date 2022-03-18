@@ -73,8 +73,11 @@ public class Game {
 
         // Check if the new piece can be placed
         if (this.grid.canPlayPiece(this.currentPiece, x, y)) {
-            this.grid.canPlayPiece(this.currentPiece, x, y);
+            this.grid.playPiece(this.currentPiece, x, y);
             logger.info("{} will be placed at {},{}", this.currentPiece.toString(), x, y);
+            
+            // Check for lines to clear
+            afterPiece();
         } else {
             logger.warn("{} can't be placed at {},{}", this.currentPiece.toString(), x, y);
         }
