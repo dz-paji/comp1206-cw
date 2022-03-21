@@ -4,6 +4,8 @@ import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javafx.beans.property.SimpleIntegerProperty;
 import uk.ac.soton.comp1206.component.GameBlock;
 
 /**
@@ -30,6 +32,26 @@ public class Game {
     protected final Grid grid;
 
     protected GamePiece currentPiece;
+
+    /**
+     * Score of current game
+     */
+    private SimpleIntegerProperty score = new SimpleIntegerProperty(0);
+    
+    /**
+     * Level of current game
+     */
+    private SimpleIntegerProperty level = new SimpleIntegerProperty(0);
+
+    /**
+     * Lives remaining of this game
+     */
+    private SimpleIntegerProperty lives = new SimpleIntegerProperty(3);
+    
+    /**
+     * Score multiplier of this game
+     */
+    private SimpleIntegerProperty multiplier = new SimpleIntegerProperty(1);
 
     /**
      * Create a new game with the specified rows and columns. Creates a corresponding grid model.
@@ -177,6 +199,42 @@ public class Game {
                 logger.info("Clearing horizontal line no.{}", j);
             }
         }
+    }
+
+    public void setScore(int score) {
+        logger.info("New score set to {}", score);
+        this.score.set(score);
+    }
+
+    public int getScore() {
+        return this.score.get();
+    }
+
+    public void setLevel(int level) {
+        logger.info("New level set to {}", level);
+        this.level.set(level);
+    }
+
+    public int getLevel() {
+        return this.level.get();
+    }
+
+    public void setLives(int lives) {
+        logger.info("New lives set to {}", lives);
+        this.lives.set(lives);
+    }
+
+    public int getLives() {
+        return this.lives.get();
+    }
+
+    public void setMultiplier(int multiplier) {
+        logger.info("New multiplier set to {}", multiplier);
+        this.multiplier.set(multiplier);
+    }
+
+    public int getMultiplier() {
+        return this.multiplier.get();
     }
 
 }
