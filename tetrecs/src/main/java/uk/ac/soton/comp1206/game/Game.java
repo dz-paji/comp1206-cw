@@ -2,6 +2,7 @@ package uk.ac.soton.comp1206.game;
 
 import java.util.Random;
 
+import javafx.beans.property.IntegerProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -206,8 +207,8 @@ public class Game {
         this.score.set(score);
     }
 
-    public int getScore() {
-        return this.score.get();
+    public IntegerProperty getScore() {
+        return this.score;
     }
 
     public void setLevel(int level) {
@@ -215,8 +216,8 @@ public class Game {
         this.level.set(level);
     }
 
-    public int getLevel() {
-        return this.level.get();
+    public IntegerProperty getLevel() {
+        return this.level;
     }
 
     public void setLives(int lives) {
@@ -224,8 +225,8 @@ public class Game {
         this.lives.set(lives);
     }
 
-    public int getLives() {
-        return this.lives.get();
+    public IntegerProperty getLives() {
+        return this.lives;
     }
 
     public void setMultiplier(int multiplier) {
@@ -233,8 +234,8 @@ public class Game {
         this.multiplier.set(multiplier);
     }
 
-    public int getMultiplier() {
-        return this.multiplier.get();
+    public IntegerProperty getMultiplier() {
+        return this.multiplier;
     }
 
 }
