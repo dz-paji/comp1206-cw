@@ -1,6 +1,8 @@
 package uk.ac.soton.comp1206.scene;
 
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.GameBlock;
@@ -51,6 +53,28 @@ public class ChallengeScene extends BaseScene {
 
         //Handle block on gameboard grid being clicked
         board.setOnBlockClick(this::blockClicked);
+
+        // Show stats
+        var level = new Text();
+        var level_text = new Text("Current Level:");
+        level.textProperty().bind(game.getLevel().asString());
+
+        var lives = new Text();
+        var lives_text = new Text("Lives remain:" + level);
+        lives.textProperty().bind(game.getLives().asString());
+
+        var multiplier = new Text();
+        var multiplier_text = new Text("Current multiplier:" + level);
+        multiplier.textProperty().bind(game.getMultiplier().asString());
+
+        var score = new Text();
+        var score_text = new Text("Current score:" + level);
+        score.textProperty().bind(game.getLevel().asString());
+
+        var statsBox = new VBox();
+        statsBox.getChildren().addAll(level_text, lives_text, multiplier_text, score_text);
+        mainPane.setRight(statsBox);
+        
     }
 
     /**
