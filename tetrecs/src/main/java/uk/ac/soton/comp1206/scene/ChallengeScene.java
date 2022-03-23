@@ -60,19 +60,19 @@ public class ChallengeScene extends BaseScene {
         level.textProperty().bind(game.getLevel().asString());
 
         var lives = new Text();
-        var lives_text = new Text("Lives remain:" + level);
+        var lives_text = new Text("Lives remain:");
         lives.textProperty().bind(game.getLives().asString());
 
         var multiplier = new Text();
-        var multiplier_text = new Text("Current multiplier:" + level);
+        var multiplier_text = new Text("Current multiplier:");
         multiplier.textProperty().bind(game.getMultiplier().asString());
 
         var score = new Text();
-        var score_text = new Text("Current score:" + level);
+        var score_text = new Text("Current score:");
         score.textProperty().bind(game.getLevel().asString());
 
         var statsBox = new VBox();
-        statsBox.getChildren().addAll(level_text, lives_text, multiplier_text, score_text);
+        statsBox.getChildren().addAll(level_text, level, lives_text, lives, multiplier_text, multiplier ,score_text, score);
         mainPane.setRight(statsBox);
         
     }

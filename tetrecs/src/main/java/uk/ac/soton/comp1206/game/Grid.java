@@ -1,5 +1,8 @@
 package uk.ac.soton.comp1206.game;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
@@ -18,6 +21,9 @@ import javafx.beans.property.SimpleIntegerProperty;
  * The Grid should be linked to a GameBoard for its display.
  */
 public class Grid {
+
+    private static final Logger logger = LogManager.getLogger(Game.class);
+
 
     /**
      * The number of columns in this grid
@@ -124,12 +130,18 @@ public class Grid {
      */
     public Boolean canPlayPiece(GamePiece thisPiece, int x, int y) {
         int[][] thisBlocks = thisPiece.getBlocks();
+        System.out.println(thisBlocks);
 
         for (int i = 0; i < thisBlocks.length; i++) {
             for (int j = 0; j < thisBlocks[i].length; j++) {
-                if (thisBlocks[i][j] != 0 && get(x - 1 + j, y - 1 + i) != 0) {
-                    return false;
+                try{
+                    if (thisBlocks[i][j] != 0 && get(x - 1 + j, y - 1 + i) != 0) {
+                        return false;
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    logger.error(e);
                 }
+        
             }
         }
         return true;
@@ -144,11 +156,12 @@ public class Grid {
      */
     public void playPiece(GamePiece thisPiece, int x, int y) {
         int[][] thisBlock = thisPiece.getBlocks();
-        int blockValue = thisPiece.getValue();
 
         for (int i = 0; i < thisBlock.length; i++) {
-            for (int j = 0; j < thisBlock[0].length; j++) {
-                set(x - 1 + j, y - 1 + i, blockValue);
+            for (int j = 0; j < thisBlock[i].length; j++) {
+                if (thisBlock[i][j] != 0) {
+                    set(x - 1 + j, y - 1 + i, thisBlock[i][j]);
+                }
             }
         }
     }

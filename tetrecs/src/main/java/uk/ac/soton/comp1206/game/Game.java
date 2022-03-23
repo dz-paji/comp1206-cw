@@ -164,11 +164,12 @@ public class Game {
      * Clear any fully occupied lines.
      */
     public void afterPiece() {
-        Boolean isVOccupied = true;
-        Boolean isHOccupied = true;
 
         // Check for vertical lines
+        // i for x, j for y.
         for (int i = 0; i < this.rows; i++) {
+            Boolean isVOccupied = true;
+
             // Loop through every y at given x
             for (int j = 0; j < this.cols; j++) {
                 if (this.grid.get(i, j) == 0) {
@@ -186,6 +187,8 @@ public class Game {
 
         // Check for hotizental lines
         for (int j = 0; j < this.cols; j ++) {
+            Boolean isHOccupied = true;
+
             // Loop through every x at given y
             for (int i = 0; i < this.rows; i++) {
                 if (this.grid.get(i, j) == 0) {
@@ -200,6 +203,8 @@ public class Game {
                 logger.info("Clearing horizontal line no.{}", j);
             }
         }
+
+        this.currentPiece=spawnPiece();
     }
 
     public void setScore(int score) {
