@@ -3,7 +3,7 @@
 ## Todo
 
 - [x] Game Logic
-- [] Tracking score, level, lives, multiplier in UI
+- [x] Tracking score, level, lives, multiplier in UI
 - [] Implementing Scoring and multiplier
 - [] Add BGM
 - [] Add styles
