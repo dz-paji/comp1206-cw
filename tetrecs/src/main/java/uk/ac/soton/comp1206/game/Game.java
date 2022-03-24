@@ -164,6 +164,7 @@ public class Game {
      * Clear any fully occupied lines.
      */
     public void afterPiece() {
+        Boolean[] xFull = new Boolean();
 
         // Check for vertical lines
         // i for x, j for y.
@@ -205,6 +206,7 @@ public class Game {
         }
 
         this.currentPiece=spawnPiece();
+        score(numLines, numBlocks);
     }
 
     public void setScore(int score) {
@@ -241,6 +243,15 @@ public class Game {
 
     public IntegerProperty getMultiplier() {
         return this.multiplier;
+    }
+
+    /**
+     * Add score awared for clearing any lines.
+     * @param numLines number of lines cleared by placing a block
+     * @param numBlocks number of blocks cleared
+     */
+    public void score(int numLines, int numBlocks) {
+        this.score.set(this.score.get() + (numLines * numBlocks * 10 * this.multiplier.get()));
     }
 
 }
