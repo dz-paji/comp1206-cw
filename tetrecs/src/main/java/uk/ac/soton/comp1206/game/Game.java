@@ -36,6 +36,11 @@ public class Game {
     protected GamePiece currentPiece;
 
     /**
+     * Tracks previous interval of score. 0 means score is between 0-999, 1 means score is between 1000-1999.
+     */
+    private int scoreTracker = 0;
+
+    /**
      * Score of current game
      */
     private SimpleIntegerProperty score = new SimpleIntegerProperty(0);
@@ -86,6 +91,15 @@ public class Game {
      */
     public void initialiseGame() {
         logger.info("Initialising game");
+
+        this.score.addListener((event) -> {
+            logger.info("Score got changed!");
+            int changedScore = this.score.get() % 1000;
+            if (changedScore - this.scoreTracker > 0) {
+                this.scoreTracker += changedScore;
+                this.level.set(this.level.get() + changedScore);
+            }
+        });
     }
 
     /**
