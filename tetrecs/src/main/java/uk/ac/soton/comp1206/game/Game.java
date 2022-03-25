@@ -175,7 +175,6 @@ public class Game {
         Boolean[] yFull = new Boolean[this.cols];
         int xCount = 0;
         int yCount = 0;
-        int numLineCount = 0;
         int numBlockCount = 0;
 
         // Check for vertical lines
