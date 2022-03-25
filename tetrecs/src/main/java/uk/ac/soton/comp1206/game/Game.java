@@ -234,6 +234,7 @@ public class Game {
 
         this.currentPiece = spawnPiece();
         score(yCount + xCount, numBlockCount);
+        checkMultiplier(yCount + xCount);
     }
 
     public void setScore(int score) {
@@ -280,6 +281,13 @@ public class Game {
      */
     public void score(int numLines, int numBlocks) {
         this.score.set(this.score.get() + (numLines * numBlocks * 10 * this.multiplier.get()));
+    }
+
+    public void checkMultiplier(int numLines) {
+        switch (numLines) {
+            case 0: this.multiplier.set(1);
+            default: this.multiplier.set(this.multiplier.get() + 1);
+        }
     }
 
 }
