@@ -4,7 +4,7 @@
 
 - [x] Game Logic
 - [x] Tracking score, level, lives, multiplier in UI
-- [] Implementing Scoring and multiplier
+- [x] Implementing Scoring and multiplier
 - [] Add BGM
 - [] Add styles
 - [] Better menu
