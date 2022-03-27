@@ -6,6 +6,8 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import uk.ac.soton.comp1206.game.Multimedia;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
@@ -61,7 +63,7 @@ public class MenuScene extends BaseScene {
      */
     @Override
     public void initialise() {
-
+        Multimedia.playBGM();
     }
 
     /**
