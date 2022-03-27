@@ -36,7 +36,8 @@ public class Game {
     protected GamePiece currentPiece;
 
     /**
-     * Tracks previous interval of score. 0 means score is between 0-999, 1 means score is between 1000-1999.
+     * Tracks previous interval of score. 0 means score is between 0-999, 1 means
+     * score is between 1000-1999.
      */
     private int scoreTracker = 0;
 
@@ -297,11 +298,17 @@ public class Game {
         this.score.set(this.score.get() + (numLines * numBlocks * 10 * this.multiplier.get()));
     }
 
+    /**
+     * Update the multiplier
+     * @param numLines number of lines cleared after block click
+     */
     public void checkMultiplier(int numLines) {
-        switch (numLines) {
-            case 0: this.multiplier.set(1);
-            default: this.multiplier.set(this.multiplier.get() + 1);
+        if (numLines == 0) {
+            this.multiplier.set(1);
+        } else {
+            this.multiplier.set(this.multiplier.get() + 1);
         }
+
     }
 
 }
