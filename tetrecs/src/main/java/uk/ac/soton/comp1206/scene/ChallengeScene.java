@@ -93,7 +93,6 @@ public class ChallengeScene extends BaseScene {
         pieceBoard.setPiece(game.getPiece());
         var piecePane = new BorderPane();
         piecePane.getChildren().add(pieceBoard);
-        BorderPane.setAlignment(piecePane, Pos.CENTER);
 
         statsBox.getChildren().add(piecePane);
         statsBox.setAlignment(Pos.CENTER);
