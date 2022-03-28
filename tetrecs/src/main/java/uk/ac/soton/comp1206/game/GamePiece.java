@@ -1,12 +1,20 @@
 package uk.ac.soton.comp1206.game;
 
+import java.util.ArrayList;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import uk.ac.soton.comp1206.event.PieceSpawnedListener;
+
 /**
- * Instances of GamePiece Represents the model of a specific Game Piece with it's block makeup.
+ * Instances of GamePiece Represents the model of a specific Game Piece with
+ * it's block makeup.
  *
- * The GamePiece class also contains a factory for producing a GamePiece of a particular shape, as specified by it's
+ * The GamePiece class also contains a factory for producing a GamePiece of a
+ * particular shape, as specified by it's
  * number.
  */
-public class GamePiece {
+public class GamePiece implements EventHandler<ActionEvent> {
 
     /**
      * The total number of pieces in this game
@@ -28,111 +36,115 @@ public class GamePiece {
      */
     private final String name;
 
+    private static ArrayList<PieceSpawnedListener> listeners;
+
     /**
      * Create a new GamePiece of the specified piece number
+     * 
      * @param piece piece number
      * @return the created GamePiece
      */
     public static GamePiece createPiece(int piece) {
         switch (piece) {
-            //Line
+            // Line
             case 0 -> {
-                int[][] blocks = {{0, 0, 0}, {1, 1, 1}, {0, 0, 0}};
+                int[][] blocks = { { 0, 0, 0 }, { 1, 1, 1 }, { 0, 0, 0 } };
                 return new GamePiece("Line", blocks, 1);
             }
 
-            //C
+            // C
             case 1 -> {
-                int[][] blocks = {{0, 0, 0}, {1, 1, 1}, {1, 0, 1}};
+                int[][] blocks = { { 0, 0, 0 }, { 1, 1, 1 }, { 1, 0, 1 } };
                 return new GamePiece("C", blocks, 2);
             }
 
-            //Plus
+            // Plus
             case 2 -> {
-                int[][] blocks = {{0, 1, 0}, {1, 1, 1}, {0, 1, 0}};
+                int[][] blocks = { { 0, 1, 0 }, { 1, 1, 1 }, { 0, 1, 0 } };
                 return new GamePiece("Plus", blocks, 3);
             }
 
-            //Dot
+            // Dot
             case 3 -> {
-                int[][] blocks = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}};
+                int[][] blocks = { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
                 return new GamePiece("Dot", blocks, 4);
             }
 
-            //Square
+            // Square
             case 4 -> {
-                int[][] blocks = {{1, 1, 0}, {1, 1, 0}, {0, 0, 0}};
+                int[][] blocks = { { 1, 1, 0 }, { 1, 1, 0 }, { 0, 0, 0 } };
                 return new GamePiece("Square", blocks, 5);
             }
 
-            //L
+            // L
             case 5 -> {
-                int[][] blocks = {{0, 0, 0}, {1, 1, 1}, {0, 0, 1}};
+                int[][] blocks = { { 0, 0, 0 }, { 1, 1, 1 }, { 0, 0, 1 } };
                 return new GamePiece("L", blocks, 6);
             }
 
-            //J
+            // J
             case 6 -> {
-                int[][] blocks = {{0, 0, 1}, {1, 1, 1}, {0, 0, 0}};
+                int[][] blocks = { { 0, 0, 1 }, { 1, 1, 1 }, { 0, 0, 0 } };
                 return new GamePiece("J", blocks, 7);
             }
 
-            //S
+            // S
             case 7 -> {
-                int[][] blocks = {{0, 0, 0}, {0, 1, 1}, {1, 1, 0}};
+                int[][] blocks = { { 0, 0, 0 }, { 0, 1, 1 }, { 1, 1, 0 } };
                 return new GamePiece("S", blocks, 8);
             }
 
-            //Z
+            // Z
             case 8 -> {
-                int[][] blocks = {{1, 1, 0}, {0, 1, 1}, {0, 0, 0}};
+                int[][] blocks = { { 1, 1, 0 }, { 0, 1, 1 }, { 0, 0, 0 } };
                 return new GamePiece("Z", blocks, 9);
             }
 
-            //T
+            // T
             case 9 -> {
-                int[][] blocks = {{1, 0, 0}, {1, 1, 0}, {1, 0, 0}};
+                int[][] blocks = { { 1, 0, 0 }, { 1, 1, 0 }, { 1, 0, 0 } };
                 return new GamePiece("T", blocks, 10);
             }
 
-            //X
+            // X
             case 10 -> {
-                int[][] blocks = {{1, 0, 1}, {0, 1, 0}, {1, 0, 1}};
+                int[][] blocks = { { 1, 0, 1 }, { 0, 1, 0 }, { 1, 0, 1 } };
                 return new GamePiece("X", blocks, 11);
             }
 
-            //Corner
+            // Corner
             case 11 -> {
-                int[][] blocks = {{0, 0, 0}, {1, 1, 0}, {1, 0, 0}};
+                int[][] blocks = { { 0, 0, 0 }, { 1, 1, 0 }, { 1, 0, 0 } };
                 return new GamePiece("Corner", blocks, 12);
             }
 
-            //Inverse Corner
+            // Inverse Corner
             case 12 -> {
-                int[][] blocks = {{1, 0, 0}, {1, 1, 0}, {0, 0, 0}};
+                int[][] blocks = { { 1, 0, 0 }, { 1, 1, 0 }, { 0, 0, 0 } };
                 return new GamePiece("Inverse Corner", blocks, 13);
             }
 
-            //Diagonal
+            // Diagonal
             case 13 -> {
-                int[][] blocks = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+                int[][] blocks = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
                 return new GamePiece("Diagonal", blocks, 14);
             }
 
-            //Double
+            // Double
             case 14 -> {
-                int[][] blocks = {{0, 1, 0}, {0, 1, 0}, {0, 0, 0}};
+                int[][] blocks = { { 0, 1, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
                 return new GamePiece("Double", blocks, 15);
             }
         }
 
-        //Not a valid piece number
+        // Not a valid piece number
         throw new IndexOutOfBoundsException("No such piece: " + piece);
     }
 
     /**
      * Create a new GamePiece of the specified piece number and rotation
-     * @param piece piece number
+     * 
+     * @param piece    piece number
      * @param rotation number of times to rotate
      * @return the created GamePiece
      */
@@ -140,25 +152,34 @@ public class GamePiece {
         var newPiece = createPiece(piece);
 
         newPiece.rotate(rotation);
+
+        for(PieceSpawnedListener listener: listeners) {
+            listener.pieceSpawned(newPiece);
+        }
         return newPiece;
     }
 
     /**
-     * Create a new GamePiece with the given name, block makeup and value. Should not be called directly, only via the
+     * Create a new GamePiece with the given name, block makeup and value. Should
+     * not be called directly, only via the
      * factory.
-     * @param name name of the piece
+     * 
+     * @param name   name of the piece
      * @param blocks block makeup of the piece
-     * @param value the value of this piece
+     * @param value  the value of this piece
      */
     private GamePiece(String name, int[][] blocks, int value) {
         this.name = name;
         this.blocks = blocks;
         this.value = value;
+        listeners = new ArrayList<>();
 
-        //Use the shape of the block to create a grid with either 0 (empty) or the value of this shape for each block.
-        for(int x = 0; x < blocks.length; x++) {
+        // Use the shape of the block to create a grid with either 0 (empty) or the
+        // value of this shape for each block.
+        for (int x = 0; x < blocks.length; x++) {
             for (int y = 0; y < blocks[x].length; y++) {
-                if(blocks[x][y] == 0) continue;
+                if (blocks[x][y] == 0)
+                    continue;
                 blocks[x][y] = value;
             }
         }
@@ -166,6 +187,7 @@ public class GamePiece {
 
     /**
      * Get the value of this piece
+     * 
      * @return piece value
      */
     public int getValue() {
@@ -174,6 +196,7 @@ public class GamePiece {
 
     /**
      * Get the block makeup of this piece
+     * 
      * @return 2D grid of the blocks representing the piece shape
      */
     public int[][] getBlocks() {
@@ -182,10 +205,11 @@ public class GamePiece {
 
     /**
      * Rotate this piece the given number of rotations
+     * 
      * @param rotations number of rotations
      */
     public void rotate(int rotations) {
-        for(int rotated = 0; rotated < rotations; rotated ++) {
+        for (int rotated = 0; rotated < rotations; rotated++) {
             rotate();
         }
     }
@@ -210,15 +234,25 @@ public class GamePiece {
         blocks = rotated;
     }
 
-
     /**
      * Return the string representation of this piece
+     * 
      * @return the name of this piece
      */
     public String toString() {
         return this.name;
     }
 
+    /**
+     * The handle method that handles when an event happens.
+     */
+    @Override
+    public void handle(ActionEvent event) {
 
+    }
+
+    public void addListener(PieceSpawnedListener listener) {
+        this.listeners.add(listener);
+    }
 
 }

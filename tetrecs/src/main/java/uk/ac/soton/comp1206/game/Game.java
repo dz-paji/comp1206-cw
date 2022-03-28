@@ -7,7 +7,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.event.ActionEvent;
 import uk.ac.soton.comp1206.component.GameBlock;
+import uk.ac.soton.comp1206.event.PieceSpawnedListener;
 
 /**
  * The Game class handles the main logic, state and properties of the TetrECS
@@ -64,6 +66,8 @@ public class Game {
      */
     private SimpleIntegerProperty multiplier = new SimpleIntegerProperty(1);
 
+    private PieceSpawnedListener pieceSpawnedListener;
+
     /**
      * Create a new game with the specified rows and columns. Creates a
      * corresponding grid model.
@@ -104,6 +108,8 @@ public class Game {
                 this.level.set(this.level.get() + changedScore);
             }
         });
+
+        
     }
 
     /**

@@ -20,9 +20,9 @@ public class PieceBoard extends GameBoard {
      * @param currentPiece The GamePiece to be displayed.
      */
     public void setPiece(GamePiece currentPiece) {
-        int[][] currentArray= currentPiece.getBlocks();
+        int[][] currentArray = currentPiece.getBlocks();
 
-        for (int i = 0; i < currentArray.length; i ++) {
+        for (int i = 0; i < currentArray.length; i++) {
             for (int j = 0; j < currentArray[i].length; j++) {
                 if (currentArray[i][j] != 0) {
                     grid.set(i, j, currentArray[i][j]);
