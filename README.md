@@ -6,10 +6,12 @@
 - [x] Tracking score, level, lives, multiplier in UI
 - [x] Implementing Scoring and multiplier
 - [x] Add BGM
-- [] Add styles
-- [] Better menu
-- [] Instruction screen
-- [] A custom component to show a specific piece
-- [] A listener for handling a next piece being ready
-- [] Use the component the upcoming piece in the UI
+- [x] Add styles
+- [ ] Fix Error when placing a piece
+- [ ] Add listener to auto-updating pieceBoard
+- [ ] Better menu
+- [ ] Instruction screen
+- [ ] A custom component to show a specific piece
+- [ ] A listener for handling a next piece being ready
+- [ ] Use the component the upcoming piece in the UI
   
