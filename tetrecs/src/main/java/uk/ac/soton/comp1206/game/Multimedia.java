@@ -37,4 +37,11 @@ public class Multimedia {
             logger.info("BGM ends, restarting..");
         });
     }
+
+    /**
+     * Stop the current playing BGM.
+     */
+    public static void stopBGM() {
+        bgmPlayer.stop();
+    }
 }

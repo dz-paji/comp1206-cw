@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.GameBlock;
 import uk.ac.soton.comp1206.component.GameBoard;
+import uk.ac.soton.comp1206.component.PieceBoard;
 import uk.ac.soton.comp1206.game.Game;
 import uk.ac.soton.comp1206.game.Multimedia;
 import uk.ac.soton.comp1206.ui.GamePane;
@@ -86,6 +87,15 @@ public class ChallengeScene extends BaseScene {
         var statsBox = new VBox();
         statsBox.getChildren().addAll(level_text, level, lives_text, lives, multiplier_text, multiplier, score_text,
                 score);
+
+        // Show current Piece
+        PieceBoard pieceBoard = new PieceBoard(gameWindow.getWidth() / 5, gameWindow.getHeight() / 4);
+        pieceBoard.setPiece(game.getPiece());
+        var piecePane = new BorderPane();
+        piecePane.getChildren().add(pieceBoard);
+        BorderPane.setAlignment(piecePane, Pos.CENTER);
+
+        statsBox.getChildren().add(piecePane);
         statsBox.setAlignment(Pos.CENTER);
         mainPane.setRight(statsBox);
 

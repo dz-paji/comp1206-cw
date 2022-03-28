@@ -71,6 +71,7 @@ public class MenuScene extends BaseScene {
      * @param event event
      */
     private void startGame(ActionEvent event) {
+        Multimedia.stopBGM();
         gameWindow.startChallenge();
     }
 

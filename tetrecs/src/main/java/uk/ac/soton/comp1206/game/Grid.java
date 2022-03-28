@@ -24,7 +24,6 @@ public class Grid {
 
     private static final Logger logger = LogManager.getLogger(Game.class);
 
-
     /**
      * The number of columns in this grid
      */
@@ -132,16 +131,16 @@ public class Grid {
         int[][] thisBlocks = thisPiece.getBlocks();
         System.out.println(thisBlocks);
 
-        for (int i = 0; i < thisBlocks.length; i++) {
-            for (int j = 0; j < thisBlocks[i].length; j++) {
-                try{
-                    if (thisBlocks[i][j] != 0 && get(x - 1 + j, y - 1 + i) != 0) {
+        for (int j = 0; j < thisBlocks.length; j++) {
+            for (int i = 0; i < thisBlocks[j].length; i++) {
+                try {
+                    if (thisBlocks[i][j] != 0 && get(y - 1 + j, x - 1 + i) != 0) {
                         return false;
                     }
                 } catch (IndexOutOfBoundsException e) {
                     logger.error(e);
                 }
-        
+
             }
         }
         return true;
@@ -159,8 +158,8 @@ public class Grid {
 
         for (int i = 0; i < thisBlock.length; i++) {
             for (int j = 0; j < thisBlock[i].length; j++) {
-                if (thisBlock[i][j] != 0) {
-                    set(x - 1 + j, y - 1 + i, thisBlock[i][j]);
+                if (thisBlock[j][i] != 0) {
+                    set(y - 1 + i, x - 1 + j, thisBlock[i][j]);
                 }
             }
         }

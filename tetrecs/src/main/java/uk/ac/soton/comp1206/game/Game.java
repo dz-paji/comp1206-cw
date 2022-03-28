@@ -33,6 +33,9 @@ public class Game {
      */
     protected final Grid grid;
 
+    /**
+     * The game piece that the player going to place.
+     */
     protected GamePiece currentPiece;
 
     /**
@@ -194,47 +197,47 @@ public class Game {
 
         // Check for vertical lines
         // i for x, j for y.
-        for (int i = 0; i < this.rows; i++) {
-            xFull[i] = true;
+        for (int j = 0; j < this.rows; j++) {
+            xFull[j] = true;
 
             // Loop through every y at given x
-            for (int j = 0; j < this.cols; j++) {
-                if (this.grid.get(i, j) == 0) {
-                    xFull[i] = false;
+            for (int i = 0; i < this.cols; i++) {
+                if (this.grid.get(j, i) == 0) {
+                    xFull[j] = false;
                     break;
                 }
             }
         }
 
         // Check for hotizental lines
-        for (int j = 0; j < this.cols; j++) {
-            yFull[j] = true;
+        for (int i = 0; i < this.cols; i++) {
+            yFull[i] = true;
 
             // Loop through every x at given y
-            for (int i = 0; i < this.rows; i++) {
-                if (this.grid.get(i, j) == 0) {
-                    yFull[j] = false;
+            for (int j = 0; j < this.rows; j++) {
+                if (this.grid.get(j, i) == 0) {
+                    yFull[i] = false;
                     break;
                 }
             }
         }
 
         // Clear lines and count number of cleared lines.
-        for (int i = 0; i < this.rows; i++) {
-            if (xFull[i] == true) {
-                logger.info("Vertical line no.{} will be cleared", i);
-                for (int j = 0; j < this.cols; j++) {
-                    this.grid.set(i, j, 0);
+        for (int j = 0; j < this.rows; j++) {
+            if (xFull[j] == true) {
+                logger.info("Vertical line no.{} will be cleared", j);
+                for (int i = 0; i < this.cols; i++) {
+                    this.grid.set(j, i, 0);
                 }
                 yCount++;
             }
         }
 
-        for (int j = 0; j < this.cols; j++) {
-            if (yFull[j] == true) {
-                logger.info("Vertical line no.{} will be cleared", j);
-                for (int i = 0; i < this.rows; i++) {
-                    this.grid.set(i, j, 0);
+        for (int i = 0; i < this.cols; i++) {
+            if (yFull[i] == true) {
+                logger.info("Horizontal line no.{} will be cleared", i);
+                for (int j = 0; j < this.rows; j++) {
+                    this.grid.set(j, i, 0);
                 }
                 xCount++;
             }
@@ -300,6 +303,7 @@ public class Game {
 
     /**
      * Update the multiplier
+     * 
      * @param numLines number of lines cleared after block click
      */
     public void checkMultiplier(int numLines) {
@@ -309,6 +313,15 @@ public class Game {
             this.multiplier.set(this.multiplier.get() + 1);
         }
 
+    }
+
+    /**
+     * Get the current GamePiece
+     * 
+     * @return Current GamePiece
+     */
+    public GamePiece getPiece() {
+        return this.currentPiece;
     }
 
 }
