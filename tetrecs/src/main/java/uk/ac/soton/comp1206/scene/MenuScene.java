@@ -45,13 +45,11 @@ public class MenuScene extends BaseScene {
         var mainPane = new BorderPane();
         menuPane.getChildren().add(mainPane);
 
-        //Awful title
-        var title = new Text("TetrECS");
-        title.getStyleClass().add("title");
-        mainPane.setTop(title);
+        //Better title
+        FileInputStream logo = new FileInputStream(MenuScene.class.getResource("/images/TetrECS.png"));
 
         //For now, let us just add a button that starts the game. I'm sure you'll do something way better.
-        var button = new Button("Play");
+        var button = new Button("Single Player");
         mainPane.setCenter(button);
 
         //Bind the button action to the startGame method in the menu
