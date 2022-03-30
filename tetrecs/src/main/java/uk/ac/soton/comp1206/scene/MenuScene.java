@@ -1,9 +1,15 @@
 package uk.ac.soton.comp1206.scene;
 
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +26,7 @@ public class MenuScene extends BaseScene {
 
     /**
      * Create a new menu scene
+     * 
      * @param gameWindow the Game Window this will be displayed in
      */
     public MenuScene(GameWindow gameWindow) {
@@ -34,7 +41,7 @@ public class MenuScene extends BaseScene {
     public void build() {
         logger.info("Building " + this.getClass().getName());
 
-        root = new GamePane(gameWindow.getWidth(),gameWindow.getHeight());
+        root = new GamePane(gameWindow.getWidth(), gameWindow.getHeight());
 
         var menuPane = new StackPane();
         menuPane.setMaxWidth(gameWindow.getWidth());
@@ -42,18 +49,30 @@ public class MenuScene extends BaseScene {
         menuPane.getStyleClass().add("menu-background");
         root.getChildren().add(menuPane);
 
-        var mainPane = new BorderPane();
+        var mainPane = new GridPane();
         menuPane.getChildren().add(mainPane);
 
-        //Better title
-        FileInputStream logo = new FileInputStream(MenuScene.class.getResource("/images/TetrECS.png"));
+        // Better title
+        try {
+            FileInputStream logo = new FileInputStream(MenuScene.class.getResource("/images/TetrECS.png").getPath());
+            Image logoImage = new Image(logo);
+            ImageView logoView = new ImageView(logoImage);
+            logoView.setFitHeight(40);
+            logoView.setFitWidth(200);
 
-        //For now, let us just add a button that starts the game. I'm sure you'll do something way better.
-        var button = new Button("Single Player");
-        mainPane.setCenter(button);
+            var button = new Button("Single Player");
 
-        //Bind the button action to the startGame method in the menu
-        button.setOnAction(this::startGame);
+            // Bind the button action to the startGame method in the menu
+            button.setOnAction(this::startGame);
+
+            var menuBox = new VBox();
+            menuBox.getChildren().add(logoView);
+            menuBox.setAlignment(Pos.CENTER);
+            mainPane.getChildren().add(menuBox);
+            mainPane.setCenter(menuBox);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -66,6 +85,7 @@ public class MenuScene extends BaseScene {
 
     /**
      * Handle when the Start Game button is pressed
+     * 
      * @param event event
      */
     private void startGame(ActionEvent event) {
