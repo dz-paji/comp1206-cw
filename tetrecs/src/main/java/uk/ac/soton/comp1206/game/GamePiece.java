@@ -1,9 +1,5 @@
 package uk.ac.soton.comp1206.game;
 
-import java.util.ArrayList;
-
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import uk.ac.soton.comp1206.event.PieceSpawnedListener;
 
 /**
@@ -14,7 +10,7 @@ import uk.ac.soton.comp1206.event.PieceSpawnedListener;
  * particular shape, as specified by it's
  * number.
  */
-public class GamePiece implements EventHandler<ActionEvent> {
+public class GamePiece {
 
     /**
      * The total number of pieces in this game
@@ -35,8 +31,6 @@ public class GamePiece implements EventHandler<ActionEvent> {
      * The name of this piece
      */
     private final String name;
-
-    private static ArrayList<PieceSpawnedListener> listeners;
 
     /**
      * Create a new GamePiece of the specified piece number
@@ -153,9 +147,6 @@ public class GamePiece implements EventHandler<ActionEvent> {
 
         newPiece.rotate(rotation);
 
-        for(PieceSpawnedListener listener: listeners) {
-            listener.pieceSpawned(newPiece);
-        }
         return newPiece;
     }
 
@@ -172,7 +163,6 @@ public class GamePiece implements EventHandler<ActionEvent> {
         this.name = name;
         this.blocks = blocks;
         this.value = value;
-        listeners = new ArrayList<>();
 
         // Use the shape of the block to create a grid with either 0 (empty) or the
         // value of this shape for each block.
@@ -241,18 +231,6 @@ public class GamePiece implements EventHandler<ActionEvent> {
      */
     public String toString() {
         return this.name;
-    }
-
-    /**
-     * The handle method that handles when an event happens.
-     */
-    @Override
-    public void handle(ActionEvent event) {
-
-    }
-
-    public void addListener(PieceSpawnedListener listener) {
-        this.listeners.add(listener);
     }
 
 }

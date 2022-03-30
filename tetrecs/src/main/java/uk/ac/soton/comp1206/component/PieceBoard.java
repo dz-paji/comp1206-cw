@@ -1,8 +1,13 @@
 package uk.ac.soton.comp1206.component;
 
+// import java.util.ArrayList;
+
+// import uk.ac.soton.comp1206.event.PieceSpawnedListener;
 import uk.ac.soton.comp1206.game.GamePiece;
 
 public class PieceBoard extends GameBoard {
+
+    // public final ArrayList<PieceSpawnedListener> listeners;
 
     /**
      * Create a new PieceBoard with its super class GameBoard.
@@ -12,6 +17,7 @@ public class PieceBoard extends GameBoard {
      */
     public PieceBoard(double width, double height) {
         super(3, 3, width, height);
+        // this.listeners = new ArrayList<>();
     }
 
     /**
