@@ -1,11 +1,13 @@
 package uk.ac.soton.comp1206.scene;
 
+import javafx.animation.RotateTransition;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -59,17 +61,30 @@ public class MenuScene extends BaseScene {
             ImageView logoView = new ImageView(logoImage);
             logoView.setFitHeight(40);
             logoView.setFitWidth(200);
+            RotateTransition logoRT = new RotateTransition(Duration.millis(3000), logoView);
+            logoRT.setByAngle(10);
+            logoRT.setToAngle(-10);
+            
+            logoRT.setAutoReverse(true);
+            logoRT.play();
 
             var button = new Button("Single Player");
 
             // Bind the button action to the startGame method in the menu
             button.setOnAction(this::startGame);
 
-            var menuBox = new VBox();
-            menuBox.getChildren().add(logoView);
-            menuBox.setAlignment(Pos.CENTER);
-            mainPane.getChildren().add(menuBox);
-            mainPane.setCenter(menuBox);
+            mainPane.add(logoView, 2, 0);
+            mainPane.add(button, 2, 2);
+
+            ColumnConstraints colum1 = new ColumnConstraints();
+            colum1.setPercentWidth(40);
+            mainPane.getColumnConstraints().add(colum1);
+
+            RowConstraints row1 = new RowConstraints();
+            row1.setPercentHeight(40);
+            RowConstraints row2 = new RowConstraints();
+            row2.setPercentHeight(20);
+            mainPane.getRowConstraints().addAll(row2,row1,row2);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
