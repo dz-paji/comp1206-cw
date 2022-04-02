@@ -4,6 +4,7 @@ import javafx.animation.RotateTransition;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -62,11 +63,7 @@ public class MenuScene extends BaseScene {
             logoView.setFitHeight(40);
             logoView.setFitWidth(200);
             RotateTransition logoRT = new RotateTransition(Duration.millis(3000), logoView);
-            logoRT.setByAngle(10);
-            logoRT.setToAngle(-10);
-            
-            logoRT.setAutoReverse(true);
-            logoRT.play();
+            this.logoRT(logoRT);
 
             var button = new Button("Single Player");
 
@@ -77,7 +74,7 @@ public class MenuScene extends BaseScene {
             mainPane.add(button, 2, 2);
 
             ColumnConstraints colum1 = new ColumnConstraints();
-            colum1.setPercentWidth(40);
+            colum1.setPercentWidth(37);
             mainPane.getColumnConstraints().add(colum1);
 
             RowConstraints row1 = new RowConstraints();
@@ -106,6 +103,16 @@ public class MenuScene extends BaseScene {
     private void startGame(ActionEvent event) {
         Multimedia.stopBGM();
         gameWindow.startChallenge();
+    }
+
+    private void logoRT(RotateTransition logoRT) {
+        logoRT.setFromAngle(10);
+        logoRT.setByAngle(-20);
+        logoRT.setCycleCount(2);       
+        
+        logoRT.setAutoReverse(true);
+        logoRT.play();
+        logoRT.setOnFinished((event) -> this.logoRT(logoRT));
     }
 
 }
