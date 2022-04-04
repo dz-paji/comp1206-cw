@@ -69,6 +69,7 @@ public class MenuScene extends BaseScene {
 
             // Bind the button action to the startGame method in the menu
             button.setOnAction(this::startGame);
+            button.getStyleClass().add("menuItem");
 
             mainPane.add(logoView, 2, 0);
             mainPane.add(button, 2, 2);
