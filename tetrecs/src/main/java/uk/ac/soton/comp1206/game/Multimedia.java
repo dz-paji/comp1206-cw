@@ -55,7 +55,7 @@ public class Multimedia {
         logger.info("Playing BGM");
 
         bgmPlayer.setOnEndOfMedia( () -> {
-            playBGM();
+            playMenu();
             logger.info("BGM ends, restarting..");
         });
     }
