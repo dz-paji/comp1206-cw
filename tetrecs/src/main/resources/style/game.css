@@ -21,14 +21,14 @@
 }
 
 .menuItem {
-    -fx-fill: rgb(247, 222, 0);
+    -fx-fill: blue;
     -fx-font-family: 'Orbitron';
     -fx-font-size: 32px;
     -fx-font-weight: 700;
-    -fx-border-color: rgb(0, 17, 255);
-    -fx-stroke: black;
-    -fx-background-color: #ff000000;
-    -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-stroke: yellow;
+    -fx-effect: dropshadow(gaussian, rgb(231, 27, 27), 1, 1.0, 1, 1);
 }
 
 .menuItem:hover {

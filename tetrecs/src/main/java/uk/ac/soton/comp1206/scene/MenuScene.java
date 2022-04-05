@@ -93,7 +93,7 @@ public class MenuScene extends BaseScene {
      */
     @Override
     public void initialise() {
-        Multimedia.playBGM();
+        Multimedia.playMenu();
     }
 
     /**
@@ -102,7 +102,7 @@ public class MenuScene extends BaseScene {
      * @param event event
      */
     private void startGame(ActionEvent event) {
-        Multimedia.stopBGM();
+        Multimedia.stopMenu();
         gameWindow.startChallenge();
     }
 

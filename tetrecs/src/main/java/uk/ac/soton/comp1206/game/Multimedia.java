@@ -44,4 +44,27 @@ public class Multimedia {
     public static void stopBGM() {
         bgmPlayer.stop();
     }
+
+    /**
+     * Method plays BGM.
+     */
+    public static void playMenu() {
+        Media bgm = new Media(Multimedia.class.getResource("/music/menu_phoenix.mp3").toExternalForm());
+        bgmPlayer = new MediaPlayer(bgm);
+        bgmPlayer.play();
+        logger.info("Playing BGM");
+
+        bgmPlayer.setOnEndOfMedia( () -> {
+            playBGM();
+            logger.info("BGM ends, restarting..");
+        });
+    }
+
+    /**
+     * Stop the current playing BGM.
+     */
+    public static void stopMenu() {
+        bgmPlayer.stop();
+    }
+
 }
