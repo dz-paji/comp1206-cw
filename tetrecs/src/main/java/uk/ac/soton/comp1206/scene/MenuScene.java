@@ -82,7 +82,7 @@ public class MenuScene extends BaseScene {
             row1.setPercentHeight(40);
             RowConstraints row2 = new RowConstraints();
             row2.setPercentHeight(20);
-            mainPane.getRowConstraints().addAll(row2,row1,row2);
+            mainPane.getRowConstraints().addAll(row2, row1, row2);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -106,11 +106,20 @@ public class MenuScene extends BaseScene {
         gameWindow.startChallenge();
     }
 
+    /**
+     * Handle when the start instruction button is pressed
+     * 
+     * @param event event
+     */
+    private void startInstruction(ActionEvent event) {
+        gameWindow.startInstruction();
+    }
+
     private void logoRT(RotateTransition logoRT) {
         logoRT.setFromAngle(10);
         logoRT.setByAngle(-20);
-        logoRT.setCycleCount(2);       
-        
+        logoRT.setCycleCount(2);
+
         logoRT.setAutoReverse(true);
         logoRT.play();
         logoRT.setOnFinished((event) -> this.logoRT(logoRT));
