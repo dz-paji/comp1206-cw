@@ -51,6 +51,7 @@ public class Multimedia {
     public static void playMenu() {
         Media bgm = new Media(Multimedia.class.getResource("/music/menu_phoenix.mp3").toExternalForm());
         bgmPlayer = new MediaPlayer(bgm);
+        bgmPlayer.setVolume(0.3);
         bgmPlayer.play();
         logger.info("Playing BGM");
 

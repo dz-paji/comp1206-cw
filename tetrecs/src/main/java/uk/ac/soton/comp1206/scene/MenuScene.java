@@ -52,40 +52,29 @@ public class MenuScene extends BaseScene {
         menuPane.getStyleClass().add("menu-background");
         root.getChildren().add(menuPane);
 
-        var mainPane = new GridPane();
+        var mainPane = new StackPane();
         menuPane.getChildren().add(mainPane);
 
         // Better title
-        try {
-            FileInputStream logo = new FileInputStream(MenuScene.class.getResource("/images/TetrECS.png").getPath());
-            Image logoImage = new Image(logo);
-            ImageView logoView = new ImageView(logoImage);
-            logoView.setFitHeight(40);
-            logoView.setFitWidth(200);
-            RotateTransition logoRT = new RotateTransition(Duration.millis(3000), logoView);
-            this.logoRT(logoRT);
+        Image logoImage = new Image(MenuScene.class.getResource("/images/TetrECS.png").toExternalForm());
+        ImageView logoView = new ImageView(logoImage);
+        logoView.set
+        logoView.setFitHeight(40);
+        logoView.setFitWidth(200);
+        RotateTransition logoRT = new RotateTransition(Duration.millis(3000), logoView);
+        this.logoRT(logoRT);
 
-            var button = new Button("Single Player");
+        var button = new Button("Single Player");
+        var instructionButton = new Button("Instructions");
 
-            // Bind the button action to the startGame method in the menu
-            button.setOnAction(this::startGame);
-            button.getStyleClass().add("menuItem");
+        // Bind the button action to the startGame method in the menu
+        button.setOnAction(this::startGame);
+        button.getStyleClass().add("menuItem");
+        instructionButton.setOnAction(this::startInstruction);
+        instructionButton.getStyleClass().add("menuItem");
 
-            mainPane.add(logoView, 2, 0);
-            mainPane.add(button, 2, 2);
+        mainPane.getChildren().addAll(logoView, button, instructionButton);
 
-            ColumnConstraints colum1 = new ColumnConstraints();
-            colum1.setPercentWidth(37);
-            mainPane.getColumnConstraints().add(colum1);
-
-            RowConstraints row1 = new RowConstraints();
-            row1.setPercentHeight(40);
-            RowConstraints row2 = new RowConstraints();
-            row2.setPercentHeight(20);
-            mainPane.getRowConstraints().addAll(row2, row1, row2);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
