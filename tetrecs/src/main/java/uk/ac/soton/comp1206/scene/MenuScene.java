@@ -2,16 +2,12 @@ package uk.ac.soton.comp1206.scene;
 
 import javafx.animation.RotateTransition;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,9 +54,9 @@ public class MenuScene extends BaseScene {
         // Better title
         Image logoImage = new Image(MenuScene.class.getResource("/images/TetrECS.png").toExternalForm());
         ImageView logoView = new ImageView(logoImage);
-        logoView.set
         logoView.setFitHeight(40);
         logoView.setFitWidth(200);
+        logoView.getStyleClass().add("menu");
         RotateTransition logoRT = new RotateTransition(Duration.millis(3000), logoView);
         this.logoRT(logoRT);
 
@@ -71,9 +67,10 @@ public class MenuScene extends BaseScene {
         button.setOnAction(this::startGame);
         button.getStyleClass().add("menuItem");
         instructionButton.setOnAction(this::startInstruction);
-        instructionButton.getStyleClass().add("menuItem");
+        instructionButton.getStyleClass().addAll("menuItem");
 
         mainPane.getChildren().addAll(logoView, button, instructionButton);
+        StackPane.setAlignment(logoView, Pos.TOP_CENTER);
 
     }
 
