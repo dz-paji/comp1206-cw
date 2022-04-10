@@ -9,9 +9,8 @@
 - [x] Add styles
 - [ ] Fix Error when placing a piece
 - [ ] Add listener to auto-updating pieceBoard
-- [ ] Better menu
+- [x] Better menu
 - [ ] Instruction screen
 - [ ] A custom component to show a specific piece
 - [ ] A listener for handling a next piece being ready
 - [ ] Use the component the upcoming piece in the UI
-  

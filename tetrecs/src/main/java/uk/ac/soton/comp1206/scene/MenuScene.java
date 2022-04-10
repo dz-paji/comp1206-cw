@@ -2,6 +2,7 @@ package uk.ac.soton.comp1206.scene;
 
 import javafx.animation.RotateTransition;
 import javafx.event.ActionEvent;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -48,15 +49,16 @@ public class MenuScene extends BaseScene {
         menuPane.getStyleClass().add("menu-background");
         root.getChildren().add(menuPane);
 
-        var mainPane = new StackPane();
+        var mainPane = new GridPane();
         menuPane.getChildren().add(mainPane);
 
         // Better title
         Image logoImage = new Image(MenuScene.class.getResource("/images/TetrECS.png").toExternalForm());
         ImageView logoView = new ImageView(logoImage);
-        logoView.setFitHeight(40);
-        logoView.setFitWidth(200);
-        logoView.getStyleClass().add("menu");
+        logoView.setFitHeight(80);
+        logoView.setFitWidth(400);
+        logoView.getStyleClass().add("menuLogo");
+        GridPane.setHalignment(logoView, HPos.CENTER);
         RotateTransition logoRT = new RotateTransition(Duration.millis(3000), logoView);
         this.logoRT(logoRT);
 
@@ -69,8 +71,18 @@ public class MenuScene extends BaseScene {
         instructionButton.setOnAction(this::startInstruction);
         instructionButton.getStyleClass().addAll("menuItem");
 
-        mainPane.getChildren().addAll(logoView, button, instructionButton);
-        StackPane.setAlignment(logoView, Pos.TOP_CENTER);
+        var buttonBox = new VBox();
+        buttonBox.getChildren().addAll(button, instructionButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        GridPane.setHalignment(buttonBox, HPos.CENTER);
+
+        mainPane.add(logoView, 2, 1);
+        mainPane.add(buttonBox, 2, 5);
+        mainPane.gridLinesVisibleProperty();
+        mainPane.setHgap(100);
+        mainPane.setVgap(50);
+        mainPane.setPadding(new Insets(0, 10, 0, 10));
+
 
     }
 
