@@ -1,13 +1,17 @@
 package uk.ac.soton.comp1206.ui;
 
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import uk.ac.soton.comp1206.App;
 import uk.ac.soton.comp1206.scene.*;
 
@@ -26,10 +30,13 @@ public class GameWindow {
 
     private final int width;
     private final int height;
+    private final IntegerProperty heightProperty = new SimpleIntegerProperty();
+    private final IntegerProperty widthProperty = new SimpleIntegerProperty();
 
     private final Stage stage;
 
     private BaseScene currentScene;
+    private BaseScene prevScene;
     private Scene scene;
 
     //final Communicator communicator;
@@ -45,6 +52,7 @@ public class GameWindow {
     public GameWindow(Stage stage, int width, int height) {
         this.width = width;
         this.height = height;
+        this.heightProperty.set(height);
 
         this.stage = stage;
 
@@ -120,12 +128,15 @@ public class GameWindow {
 
         // Create the new scene and set it up
         newScene.build();
+        prevScene = currentScene;
         currentScene = newScene;
         scene = newScene.setScene();
         stage.setScene(scene);
 
         // Initialise the scene when ready
         Platform.runLater(() -> currentScene.initialise());
+
+        addEscListener();
     }
 
     /**
@@ -173,6 +184,24 @@ public class GameWindow {
     }
 
     /**
+     * Get the height property of the Game Window
+     * 
+     * @return height property.
+     */
+    public IntegerProperty getHeIntegerProperty() {
+        return heightProperty;
+    }
+
+    /**
+     * Get the width property of the Game Window
+     * 
+     * @return width property.
+     */
+    public IntegerProperty getWiIntegerProperty() {
+        return widthProperty;
+    }
+
+    /**
      * Get the communicator
      * 
      * @return communicator
@@ -180,4 +209,30 @@ public class GameWindow {
     // public Communicator getCommunicator() {
     //     return communicator;
     // }
+
+    public void endGame() {
+        if (prevScene == null) {
+            logger.info("No previsou scene, exiting.");
+            stage.close();
+            return;
+        }
+
+        logger.info("Previous scene found, cleanning up and loading previous scene.");
+        cleanup();
+        prevScene.build();
+        scene = prevScene.setScene();
+        stage.setScene(scene);
+        prevScene = null;
+
+        addEscListener();
+    }
+
+    public void addEscListener() {
+        scene.setOnKeyPressed((e) -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                logger.info("ecs key pressed");
+                endGame();
+            }
+        });
+    }
 }

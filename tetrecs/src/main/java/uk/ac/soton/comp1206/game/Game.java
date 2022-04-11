@@ -104,8 +104,6 @@ public class Game {
                 this.level.set(this.level.get() + changedScore);
             }
         });
-
-        
     }
 
     /**

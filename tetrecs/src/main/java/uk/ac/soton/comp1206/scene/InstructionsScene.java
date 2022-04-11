@@ -43,24 +43,15 @@ public class InstructionsScene extends BaseScene {
         instructPane.getStyleClass().add("menu-background");
         root.getChildren().add(instructPane);
 
-        Image instructImage = new Image(InstructionsScene.class.getResource("/images/instructions.png").toExternalForm());
+        Image instructImage = new Image(
+                InstructionsScene.class.getResource("/images/instructions.png").toExternalForm(), gameWindow.getWidth(),
+                gameWindow.getHeight(), false, false);
         ImageView instructView = new ImageView(instructImage);
+        instructView.fitHeightProperty().bind(gameWindow.getHeIntegerProperty());
+        instructView.fitWidthProperty().bind(gameWindow.getWiIntegerProperty());
         instructView.autosize();
-        
-        instructPane.getChildren().add(instructView);
-        this.scene.setOnKeyTyped(e -> {
-            logger.info("This scene key typed", e.getCode());
-        });
 
-        gameWindow.getScene().setOnKeyTyped(e->{
-            logger.info(e.getCode());
-        });
-            // System.out.println(e.getCode());
-            // if (e.getCode() == KeyCode.ESCAPE) {
-            //     logger.info("ECS Key pressed.");
-            //     gameWindow.cleanup();
-            //     gameWindow.setupDefaultScene();
-            // }
+        instructPane.getChildren().add(instructView);
 
     }
 }

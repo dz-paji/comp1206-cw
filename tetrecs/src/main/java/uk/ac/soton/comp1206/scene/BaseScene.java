@@ -1,9 +1,12 @@
 package uk.ac.soton.comp1206.scene;
 
+import java.security.Key;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
@@ -17,6 +20,7 @@ public abstract class BaseScene {
 
     protected GamePane root;
     protected Scene scene;
+    protected Scene prevScene;
     private final Logger logger = LogManager.getLogger(BaseScene.class);
 
     /**
@@ -25,9 +29,6 @@ public abstract class BaseScene {
      */
     public BaseScene(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        scene.setOnKeyPressed((e) -> {
-            logger.info("key is pressed");
-        });
     }
 
     /**
@@ -45,8 +46,8 @@ public abstract class BaseScene {
      * @return JavaFX scene
      */
     public Scene setScene() {
-        var previous = gameWindow.getScene();
-        Scene newScene = new Scene(root, previous.getWidth(), previous.getHeight(), Color.BLACK);
+        this.prevScene = gameWindow.getScene();
+        Scene newScene = new Scene(root, prevScene.getWidth(), prevScene.getHeight(), Color.BLACK);
         newScene.getStylesheets().add(getClass().getResource("/style/game.css").toExternalForm());
         this.scene = newScene;
         return scene;
