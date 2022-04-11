@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
@@ -82,8 +83,6 @@ public class MenuScene extends BaseScene {
         mainPane.setHgap(100);
         mainPane.setVgap(50);
         mainPane.setPadding(new Insets(0, 10, 0, 10));
-
-
     }
 
     /**

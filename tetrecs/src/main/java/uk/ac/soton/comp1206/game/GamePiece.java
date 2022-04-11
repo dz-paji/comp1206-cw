@@ -1,7 +1,5 @@
 package uk.ac.soton.comp1206.game;
 
-import uk.ac.soton.comp1206.event.PieceSpawnedListener;
-
 /**
  * Instances of GamePiece Represents the model of a specific Game Piece with
  * it's block makeup.

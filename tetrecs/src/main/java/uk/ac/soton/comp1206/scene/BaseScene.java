@@ -1,5 +1,8 @@
 package uk.ac.soton.comp1206.scene;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import uk.ac.soton.comp1206.ui.GamePane;
@@ -14,6 +17,7 @@ public abstract class BaseScene {
 
     protected GamePane root;
     protected Scene scene;
+    private final Logger logger = LogManager.getLogger(BaseScene.class);
 
     /**
      * Create a new scene, passing in the GameWindow the scene will be displayed in
@@ -21,6 +25,9 @@ public abstract class BaseScene {
      */
     public BaseScene(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
+        scene.setOnKeyPressed((e) -> {
+            logger.info("key is pressed");
+        });
     }
 
     /**
@@ -39,9 +46,9 @@ public abstract class BaseScene {
      */
     public Scene setScene() {
         var previous = gameWindow.getScene();
-        Scene scene = new Scene(root, previous.getWidth(), previous.getHeight(), Color.BLACK);
-        scene.getStylesheets().add(getClass().getResource("/style/game.css").toExternalForm());
-        this.scene = scene;
+        Scene newScene = new Scene(root, previous.getWidth(), previous.getHeight(), Color.BLACK);
+        newScene.getStylesheets().add(getClass().getResource("/style/game.css").toExternalForm());
+        this.scene = newScene;
         return scene;
     }
 

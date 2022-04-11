@@ -129,4 +129,9 @@ public class ChallengeScene extends BaseScene {
         Multimedia.playBGM();
     }
 
+    public void endGame() {
+        logger.info("Cleanning up the game...");
+        
+    }
+
 }

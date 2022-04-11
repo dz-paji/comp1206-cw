@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.App;
-import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.scene.*;
 
 /**
@@ -33,7 +32,7 @@ public class GameWindow {
     private BaseScene currentScene;
     private Scene scene;
 
-    final Communicator communicator;
+    //final Communicator communicator;
 
     /**
      * Create a new GameWindow attached to the given stage with the specified width
@@ -59,7 +58,7 @@ public class GameWindow {
         setupDefaultScene();
 
         // Setup communicator
-        communicator = new Communicator("ws://ofb-labs.soton.ac.uk:9700");
+        //communicator = new Communicator("ws://ofb-labs.soton.ac.uk:9700");
 
         // Go to menu
         startMenu();
@@ -143,7 +142,7 @@ public class GameWindow {
      */
     public void cleanup() {
         logger.info("Clearing up previous scene");
-        communicator.clearListeners();
+        //communicator.clearListeners();
     }
 
     /**
@@ -178,7 +177,7 @@ public class GameWindow {
      * 
      * @return communicator
      */
-    public Communicator getCommunicator() {
-        return communicator;
-    }
+    // public Communicator getCommunicator() {
+    //     return communicator;
+    // }
 }

@@ -8,11 +8,7 @@ import javafx.scene.layout.StackPane;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class InstructionsScene extends BaseScene {
 
@@ -49,9 +45,22 @@ public class InstructionsScene extends BaseScene {
 
         Image instructImage = new Image(InstructionsScene.class.getResource("/images/instructions.png").toExternalForm());
         ImageView instructView = new ImageView(instructImage);
+        instructView.autosize();
         
         instructPane.getChildren().add(instructView);
+        this.scene.setOnKeyTyped(e -> {
+            logger.info("This scene key typed", e.getCode());
+        });
 
+        gameWindow.getScene().setOnKeyTyped(e->{
+            logger.info(e.getCode());
+        });
+            // System.out.println(e.getCode());
+            // if (e.getCode() == KeyCode.ESCAPE) {
+            //     logger.info("ECS Key pressed.");
+            //     gameWindow.cleanup();
+            //     gameWindow.setupDefaultScene();
+            // }
 
     }
 }
