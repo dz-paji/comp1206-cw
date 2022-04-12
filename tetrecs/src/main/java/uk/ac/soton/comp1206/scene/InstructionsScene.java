@@ -83,6 +83,7 @@ public class InstructionsScene extends BaseScene {
             pieceArray.add(GamePiece.createPiece(i));
             boardArray.add(new PieceBoard(50, 50));
             boardArray.get(i).setPiece(pieceArray.get(i));
+            boardArray.get(i).getStyleClass().add("gameBox");
             piecePane.add(boardArray.get(i), i % 8, i / 8);
         }
 

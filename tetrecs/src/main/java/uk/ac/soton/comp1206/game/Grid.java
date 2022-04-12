@@ -158,8 +158,8 @@ public class Grid {
 
         for (int i = 0; i < thisBlock.length; i++) {
             for (int j = 0; j < thisBlock[i].length; j++) {
-                if (thisBlock[j][i] != 0) {
-                    set(y - 1 + i, x - 1 + j, thisBlock[i][j]);
+                if (thisBlock[i][j] != 0) {
+                    set(x - 1 + i, y - 1 + j, thisBlock[i][j]);
                 }
             }
         }

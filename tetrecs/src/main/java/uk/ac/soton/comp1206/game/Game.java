@@ -197,26 +197,30 @@ public class Game {
 
         // Check for vertical lines
         // i for x, j for y.
-        for (int j = 0; j < this.rows; j++) {
-            xFull[j] = true;
+        for (int i = 0; i < this.cols; i++) {
+            xFull[i] = true;
 
-            // Loop through every y at given x
-            for (int i = 0; i < this.cols; i++) {
-                if (this.grid.get(j, i) == 0) {
-                    xFull[j] = false;
+            // Loop through every col at given row
+            for (int j = 0; j < this.rows; j++) {
+                logger.info("Checking if x:{} is full", i);
+                if (this.grid.get(i, j) == 0) {
+                    logger.info("x:{} is not full", i);
+                    xFull[i] = false;
                     break;
                 }
             }
         }
 
         // Check for hotizental lines
-        for (int i = 0; i < this.cols; i++) {
-            yFull[i] = true;
+        for (int j = 0; j < this.cols; j++) {
+            yFull[j] = true;
 
             // Loop through every x at given y
-            for (int j = 0; j < this.rows; j++) {
+            for (int i = 0; i < this.rows; i++) {
+                logger.info("Checking if y:{} is full", j);
                 if (this.grid.get(j, i) == 0) {
-                    yFull[i] = false;
+                    logger.info("y:{} is not full", j);
+                    yFull[j] = false;
                     break;
                 }
             }
