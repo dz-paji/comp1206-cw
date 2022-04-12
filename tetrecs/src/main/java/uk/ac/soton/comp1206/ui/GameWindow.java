@@ -30,8 +30,6 @@ public class GameWindow {
 
     private final int width;
     private final int height;
-    private final IntegerProperty heightProperty = new SimpleIntegerProperty();
-    private final IntegerProperty widthProperty = new SimpleIntegerProperty();
 
     private final Stage stage;
 
@@ -39,7 +37,7 @@ public class GameWindow {
     private BaseScene prevScene;
     private Scene scene;
 
-    //final Communicator communicator;
+    // final Communicator communicator;
 
     /**
      * Create a new GameWindow attached to the given stage with the specified width
@@ -52,7 +50,6 @@ public class GameWindow {
     public GameWindow(Stage stage, int width, int height) {
         this.width = width;
         this.height = height;
-        this.heightProperty.set(height);
 
         this.stage = stage;
 
@@ -66,7 +63,7 @@ public class GameWindow {
         setupDefaultScene();
 
         // Setup communicator
-        //communicator = new Communicator("ws://ofb-labs.soton.ac.uk:9700");
+        // communicator = new Communicator("ws://ofb-labs.soton.ac.uk:9700");
 
         // Go to menu
         startMenu();
@@ -153,7 +150,7 @@ public class GameWindow {
      */
     public void cleanup() {
         logger.info("Clearing up previous scene");
-        //communicator.clearListeners();
+        // communicator.clearListeners();
     }
 
     /**
@@ -188,8 +185,8 @@ public class GameWindow {
      * 
      * @return height property.
      */
-    public IntegerProperty getHeIntegerProperty() {
-        return heightProperty;
+    public IntegerProperty getHalfHeIntegerProperty() {
+        return new SimpleIntegerProperty(height / 2);
     }
 
     /**
@@ -198,7 +195,7 @@ public class GameWindow {
      * @return width property.
      */
     public IntegerProperty getWiIntegerProperty() {
-        return widthProperty;
+        return new SimpleIntegerProperty(width);
     }
 
     /**
@@ -207,7 +204,7 @@ public class GameWindow {
      * @return communicator
      */
     // public Communicator getCommunicator() {
-    //     return communicator;
+    // return communicator;
     // }
 
     public void endGame() {

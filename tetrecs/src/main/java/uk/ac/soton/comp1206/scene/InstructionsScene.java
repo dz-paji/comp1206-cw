@@ -2,11 +2,22 @@ package uk.ac.soton.comp1206.scene;
 
 import org.apache.logging.log4j.Logger;
 
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import uk.ac.soton.comp1206.component.GameBoard;
+import uk.ac.soton.comp1206.component.PieceBoard;
+import uk.ac.soton.comp1206.game.GamePiece;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
+
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -36,22 +47,52 @@ public class InstructionsScene extends BaseScene {
      */
     public void build() {
         logger.info("Building " + this.getClass().getName());
-        root = new GamePane(gameWindow.getWidth(), gameWindow.getHeight());
-        var instructPane = new StackPane();
-        instructPane.setMaxHeight(gameWindow.getHeight());
-        instructPane.setMaxWidth(gameWindow.getWidth());
-        instructPane.getStyleClass().add("menu-background");
-        root.getChildren().add(instructPane);
 
+        // Getting new GamePane ready
+        root = new GamePane(gameWindow.getWidth(), gameWindow.getHeight());
+        var mainPane = new StackPane();
+        mainPane.setMaxHeight(gameWindow.getHeight());
+        mainPane.setMaxWidth(gameWindow.getWidth());
+        mainPane.getStyleClass().add("menu-background");
+        root.getChildren().add(mainPane);
+
+        var instructionPane = new BorderPane();
+
+        // Getting instruction components ready
         Image instructImage = new Image(
                 InstructionsScene.class.getResource("/images/instructions.png").toExternalForm(), gameWindow.getWidth(),
-                gameWindow.getHeight(), false, false);
+                gameWindow.getHeight() / 2, false, false);
         ImageView instructView = new ImageView(instructImage);
-        instructView.fitHeightProperty().bind(gameWindow.getHeIntegerProperty());
-        instructView.fitWidthProperty().bind(gameWindow.getWiIntegerProperty());
-        instructView.autosize();
+        var instruction = new Text("Instruction");
+        instruction.getStyleClass().add("heading");
 
-        instructPane.getChildren().add(instructView);
+        var insctBox = new VBox();
+        insctBox.getChildren().add(instruction);
+        insctBox.getChildren().add(instructView);
+        insctBox.setAlignment(Pos.CENTER);
 
+        // Getting GamePiece ready
+        var piecePane = new GridPane();
+        var pieceText = new Text("Game Pieces");
+        pieceText.getStyleClass().add("heading");
+        ArrayList<GamePiece> pieceArray = new ArrayList<GamePiece>();
+        ArrayList<PieceBoard> boardArray = new ArrayList<PieceBoard>();
+        for (int i = 0; i < 15; i++) {
+            pieceArray.add(GamePiece.createPiece(i));
+            boardArray.add(new PieceBoard(50, 50));
+            boardArray.get(i).setPiece(pieceArray.get(i));
+            piecePane.add(boardArray.get(i), i % 8, i / 8);
+        }
+
+        logger.info(piecePane.getChildren().size());
+        var gamePieceBox = new VBox();
+        gamePieceBox.getChildren().addAll(pieceText, piecePane);
+        gamePieceBox.setAlignment(Pos.CENTER);
+        piecePane.setAlignment(Pos.CENTER);
+
+        // Adding components to the Pane.
+        mainPane.getChildren().add(instructionPane);
+        instructionPane.setTop(insctBox);
+        instructionPane.setCenter(gamePieceBox);
     }
 }
