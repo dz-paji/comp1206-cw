@@ -18,6 +18,7 @@ public class PieceBoard extends GameBoard {
     public PieceBoard(double width, double height) {
         super(3, 3, width, height);
         // this.listeners = new ArrayList<>();
+        this.getStyleClass().add("gameBox");
     }
 
     /**

@@ -175,9 +175,9 @@
 
 .gameBox {
     -fx-padding: 10;
-    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-background-color: rgba(0, 0, 0, 0.64);
     -fx-border-color: white;
-    -fx-border-width: 0.2;
+    -fx-border-width: 1;
 }
 
 .scroller {

@@ -95,10 +95,8 @@ public class ChallengeScene extends BaseScene {
         // Show current Piece
         PieceBoard pieceBoard = new PieceBoard(gameWindow.getWidth() / 5, gameWindow.getHeight() / 4);
         pieceBoard.setPiece(game.getPiece());
-        var piecePane = new BorderPane();
-        piecePane.getChildren().add(pieceBoard);
 
-        statsBox.getChildren().add(piecePane);
+        statsBox.getChildren().add(pieceBoard);
         statsBox.setAlignment(Pos.CENTER);
         mainPane.setRight(statsBox);
 
@@ -131,6 +129,8 @@ public class ChallengeScene extends BaseScene {
         logger.info("Initialising Challenge");
         game.start();
         Multimedia.playBGM();
+
+        // Bind NextPieceListener.
     }
 
     /**
