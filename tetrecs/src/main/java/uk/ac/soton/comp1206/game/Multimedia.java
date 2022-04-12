@@ -6,6 +6,9 @@ import org.apache.logging.log4j.Logger;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+/**
+ * Class multimedia handles the play of sound files and BGMs.
+ */
 public class Multimedia {
     private static MediaPlayer audioPlayer;
     private static MediaPlayer bgmPlayer;

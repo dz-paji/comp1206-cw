@@ -207,6 +207,10 @@ public class GameWindow {
     // return communicator;
     // }
 
+    /**
+     * Depending on whether previous scene exists, exit the game or load the
+     * previous scene with clean up.
+     */
     public void endGame() {
         if (prevScene == null) {
             logger.info("No previsou scene, exiting.");
@@ -224,6 +228,9 @@ public class GameWindow {
         addEscListener();
     }
 
+    /**
+     * Listen for ESC key press.
+     */
     public void addEscListener() {
         scene.setOnKeyPressed((e) -> {
             if (e.getCode() == KeyCode.ESCAPE) {

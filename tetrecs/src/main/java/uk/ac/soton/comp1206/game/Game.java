@@ -255,38 +255,78 @@ public class Game {
         checkMultiplier(yCount + xCount);
     }
 
+    /**
+     * Set the score of the game
+     * 
+     * @param score the new score
+     */
     public void setScore(int score) {
         logger.info("New score set to {}", score);
         this.score.set(score);
     }
 
+    /**
+     * Get current scores of the game
+     * 
+     * @return score of the game
+     */
     public IntegerProperty getScore() {
         return this.score;
     }
 
+    /**
+     * Set the challenge level of the game
+     * 
+     * @param level The new challenge level
+     */
     public void setLevel(int level) {
         logger.info("New level set to {}", level);
         this.level.set(level);
     }
 
+    /**
+     * Get the challenge level of the game
+     * 
+     * @return challenge level
+     */
     public IntegerProperty getLevel() {
         return this.level;
     }
 
+    /**
+     * Set lives reaming of the game
+     * 
+     * @param lives new lives
+     */
     public void setLives(int lives) {
         logger.info("New lives set to {}", lives);
         this.lives.set(lives);
     }
 
+    /**
+     * Get current lives
+     * 
+     * @return lives
+     */
     public IntegerProperty getLives() {
         return this.lives;
     }
 
+    /**
+     * Set the multiplier of the game
+     * 
+     * @param multiplier the new multiplier to be set.
+     */
     public void setMultiplier(int multiplier) {
         logger.info("New multiplier set to {}", multiplier);
         this.multiplier.set(multiplier);
     }
 
+    /**
+     * Get current multiplier
+     * 
+     * @return Multiplier
+     */
     public IntegerProperty getMultiplier() {
         return this.multiplier;
     }

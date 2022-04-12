@@ -19,6 +19,10 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 
+/**
+ * The instructionsScene class handles the build and logic of the Instruction
+ * page.
+ */
 public class InstructionsScene extends BaseScene {
 
     private static final Logger logger = LogManager.getLogger(MenuScene.class);

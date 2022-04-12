@@ -1,12 +1,9 @@
 package uk.ac.soton.comp1206.scene;
 
-import java.security.Key;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
@@ -16,10 +13,24 @@ import uk.ac.soton.comp1206.ui.GameWindow;
  */
 public abstract class BaseScene {
 
+    /**
+     * The one and only one GameWindow
+     */
     protected final GameWindow gameWindow;
 
+    /**
+     * Root pane that contains everything
+     */
     protected GamePane root;
+
+    /**
+     * Current Scene
+     */
     protected Scene scene;
+
+    /**
+     * Previous scene
+     */
     protected Scene prevScene;
     private final Logger logger = LogManager.getLogger(BaseScene.class);
 
