@@ -8,9 +8,15 @@
 - [x] Add BGM
 - [x] Add styles
 - [x] Fix Error when placing a piece
-- [ ] Add listener to auto-updating pieceBoard
+- [x] Add listener to auto-updating pieceBoard
 - [x] Better menu
 - [x] Instruction screen
 - [x] A custom component to show a specific piece
-- [ ] A listener for handling a next piece being ready
-- [ ] Use the component the upcoming piece in the UI
+- [x] A listener for handling a next piece being ready
+- [x] Use the component the upcoming piece in the UI
+- [ ] Fix cannot place piece error, and correct piece color over-write error.
+- [ ] Add next tile in advance
+- [ ] Add piece rotation
+- [ ] Add piece swapping
+- [ ] Add sound effect
+- [ ] Add keyboard support
