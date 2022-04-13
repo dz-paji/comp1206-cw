@@ -261,7 +261,7 @@ public class Game {
 
         this.currentPiece = this.followingPiece;
         this.followingPiece();
-        this.nextPieceListener.nextPiece(this.currentPiece);
+        this.nextPieceListener.nextPiece(this.currentPiece, this.followingPiece);
         score(yCount + xCount, numBlockCount);
         checkMultiplier(yCount + xCount);
     }
@@ -373,6 +373,15 @@ public class Game {
      */
     public GamePiece getPiece() {
         return this.currentPiece;
+    }
+
+    /**
+     * Get the following GamePiece.
+     * 
+     * @return GamePiece after currentPiece.
+     */
+    public GamePiece getFollowingPiece() {
+        return this.followingPiece;
     }
 
     /**

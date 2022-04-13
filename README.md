@@ -15,7 +15,7 @@
 - [x] A listener for handling a next piece being ready
 - [x] Use the component the upcoming piece in the UI
 - [x] Fix cannot place piece error, and correct piece color over-write error.
-- [ ] Add next tile in advance
+- [x] Add next tile in advance
 - [ ] Add piece rotation
 - [ ] Add piece swapping
 - [ ] Add sound effect

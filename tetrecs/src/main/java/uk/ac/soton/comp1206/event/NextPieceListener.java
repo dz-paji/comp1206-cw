@@ -13,5 +13,5 @@ public interface NextPieceListener {
      * 
      * @param next the piece that spawned.
      */
-    public void nextPiece(GamePiece next);
+    public void nextPiece(GamePiece next, GamePiece followingPiece);
 }
