@@ -185,13 +185,6 @@ public class Game {
     }
 
     /**
-     * Subsitute currentPiece with a new spawned piece.
-     */
-    public void nextPiece() {
-        this.currentPiece = spawnPiece();
-    }
-
-    /**
      * Clear any fully occupied lines.
      */
     public void afterPiece() {
@@ -261,6 +254,7 @@ public class Game {
         }
 
         this.currentPiece = spawnPiece();
+        this.nextPieceListener.nextPiece(this.currentPiece);
         score(yCount + xCount, numBlockCount);
         checkMultiplier(yCount + xCount);
     }
@@ -377,8 +371,8 @@ public class Game {
     /**
      * Update the GamePiece whenever a new one generates.
      */
-    public void setNextPieceListener() {
-
+    public void setNextPieceListener(NextPieceListener listener) {
+        this.nextPieceListener = listener;
     }
 
 }

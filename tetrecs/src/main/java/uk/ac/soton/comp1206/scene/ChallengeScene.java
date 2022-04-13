@@ -28,6 +28,11 @@ public class ChallengeScene extends BaseScene {
     protected Game game;
 
     /**
+     * The PieceBoard displays the current piece.
+     */
+    private final PieceBoard pieceBoard;
+
+    /**
      * Create a new Single Player challenge scene
      * 
      * @param gameWindow the Game Window
@@ -35,6 +40,7 @@ public class ChallengeScene extends BaseScene {
     public ChallengeScene(GameWindow gameWindow) {
         super(gameWindow);
         logger.info("Creating Challenge Scene");
+        pieceBoard = new PieceBoard(gameWindow.getWidth() / 5, gameWindow.getHeight() / 4);
     }
 
     /**
@@ -93,7 +99,6 @@ public class ChallengeScene extends BaseScene {
                 score);
 
         // Show current Piece
-        PieceBoard pieceBoard = new PieceBoard(gameWindow.getWidth() / 5, gameWindow.getHeight() / 4);
         pieceBoard.setPiece(game.getPiece());
 
         statsBox.getChildren().add(pieceBoard);
@@ -119,6 +124,12 @@ public class ChallengeScene extends BaseScene {
 
         // Start new game
         game = new Game(5, 5);
+
+        // Bind NextPieceListener.
+        game.setNextPieceListener((message) -> {
+            pieceBoard.setPiece(game.getPiece());
+        });
+
     }
 
     /**
@@ -129,8 +140,6 @@ public class ChallengeScene extends BaseScene {
         logger.info("Initialising Challenge");
         game.start();
         Multimedia.playBGM();
-
-        // Bind NextPieceListener.
     }
 
     /**
@@ -138,7 +147,7 @@ public class ChallengeScene extends BaseScene {
      */
     public void endGame() {
         logger.info("Cleanning up the game...");
-        Multimedia.stopBGM();        
+        Multimedia.stopBGM();
     }
 
 }

@@ -27,6 +27,9 @@ public class PieceBoard extends GameBoard {
      * @param currentPiece The GamePiece to be displayed.
      */
     public void setPiece(GamePiece currentPiece) {
+        // Reset this PieceBoard first
+        resetBoard();
+        
         int[][] currentArray = currentPiece.getBlocks();
 
         for (int i = 0; i < currentArray.length; i++) {
@@ -34,6 +37,17 @@ public class PieceBoard extends GameBoard {
                 if (currentArray[i][j] != 0) {
                     grid.set(i, j, currentArray[i][j]);
                 }
+            }
+        }
+    }
+
+    /**
+     * Reset the PieceBoard
+     */
+    public void resetBoard() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                grid.set(i, j, 0);
             }
         }
     }
