@@ -103,8 +103,7 @@ public class ChallengeScene extends BaseScene {
 
         statsBox.getChildren().add(pieceBoard);
         statsBox.setAlignment(Pos.CENTER);
-        mainPane.setRight(statsBox);
-
+        mainPane.getChildren().add(statsBox);
     }
 
     /**

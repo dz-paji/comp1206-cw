@@ -40,6 +40,11 @@ public class Game {
     protected GamePiece currentPiece;
 
     /**
+     * The game piece that followed by the currentPiece.
+     */
+    protected GamePiece followingPiece;
+
+    /**
      * Tracks previous interval of score. 0 means score is between 0-999, 1 means
      * score is between 1000-1999.
      */
@@ -86,6 +91,7 @@ public class Game {
 
         // Spawn a new piece
         this.currentPiece = spawnPiece();
+        this.followingPiece();
     }
 
     /**
@@ -201,9 +207,9 @@ public class Game {
 
             // Loop through every col at given row
             for (int j = 0; j < this.rows; j++) {
-                logger.info("Checking if x:{} is full", i);
+                // logger.info("Checking if x:{} is full", i);
                 if (this.grid.get(i, j) == 0) {
-                    logger.info("x:{} is not full", i);
+                    // logger.info("x:{} is not full", i);
                     xFull[i] = false;
                     break;
                 }
@@ -216,9 +222,9 @@ public class Game {
 
             // Loop through every x at given y
             for (int i = 0; i < this.rows; i++) {
-                logger.info("Checking if y:{} is full", j);
+                // logger.info("Checking if y:{} is full", j);
                 if (this.grid.get(j, i) == 0) {
-                    logger.info("y:{} is not full", j);
+                    // logger.info("y:{} is not full", j);
                     yFull[j] = false;
                     break;
                 }
@@ -253,7 +259,8 @@ public class Game {
             numBlockCount = yCount * this.cols + xCount * this.rows;
         }
 
-        this.currentPiece = spawnPiece();
+        this.currentPiece = this.followingPiece;
+        this.followingPiece();
         this.nextPieceListener.nextPiece(this.currentPiece);
         score(yCount + xCount, numBlockCount);
         checkMultiplier(yCount + xCount);
@@ -373,6 +380,21 @@ public class Game {
      */
     public void setNextPieceListener(NextPieceListener listener) {
         this.nextPieceListener = listener;
+    }
+
+    /**
+     * Rotate the current GamePiece
+     */
+    public void rotateCurrentPiece() {
+        this.currentPiece.rotate();
+        logger.info("Rotating currentPiece.");
+    }
+
+    /**
+     * Initialise the piece after currentPiece.
+     */
+    public void followingPiece() {
+        this.followingPiece = spawnPiece();
     }
 
 }
