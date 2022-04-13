@@ -14,9 +14,10 @@
 - [x] A custom component to show a specific piece
 - [x] A listener for handling a next piece being ready
 - [x] Use the component the upcoming piece in the UI
-- [ ] Fix cannot place piece error, and correct piece color over-write error.
+- [x] Fix cannot place piece error, and correct piece color over-write error.
 - [ ] Add next tile in advance
 - [ ] Add piece rotation
 - [ ] Add piece swapping
 - [ ] Add sound effect
 - [ ] Add keyboard support
+- [ ] Enhance ESC by binding it to each scene and specify new scene to load
