@@ -74,28 +74,35 @@ public class ChallengeScene extends BaseScene {
 
         // Handle block on gameboard grid being clicked
         board.setOnBlockClick(this::blockClicked);
+        board.setOnRightClick((e) -> {
+            game.rotateCurrentPiece();
+        });
 
         // Show stats
         var level = new Text();
-        var level_text = new Text("Current Level:");
+        var level_text = new Text(
+                "Current Level:");
         level.textProperty().bind(game.getLevel().asString());
         level.getStyleClass().add("level");
         level_text.getStyleClass().add("heading");
 
         var lives = new Text();
-        var lives_text = new Text("Lives remain:");
+        var lives_text = new Text(
+                "Lives remain:");
         lives.textProperty().bind(game.getLives().asString());
         lives.getStyleClass().add("lives");
         lives_text.getStyleClass().add("heading");
 
         var multiplier = new Text();
-        var multiplier_text = new Text("Current multiplier:");
+        var multiplier_text = new Text(
+                "Current multiplier:");
         multiplier.textProperty().bind(game.getMultiplier().asString());
         multiplier.getStyleClass().add("multiplier");
         multiplier_text.getStyleClass().add("heading");
 
         var score = new Text();
-        var score_text = new Text("Current score:");
+        var score_text = new Text(
+                "Current score:");
         score.textProperty().bind(game.getLevel().asString());
         score.getStyleClass().add("score");
         score_text.getStyleClass().add("heading");
@@ -108,7 +115,12 @@ public class ChallengeScene extends BaseScene {
         pieceBoard.setPiece(game.getPiece());
         followingPieceBoard.setPiece(game.getFollowingPiece());
 
-        pieceBoard.setOnBlockClick(this::pieceBoardClicked);
+        // Rotate currentPiece when clicking PieceBoard
+        pieceBoard.setOnBlockClick((e) -> {
+            game.rotateCurrentPiece();
+        });
+
+        // Swap GamePieces when clicking followingPieceBoard
         followingPieceBoard.setOnBlockClick(this::pieceBoardClicked);
 
         statsBox.getChildren().addAll(pieceBoard, followingPieceBoard);
@@ -146,7 +158,6 @@ public class ChallengeScene extends BaseScene {
             pieceBoard.setPiece(game.getPiece());
             followingPieceBoard.setPiece(game.getFollowingPiece());
         });
-
     }
 
     /**

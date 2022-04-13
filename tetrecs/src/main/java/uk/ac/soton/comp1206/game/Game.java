@@ -404,8 +404,10 @@ public class Game {
      * Rotate the current GamePiece
      */
     public void rotateCurrentPiece() {
-        this.currentPiece.rotate();
         logger.info("Rotating currentPiece.");
+        this.currentPiece.rotate();
+
+        updatePieceBoard();
     }
 
     /**
@@ -420,7 +422,7 @@ public class Game {
      */
     public void swapPiece() {
         logger.info("Swapping GamePiece");
-        
+
         GamePiece bufferPiece;
         bufferPiece = this.currentPiece;
         this.currentPiece = this.followingPiece;

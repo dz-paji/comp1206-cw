@@ -16,7 +16,7 @@
 - [x] Use the component the upcoming piece in the UI
 - [x] Fix cannot place piece error, and correct piece color over-write error.
 - [x] Add next tile in advance
-- [ ] Add piece rotation
+- [x] Add piece rotation
 - [x] Add piece swapping
 - [ ] Add sound effect
 - [ ] Add keyboard support
