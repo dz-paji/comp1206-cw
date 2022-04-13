@@ -131,14 +131,14 @@ public class Grid {
         int[][] thisBlocks = thisPiece.getBlocks();
         System.out.println(thisBlocks);
 
-        for (int j = 0; j < thisBlocks.length; j++) {
-            for (int i = 0; i < thisBlocks[j].length; i++) {
+        for (int i = 0; i < thisBlocks.length; i++) {
+            for (int j = 0; j < thisBlocks[i].length; j++) {
                 try {
-                    if (thisBlocks[i][j] != 0 && get(y - 1 + j, x - 1 + i) != 0) {
+                    if (thisBlocks[i][j] != 0 && get(x - 1 + i, y - 1 + j) != 0) {
                         return false;
                     }
                 } catch (IndexOutOfBoundsException e) {
-                    logger.error(e);
+                    logger.error(e.getStackTrace());
                 }
 
             }
