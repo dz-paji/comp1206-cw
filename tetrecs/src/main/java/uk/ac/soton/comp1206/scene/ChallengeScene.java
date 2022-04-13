@@ -108,6 +108,9 @@ public class ChallengeScene extends BaseScene {
         pieceBoard.setPiece(game.getPiece());
         followingPieceBoard.setPiece(game.getFollowingPiece());
 
+        pieceBoard.setOnBlockClick(this::pieceBoardClicked);
+        followingPieceBoard.setOnBlockClick(this::pieceBoardClicked);
+
         statsBox.getChildren().addAll(pieceBoard, followingPieceBoard);
         statsBox.setAlignment(Pos.CENTER);
         mainPane.setRight(statsBox);
@@ -120,6 +123,13 @@ public class ChallengeScene extends BaseScene {
      */
     private void blockClicked(GameBlock gameBlock) {
         game.blockClicked(gameBlock);
+    }
+
+    /**
+     * Handle when a PieceBoard block is clicked.
+     */
+    private void pieceBoardClicked(GameBlock gameBlock) {
+        game.swapPiece();
     }
 
     /**

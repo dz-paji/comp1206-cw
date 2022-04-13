@@ -1,6 +1,7 @@
 package uk.ac.soton.comp1206.component;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
@@ -87,6 +88,8 @@ public class GameBlock extends Canvas {
 
         //When the value property is updated, call the internal updateValue method
         value.addListener(this::updateValue);
+
+        this.getStyleClass().add("gameBox");
     }
 
     /**
@@ -122,11 +125,11 @@ public class GameBlock extends Canvas {
         gc.clearRect(0,0,width,height);
 
         //Fill
-        gc.setFill(Color.TRANSPARENT);
+        gc.setFill(new Color(0.4, 0.4, 0.4, 0.4));
         gc.fillRect(0,0, width, height);
 
         //Border
-        gc.setStroke(Color.BLACK);
+        gc.setStroke(Color.WHITE);
         gc.strokeRect(0,0,width,height);
     }
 

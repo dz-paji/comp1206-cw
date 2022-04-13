@@ -17,7 +17,7 @@
 - [x] Fix cannot place piece error, and correct piece color over-write error.
 - [x] Add next tile in advance
 - [ ] Add piece rotation
-- [ ] Add piece swapping
+- [x] Add piece swapping
 - [ ] Add sound effect
 - [ ] Add keyboard support
 - [ ] Enhance ESC by binding it to each scene and specify new scene to load

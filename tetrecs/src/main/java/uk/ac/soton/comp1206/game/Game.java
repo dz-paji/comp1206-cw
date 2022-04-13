@@ -261,7 +261,9 @@ public class Game {
 
         this.currentPiece = this.followingPiece;
         this.followingPiece();
-        this.nextPieceListener.nextPiece(this.currentPiece, this.followingPiece);
+
+        // Update PieceBoard
+        updatePieceBoard();
         score(yCount + xCount, numBlockCount);
         checkMultiplier(yCount + xCount);
     }
@@ -392,6 +394,13 @@ public class Game {
     }
 
     /**
+     * Call the handler to update the PieceBoard.
+     */
+    private void updatePieceBoard() {
+        this.nextPieceListener.nextPiece(this.currentPiece, this.followingPiece);
+    }
+
+    /**
      * Rotate the current GamePiece
      */
     public void rotateCurrentPiece() {
@@ -404,6 +413,21 @@ public class Game {
      */
     public void followingPiece() {
         this.followingPiece = spawnPiece();
+    }
+
+    /**
+     * Swap currentPiece with followingPiece
+     */
+    public void swapPiece() {
+        logger.info("Swapping GamePiece");
+        
+        GamePiece bufferPiece;
+        bufferPiece = this.currentPiece;
+        this.currentPiece = this.followingPiece;
+        this.followingPiece = bufferPiece;
+
+        // Update PieceBoard.
+        updatePieceBoard();
     }
 
 }
