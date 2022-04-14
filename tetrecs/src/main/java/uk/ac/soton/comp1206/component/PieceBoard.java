@@ -56,6 +56,10 @@ public class PieceBoard extends GameBoard {
         this.blocks[1][1].paintIndicator();
     }
 
+    /**
+     * Override the inherited mouseMovesHandler. PieceBoard doesn't need this
+     * feature.
+     */
     @Override
     public void mouseMovesHandler(GameBlock block) {
     }

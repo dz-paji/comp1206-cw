@@ -208,11 +208,23 @@ public class GameBoard extends GridPane {
      */
     public void mouseMovesHandler(GameBlock block) {
         block.setOnMouseMoved((e) -> {
+            rePaintAll();
             block.highlight();
         });
 
         block.setOnMouseExited((e) -> {
             block.paint();
         });
+    }
+
+    /**
+     * Re-painting all GameBlocks.
+     */
+    public void rePaintAll() {
+        for (int i = 0; i < this.cols; i++) {
+            for (int j = 0; j < this.rows; j++) {
+                getBlock(i, j).paint();
+            }
+        }
     }
 }

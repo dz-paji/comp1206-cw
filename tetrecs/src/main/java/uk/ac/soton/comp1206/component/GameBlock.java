@@ -231,12 +231,19 @@ public class GameBlock extends Canvas {
     public void highlight() {
         GraphicsContext gc = getGraphicsContext2D();
         if (value.get() == 0) {
-            gc.setFill(Color.gray(0.8, 0.4));
+            gc.setFill(Color.gray(0.9, 0.4));
             gc.fillRect(0, 0, this.width, this.height);
         } else {
             // gc.setFill(Color.web(COLOURS[value.get()].toString(), 0.2).brighter().brighter().brighter().brighter().desaturate());
-            gc.setFill(Color.gray(0.8, 0.06));
+            gc.setFill(Color.gray(0.9, 0.4));
             gc.fillRect(0, 0, this.width, this.height);
         }
+    }
+
+    public void fadeOut() {
+        GraphicsContext gc = getGraphicsContext2D();
+        gc.setFill(Color.TRANSPARENT);
+        gc.fillRect(0, 0, this.width, this.height);
+        
     }
 }

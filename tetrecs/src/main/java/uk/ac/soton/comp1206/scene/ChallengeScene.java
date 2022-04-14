@@ -1,6 +1,11 @@
 package uk.ac.soton.comp1206.scene;
 
+import javafx.beans.Observable;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
@@ -37,6 +42,10 @@ public class ChallengeScene extends BaseScene {
      */
     private final PieceBoard followingPieceBoard;
 
+    private IntegerProperty[] aimWare = { new SimpleIntegerProperty(0), new SimpleIntegerProperty(0) };
+
+    private GameBoard board;
+
     /**
      * Create a new Single Player challenge scene
      * 
@@ -69,7 +78,7 @@ public class ChallengeScene extends BaseScene {
         var mainPane = new BorderPane();
         challengePane.getChildren().add(mainPane);
 
-        var board = new GameBoard(game.getGrid(), gameWindow.getWidth() / 2, gameWindow.getWidth() / 2);
+        board = new GameBoard(game.getGrid(), gameWindow.getWidth() / 2, gameWindow.getWidth() / 2);
         mainPane.setCenter(board);
 
         // Handle block on gameboard grid being clicked
@@ -170,6 +179,83 @@ public class ChallengeScene extends BaseScene {
         logger.info("Initialising Challenge");
         game.start();
         Multimedia.playBGM();
+
+        // Key board support
+        gameWindow.getScene().setOnKeyPressed((e) -> {
+            // board.setOnMouseExited();
+            switch (e.getCode()) {
+                case UP:
+                    aimUp();
+                    break;
+
+                case DOWN:
+                    aimDown();
+                    break;
+
+                case LEFT:
+                    aimLeft();
+                    break;
+
+                case RIGHT:
+                    aimRight();
+                    break;
+
+                case W:
+                    aimUp();
+                    break;
+
+                case A:
+                    aimLeft();
+                    break;
+
+                case S:
+                    aimDown();
+                    break;
+
+                case D:
+                    aimRight();
+                    break;
+
+                case ENTER:
+                    blockClicked(board.getBlock(aimWare[0].get(), aimWare[1].get()));
+                    break;
+
+                case X:
+                    blockClicked(board.getBlock(aimWare[0].get(), aimWare[1].get()));
+                    break;
+
+                case OPEN_BRACKET:
+                    game.rotateCurrentPiece();
+                    break;
+                case Q:
+                    game.rotateCurrentPiece();
+                    break;
+                case Z:
+                    game.rotateCurrentPiece();
+                    break;
+                case E:
+                    game.rotateCurrentPiece();
+                    break;
+                case C:
+                    game.rotateCurrentPiece();
+                    break;
+                case CLOSE_BRACKET:
+                    game.rotateCurrentPiece();
+                    break;
+                case SPACE:
+                    game.swapPiece();
+                    break;
+                case R:
+                    game.swapPiece();
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        aimWare[0].addListener(this::aimXUpdate);
+        aimWare[1].addListener(this::aimYUpdate);
+
     }
 
     /**
@@ -180,4 +266,48 @@ public class ChallengeScene extends BaseScene {
         Multimedia.stopBGM();
     }
 
+    /**
+     * Handles when key is pressed.
+     * 
+     * @param e The key pressed event
+     */
+    public void keyHandler(KeyEvent e) {
+        logger.info("Key being pressed is: {}", e.getCharacter());
+    }
+
+    private void aimUp() {
+        if (aimWare[1].get() > 0) {
+            aimWare[1].set(aimWare[1].get() - 1);
+        }
+    }
+
+    private void aimDown() {
+        if (aimWare[1].get() < game.getRows() - 1) {
+            aimWare[1].set(aimWare[1].get() + 1);
+        }
+    }
+
+    private void aimLeft() {
+        if (aimWare[0].get() > 0) {
+            aimWare[0].set(aimWare[0].get() - 1);
+        }
+    }
+
+    private void aimRight() {
+        if (aimWare[0].get() < game.getCols() - 1) {
+            aimWare[0].set(aimWare[0].get() + 1);
+        }
+    }
+
+    private void aimXUpdate(ObservableValue<? extends Number> observable, Number oldNumber, Number newNumber) {
+        board.rePaintAll();
+        board.getBlock(aimWare[0].get(), aimWare[1].get()).highlight();
+        board.getBlock(oldNumber.intValue(), aimWare[1].get()).paint();
+    }
+
+    private void aimYUpdate(ObservableValue<? extends Number> observable, Number oldNumber, Number newNumber) {
+        board.rePaintAll();
+        board.getBlock(aimWare[0].get(), aimWare[1].get()).highlight();
+        board.getBlock(aimWare[0].get(), oldNumber.intValue()).paint();
+    }
 }

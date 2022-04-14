@@ -132,8 +132,6 @@ public class GameWindow {
 
         // Initialise the scene when ready
         Platform.runLater(() -> currentScene.initialise());
-
-        addEscListener();
     }
 
     /**
@@ -224,19 +222,5 @@ public class GameWindow {
         scene = prevScene.setScene();
         stage.setScene(scene);
         prevScene = null;
-
-        addEscListener();
-    }
-
-    /**
-     * Listen for ESC key press.
-     */
-    public void addEscListener() {
-        scene.setOnKeyPressed((e) -> {
-            if (e.getCode() == KeyCode.ESCAPE) {
-                logger.info("ecs key pressed");
-                endGame();
-            }
-        });
     }
 }
