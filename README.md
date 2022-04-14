@@ -20,7 +20,7 @@
 - [x] Add piece swapping
 - [x] Add sound effect
 - [x] Add keyboard support
-- [ ] Enhance ESC by binding it to each scene and specify new scene to load
+- [x] Enhance ESC by binding it to each scene and specify new scene to load
 - [x] Add tiles to the game
 - [x] Add hovering
 - [ ] Add animation on clearing to show tiles cleared

@@ -227,4 +227,14 @@ public class GameBoard extends GridPane {
             }
         }
     }
+
+    /**
+     * Fades out a sets of GameBlock.
+     * 
+     * @param coordinates The set of coordinates of blocks which fadeOut animation
+     *                    will be performed on
+     */
+    public void fadeOut(GameBlockCoordinate coordinates) {
+
+    }
 }

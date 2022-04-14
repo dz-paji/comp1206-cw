@@ -227,27 +227,40 @@ public class ChallengeScene extends BaseScene {
                 case OPEN_BRACKET:
                     game.rotateCurrentPiece();
                     break;
+                    
                 case Q:
                     game.rotateCurrentPiece();
                     break;
+
                 case Z:
                     game.rotateCurrentPiece();
                     break;
+
                 case E:
                     game.rotateCurrentPiece();
                     break;
+
                 case C:
                     game.rotateCurrentPiece();
                     break;
+
                 case CLOSE_BRACKET:
                     game.rotateCurrentPiece();
                     break;
+
                 case SPACE:
                     game.swapPiece();
                     break;
+
                 case R:
                     game.swapPiece();
                     break;
+
+                case ESCAPE:
+                    endGame();
+                    gameWindow.startMenu();
+                    break;
+
                 default:
                     break;
             }

@@ -6,9 +6,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.image.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
@@ -92,6 +90,10 @@ public class MenuScene extends BaseScene {
     @Override
     public void initialise() {
         Multimedia.playMenu();
+
+        gameWindow.getScene().setOnKeyTyped((e) -> {
+            gameWindow.endGame();
+        });
     }
 
     /**

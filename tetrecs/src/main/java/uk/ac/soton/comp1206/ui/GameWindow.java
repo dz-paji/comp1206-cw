@@ -210,17 +210,8 @@ public class GameWindow {
      * previous scene with clean up.
      */
     public void endGame() {
-        if (prevScene == null) {
-            logger.info("No previsou scene, exiting.");
-            stage.close();
-            return;
-        }
-
-        logger.info("Previous scene found, cleanning up and loading previous scene.");
         cleanup();
-        prevScene.build();
-        scene = prevScene.setScene();
-        stage.setScene(scene);
-        prevScene = null;
+        stage.close();
+
     }
 }

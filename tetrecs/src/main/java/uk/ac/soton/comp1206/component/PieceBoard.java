@@ -15,7 +15,7 @@ public class PieceBoard extends GameBoard {
      */
     public PieceBoard(double width, double height) {
         super(3, 3, width, height);
-        this.getStyleClass().add("gameBox");
+        this.setStyle("-fx-padding: 10");
     }
 
     /**

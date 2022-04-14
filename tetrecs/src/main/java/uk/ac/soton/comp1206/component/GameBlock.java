@@ -240,18 +240,4 @@ public class GameBlock extends Canvas {
             gc.fillRect(0, 0, this.width, this.height);
         }
     }
-
-    /**
-     * Handles animation when this block got cleared.
-     */
-    public void fadeOut() {
-        GraphicsContext gc = getGraphicsContext2D();
-        gc.setFill(Color.TRANSPARENT);
-        gc.fillRect(0, 0, this.width, this.height);
-
-        AnimationTimer fadeOutTimer = new AnimationTimer() {
-            gc.setFill
-        };
-        
-    }
 }
