@@ -1,5 +1,6 @@
 package uk.ac.soton.comp1206.component;
 
+import javafx.animation.AnimationTimer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
@@ -240,10 +241,17 @@ public class GameBlock extends Canvas {
         }
     }
 
+    /**
+     * Handles animation when this block got cleared.
+     */
     public void fadeOut() {
         GraphicsContext gc = getGraphicsContext2D();
         gc.setFill(Color.TRANSPARENT);
         gc.fillRect(0, 0, this.width, this.height);
+
+        AnimationTimer fadeOutTimer = new AnimationTimer() {
+            gc.setFill
+        };
         
     }
 }
