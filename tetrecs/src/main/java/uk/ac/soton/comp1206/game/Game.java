@@ -75,6 +75,8 @@ public class Game {
      */
     private NextPieceListener nextPieceListener;
 
+    private final Multimedia soundPlayer;
+
     /**
      * Create a new game with the specified rows and columns. Creates a
      * corresponding grid model.
@@ -92,6 +94,9 @@ public class Game {
         // Spawn a new piece
         this.currentPiece = spawnPiece();
         this.followingPiece();
+
+        // Initialise mediaplayer
+        soundPlayer = new Multimedia();
     }
 
     /**
@@ -132,11 +137,13 @@ public class Game {
         if (this.grid.canPlayPiece(this.currentPiece, x, y)) {
             this.grid.playPiece(this.currentPiece, x, y);
             logger.info("{} will be placed at {},{}", this.currentPiece.toString(), x, y);
+            playSound("place.wav");
 
             // Check for lines to clear
             afterPiece();
         } else {
             logger.warn("{} can't be placed at {},{}", this.currentPiece.toString(), x, y);
+            playSound("fail.wav");
         }
 
         // Get the new value for this block
@@ -185,7 +192,8 @@ public class Game {
     public GamePiece spawnPiece() {
         Random rndPiece = new Random();
 
-        GamePiece newPiece = GamePiece.createPiece(rndPiece.nextInt(14));
+        GamePiece newPiece = GamePiece.createPiece(rndPiece.nextInt(15));
+        // GamePiece newPiece = GamePiece.createPiece(14);
         logger.info("New piece spawned {}", newPiece.toString());
         return newPiece;
     }
@@ -194,59 +202,58 @@ public class Game {
      * Clear any fully occupied lines.
      */
     public void afterPiece() {
+        // Array tracks if the indexed vertical line is full
         Boolean[] xFull = new Boolean[this.rows];
+
+        // Array tracks if the indexed horizontal line is full
         Boolean[] yFull = new Boolean[this.cols];
         int xCount = 0;
         int yCount = 0;
         int numBlockCount = 0;
 
+
         // Check for vertical lines
-        // i for x, j for y.
-        for (int i = 0; i < this.cols; i++) {
-            xFull[i] = true;
+        for (int x = 0; x < this.cols; x++) {
+            xFull[x] = true;
 
             // Loop through every col at given row
-            for (int j = 0; j < this.rows; j++) {
-                // logger.info("Checking if x:{} is full", i);
-                if (this.grid.get(i, j) == 0) {
-                    // logger.info("x:{} is not full", i);
-                    xFull[i] = false;
+            for (int y = 0; y < this.rows; y++) {
+                if (this.grid.get(x, y) == 0) {
+                    xFull[x] = false;
                     break;
                 }
             }
         }
 
         // Check for hotizental lines
-        for (int j = 0; j < this.cols; j++) {
-            yFull[j] = true;
+        for (int y = 0; y < this.cols; y++) {
+            yFull[y] = true;
 
-            // Loop through every x at given y
-            for (int i = 0; i < this.rows; i++) {
-                // logger.info("Checking if y:{} is full", j);
-                if (this.grid.get(j, i) == 0) {
-                    // logger.info("y:{} is not full", j);
-                    yFull[j] = false;
+            // Loop through every row at given col
+            for (int x = 0; x < this.rows; x++) {
+                if (this.grid.get(x, y) == 0) {
+                    yFull[y] = false;
                     break;
                 }
             }
         }
 
         // Clear lines and count number of cleared lines.
-        for (int j = 0; j < this.rows; j++) {
-            if (xFull[j] == true) {
-                logger.info("Vertical line no.{} will be cleared", j);
-                for (int i = 0; i < this.cols; i++) {
-                    this.grid.set(j, i, 0);
+        for (int y = 0; y < this.rows; y++) {
+            if (yFull[y] == true) {
+                logger.info("Horizontal line no.{} will be cleared", y);
+                for (int x = 0; x < this.cols; x++) {
+                    this.grid.set(x, y, 0);
                 }
                 yCount++;
             }
         }
 
-        for (int i = 0; i < this.cols; i++) {
-            if (yFull[i] == true) {
-                logger.info("Horizontal line no.{} will be cleared", i);
-                for (int j = 0; j < this.rows; j++) {
-                    this.grid.set(j, i, 0);
+        for (int x = 0; x < this.cols; x++) {
+            if (xFull[x] == true) {
+                logger.info("Vertical line no.{} will be cleared", x);
+                for (int y = 0; y < this.rows; y++) {
+                    this.grid.set(x, y, 0);
                 }
                 xCount++;
             }
@@ -257,6 +264,11 @@ public class Game {
             numBlockCount = yCount * this.cols + xCount * this.rows - yCount * xCount;
         } else {
             numBlockCount = yCount * this.cols + xCount * this.rows;
+        }
+
+        // Play sound when any line is cleared
+        if (numBlockCount != 0) {
+            playSound("clear.wav");
         }
 
         this.currentPiece = this.followingPiece;
@@ -408,6 +420,9 @@ public class Game {
         this.currentPiece.rotate();
 
         updatePieceBoard();
+
+        // play rotate sound
+        playSound("rotate.wav");
     }
 
     /**
@@ -430,6 +445,17 @@ public class Game {
 
         // Update PieceBoard.
         updatePieceBoard();
+
+        playSound("transition.wav");
+    }
+
+    /**
+     * Play given sound file
+     * 
+     * @param soundName Name of the sound file
+     */
+    public void playSound(String soundName) {
+        soundPlayer.playAudio(soundName);
     }
 
 }

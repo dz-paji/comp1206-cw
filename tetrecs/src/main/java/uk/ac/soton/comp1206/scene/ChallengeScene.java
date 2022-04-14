@@ -113,6 +113,7 @@ public class ChallengeScene extends BaseScene {
 
         // Show current Piece
         pieceBoard.setPiece(game.getPiece());
+        pieceBoard.toggleIndicator();
         followingPieceBoard.setPiece(game.getFollowingPiece());
 
         // Rotate currentPiece when clicking PieceBoard
@@ -156,6 +157,7 @@ public class ChallengeScene extends BaseScene {
         // Bind NextPieceListener.
         game.setNextPieceListener((message, e) -> {
             pieceBoard.setPiece(game.getPiece());
+            pieceBoard.toggleIndicator();
             followingPieceBoard.setPiece(game.getFollowingPiece());
         });
     }

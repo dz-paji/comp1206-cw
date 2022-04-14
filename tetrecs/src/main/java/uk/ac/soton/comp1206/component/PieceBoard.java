@@ -7,8 +7,6 @@ import uk.ac.soton.comp1206.game.GamePiece;
  */
 public class PieceBoard extends GameBoard {
 
-    // public final ArrayList<PieceSpawnedListener> listeners;
-
     /**
      * Create a new PieceBoard with its super class GameBoard.
      * 
@@ -17,7 +15,6 @@ public class PieceBoard extends GameBoard {
      */
     public PieceBoard(double width, double height) {
         super(3, 3, width, height);
-        // this.listeners = new ArrayList<>();
         this.getStyleClass().add("gameBox");
     }
 
@@ -29,7 +26,7 @@ public class PieceBoard extends GameBoard {
     public void setPiece(GamePiece currentPiece) {
         // Reset this PieceBoard first
         resetBoard();
-        
+
         int[][] currentArray = currentPiece.getBlocks();
 
         for (int i = 0; i < currentArray.length; i++) {
@@ -52,4 +49,14 @@ public class PieceBoard extends GameBoard {
         }
     }
 
+    /**
+     * Show indicator of this PieceBoard
+     */
+    public void toggleIndicator() {
+        this.blocks[1][1].paintIndicator();
+    }
+
+    @Override
+    public void mouseMovesHandler(GameBlock block) {
+    }
 }

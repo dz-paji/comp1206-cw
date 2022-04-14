@@ -162,6 +162,8 @@ public class GameBoard extends GridPane {
         // method
         block.setOnMouseClicked((e) -> blockClicked(e, block));
 
+        mouseMovesHandler(block);
+
         return block;
     }
 
@@ -174,6 +176,11 @@ public class GameBoard extends GridPane {
         this.blockClickedListener = listener;
     }
 
+    /**
+     * Set the listener to handle an event when a block is right-clicked
+     * 
+     * @param listener listener to add
+     */
     public void setOnRightClick(RightClickedListener listener) {
         this.rightClickedListener = listener;
     }
@@ -194,4 +201,18 @@ public class GameBoard extends GridPane {
         }
     }
 
+    /**
+     * Handles mouse moves event
+     * 
+     * @param block the block that triggered event
+     */
+    public void mouseMovesHandler(GameBlock block) {
+        block.setOnMouseMoved((e) -> {
+            block.highlight();
+        });
+
+        block.setOnMouseExited((e) -> {
+            block.paint();
+        });
+    }
 }

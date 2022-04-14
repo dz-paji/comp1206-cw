@@ -18,6 +18,9 @@
 - [x] Add next tile in advance
 - [x] Add piece rotation
 - [x] Add piece swapping
-- [ ] Add sound effect
+- [x] Add sound effect
 - [ ] Add keyboard support
 - [ ] Enhance ESC by binding it to each scene and specify new scene to load
+- [x] Add tiles to the game
+- [x] Add hovering
+- [ ] Add animation on clearing to show tiles cleared
