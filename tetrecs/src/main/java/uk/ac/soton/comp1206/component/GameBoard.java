@@ -3,6 +3,10 @@ package uk.ac.soton.comp1206.component;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+
+import java.util.Iterator;
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.event.BlockClickedListener;
@@ -234,7 +238,11 @@ public class GameBoard extends GridPane {
      * @param coordinates The set of coordinates of blocks which fadeOut animation
      *                    will be performed on
      */
-    public void fadeOut(GameBlockCoordinate coordinates) {
-
+    public void fadeOut(Set<GameBlockCoordinate> coordinates) {
+        Iterator<GameBlockCoordinate> blockIterator = coordinates.iterator();
+        while (blockIterator.hasNext()) {
+            GameBlockCoordinate nextCoordinate = blockIterator.next();
+            blocks[nextCoordinate.getX()][nextCoordinate.getY()].fadeOut();
+        }
     }
 }

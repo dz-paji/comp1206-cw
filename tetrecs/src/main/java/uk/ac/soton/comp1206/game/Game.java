@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import uk.ac.soton.comp1206.component.GameBlock;
+import uk.ac.soton.comp1206.event.LineClearedListener;
 import uk.ac.soton.comp1206.event.NextPieceListener;
 
 /**
@@ -76,6 +77,8 @@ public class Game {
     private NextPieceListener nextPieceListener;
 
     private final Multimedia soundPlayer;
+
+    private LineClearedListener lineClearedListener;
 
     /**
      * Create a new game with the specified rows and columns. Creates a
@@ -456,6 +459,13 @@ public class Game {
      */
     public void playSound(String soundName) {
         soundPlayer.playAudio(soundName);
+    }
+
+    /**
+     * Handles the Line cleared event.
+     */
+    public void setOnLineCleared(LineClearedListener listener) {
+        this.lineClearedListener = listener;
     }
 
 }

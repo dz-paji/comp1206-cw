@@ -235,9 +235,35 @@ public class GameBlock extends Canvas {
             gc.setFill(Color.gray(0.9, 0.4));
             gc.fillRect(0, 0, this.width, this.height);
         } else {
-            // gc.setFill(Color.web(COLOURS[value.get()].toString(), 0.2).brighter().brighter().brighter().brighter().desaturate());
+            // gc.setFill(Color.web(COLOURS[value.get()].toString(),
+            // 0.2).brighter().brighter().brighter().brighter().desaturate());
             gc.setFill(Color.gray(0.9, 0.4));
             gc.fillRect(0, 0, this.width, this.height);
         }
+    }
+
+    /**
+     * Handles animation when this block got cleared.
+     */
+    public void fadeOut() {
+        GraphicsContext gc = getGraphicsContext2D();
+        gc.setFill(Color.web("00ffff", 0.5));
+        gc.fillRect(0, 0, this.width, this.height);
+
+        new AnimationTimer() {
+            double opacity = 0.5;
+
+            @Override
+            public void handle(long now) {
+                gc.setFill(Color.web("00ffff", opacity));
+                gc.fillRect(0, 0, width, height);
+                opacity -= 0.1;
+
+                if (opacity == 0){
+                    stop();
+                }
+            }
+        }.start();
+
     }
 }
