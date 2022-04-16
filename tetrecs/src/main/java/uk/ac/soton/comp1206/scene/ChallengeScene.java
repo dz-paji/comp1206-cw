@@ -7,9 +7,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.beans.value.WritableValue;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
@@ -18,7 +16,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.util.HexFormat;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -80,7 +77,7 @@ public class ChallengeScene extends BaseScene {
      */
     @Override
     public void build() {
-        logger.info("Building " + this.getClass().getName());
+        logger.info("Building {}", this.getClass().getName());
 
         setupGame();
 
@@ -210,6 +207,7 @@ public class ChallengeScene extends BaseScene {
 
         // Key board support
         gameWindow.getScene().setOnKeyPressed((e) -> {
+            logger.info("Key {} pressed",e.getCharacter());
             switch (e.getCode()) {
                 case UP:
                     aimUp();
@@ -299,13 +297,13 @@ public class ChallengeScene extends BaseScene {
     }
 
     /**
-     * End the challenge.
+     * End the challenge and display scores.
      */
     public void endGame() {
         logger.info("Cleanning up the game...");
         Multimedia.stopBGM();
         game.endGame();
-        Platform.runLater(() -> gameWindow.startMenu());
+        Platform.runLater(() -> gameWindow.startScore(game));
     }
 
     /**

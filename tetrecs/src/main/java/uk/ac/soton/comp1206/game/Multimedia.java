@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 
 /**
  * Class multimedia handles the play of sound files and BGMs.
@@ -14,9 +15,9 @@ public class Multimedia {
     private static MediaPlayer bgmPlayer;
     private static final Logger logger = LogManager.getLogger(Multimedia.class);
 
-
     /**
      * Method that plays given audio file
+     * 
      * @param fileName name of the audio file
      */
     public void playAudio(String fileName) {
@@ -35,7 +36,7 @@ public class Multimedia {
         bgmPlayer.play();
         logger.info("Playing BGM");
 
-        bgmPlayer.setOnEndOfMedia( () -> {
+        bgmPlayer.setOnEndOfMedia(() -> {
             playBGM();
             logger.info("BGM ends, restarting..");
         });
@@ -58,7 +59,7 @@ public class Multimedia {
         bgmPlayer.play();
         logger.info("Playing BGM");
 
-        bgmPlayer.setOnEndOfMedia( () -> {
+        bgmPlayer.setOnEndOfMedia(() -> {
             playMenu();
             logger.info("BGM ends, restarting..");
         });
@@ -69,6 +70,24 @@ public class Multimedia {
      */
     public static void stopMenu() {
         bgmPlayer.stop();
+    }
+
+    /**
+     * Check if menu bgm is playing
+     * 
+     * @return status of menu bgm.
+     */
+    public static boolean isMenuPlaying() {
+        if (bgmPlayer == null) {
+            return false;
+        }
+
+        Status nStatus = bgmPlayer.getStatus();
+        if (nStatus == MediaPlayer.Status.PLAYING) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

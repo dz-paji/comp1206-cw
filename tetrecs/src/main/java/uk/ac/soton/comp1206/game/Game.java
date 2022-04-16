@@ -359,6 +359,7 @@ public class Game {
     public void loseLife() {
         logger.info("A life is lost");
         this.lives.set(this.lives.get() - 1);
+        playSound("lifelose.wav");
     }
 
     /**

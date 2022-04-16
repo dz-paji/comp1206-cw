@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import uk.ac.soton.comp1206.App;
+import uk.ac.soton.comp1206.game.Game;
 import uk.ac.soton.comp1206.scene.*;
 
 /**
@@ -103,6 +104,12 @@ public class GameWindow {
         loadScene(new InstructionsScene(this));
     }
 
+    /**
+     * Display the scores.
+     */
+    public void startScore(Game game) {
+        loadScene(new ScoreScene(this, game));
+    }
     /**
      * Setup the default settings for the stage itself (the window), such as the
      * title and minimum width and height.
