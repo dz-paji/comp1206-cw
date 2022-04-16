@@ -90,6 +90,8 @@ public class Game {
 
     private GameLoopListener gameLoopListener;
 
+    private IntegerProperty highestScore = new SimpleIntegerProperty(0);
+
     /**
      * Create a new game with the specified rows and columns. Creates a
      * corresponding grid model.
@@ -132,6 +134,10 @@ public class Game {
             if (changedScore - this.scoreTracker > 0) {
                 this.scoreTracker += changedScore;
                 setLevel(getLevel().get() + changedScore);
+            }
+
+            if (score.get() > highestScore.get()) {
+                highestScore.set(score.get());
             }
         });
 
@@ -354,6 +360,23 @@ public class Game {
     }
 
     /**
+     * Set the highest score
+     * 
+     * @param highScore highest score
+     */
+    public void setHighestScore(int highScore) {
+        this.highestScore.set(highScore);
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public IntegerProperty getHighScore() {
+        return this.highestScore;
+    }
+
+    /**
      * Deduct current lives by 1.
      */
     public void loseLife() {
@@ -533,7 +556,7 @@ public class Game {
 
                 // When no life remains, pass -1 as parameter to gameLoopListener to stop the
                 // challenge.
-                if (lives.get() == 0) {
+                if (lives.get() == -1) {
                     endGame();
                     gameLoopListener.gameLoops(-1);
                     return;

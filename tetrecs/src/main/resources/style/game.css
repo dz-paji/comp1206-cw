@@ -67,7 +67,7 @@
 .heading {
     -fx-fill: white;
     -fx-font-family: 'Orbitron';
-    -fx-font-size: 20px;
+    -fx-font-size: 15px;
     -fx-font-weight: 700;
     -fx-border-color: black;
     -fx-stroke: black;
@@ -77,7 +77,7 @@
 .score {
     -fx-fill: yellow;
     -fx-font-family: 'Orbitron';
-    -fx-font-size: 36px;
+    -fx-font-size: 20px;
     -fx-font-weight: 700;
     -fx-border-color: black;
     -fx-stroke: black;
@@ -88,7 +88,7 @@
 .multiplier {
     -fx-fill: yellow;
     -fx-font-family: 'Orbitron';
-    -fx-font-size: 36px;
+    -fx-font-size: 20px;
     -fx-font-weight: 700;
     -fx-border-color: black;
     -fx-stroke: black;
@@ -131,7 +131,9 @@
 
 .scorelist {
     -fx-font-size: 20px;
+    -fx-fill: white;
     -fx-font-family: 'Orbitron';
+    -fx-stroke: black;
 }
 
 .scoreitem {

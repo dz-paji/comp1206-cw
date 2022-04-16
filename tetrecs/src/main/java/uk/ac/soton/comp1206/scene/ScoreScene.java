@@ -7,11 +7,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.util.Pair;
 import uk.ac.soton.comp1206.component.ScoreList;
 import uk.ac.soton.comp1206.game.Game;
@@ -60,10 +67,38 @@ public class ScoreScene extends BaseScene {
         root.getChildren().add(mainPane);
         mainPane.getStyleClass().add("menu-background");
 
-        scoreList = new ScoreList(localScores);
-        scoreList.getStyleClass().add("scorelist");
+        int scoreListIndex = checkScore();
 
-        mainPane.setLeft(scoreList);
+        if (scoreListIndex != -1) {
+            // Scene texts
+            var gameOver = new Text("Game Over");
+            gameOver.getStyleClass().add("bigtitle");
+            var highScorePromot = new Text("You beats a historic high score!");
+            var savePromot = new Text("Save it to proceed.");
+            savePromot.getStyleClass().add("title");
+            highScorePromot.getStyleClass().add("title");
+
+            var nameTextField = new TextField("Your unique identifier");
+            var saveName = new Button("Save");
+            saveName.setOnMouseClicked((e) -> {
+                String name = nameTextField.getText();
+                localScores.add(scoreListIndex, new Pair<String, Integer>(name, game.getScore().get()));
+                writeScore();
+
+                Platform.runLater(() -> {
+                    displayScoreList();
+                });
+            });
+
+            var titleBox = new VBox();
+            titleBox.getChildren().addAll(gameOver, highScorePromot, savePromot, nameTextField, saveName);
+            VBox.setVgrow(nameTextField, Priority.ALWAYS);
+            mainPane.setTop(titleBox);
+            titleBox.setAlignment(Pos.CENTER);
+        } else {
+            displayScoreList();
+        }
+
     }
 
     /**
@@ -81,6 +116,43 @@ public class ScoreScene extends BaseScene {
             };
         });
 
+        gameWindow.getScene().setOnKeyPressed((e) -> {
+            switch (e.getCode()) {
+                case ESCAPE:
+                    gameWindow.startMenu();
+                    break;
+                default:
+                    break;
+
+            }
+        });
+    }
+
+    public void displayScoreList() {
+        root.getChildren().clear();
+        logger.info("Rebuilding {} to display score list", this.getClass().toString());
+
+        var mainPane = new BorderPane();
+        mainPane.setMaxHeight(gameWindow.getHeight());
+        mainPane.setMaxWidth(gameWindow.getWidth());
+        root.getChildren().add(mainPane);
+        mainPane.getStyleClass().add("menu-background");
+
+        // Title
+        var gameOver = new Text("Game Over");
+        gameOver.getStyleClass().add("bigtitle");
+        var titleBox = new VBox();
+        titleBox.getChildren().add(gameOver);
+        mainPane.setTop(titleBox);
+        titleBox.setAlignment(Pos.CENTER);
+
+        // Score list
+        scoreList = new ScoreList(localScores);
+        scoreList.getStyleClass().add("scorelist");
+
+        mainPane.setCenter(scoreList);
+
+        scoreList.reveal();
     }
 
     /**
@@ -97,7 +169,8 @@ public class ScoreScene extends BaseScene {
             while ((nextLine = scoreFileReader.readLine()) != null) {
                 String[] thisScore = nextLine.split(":");
                 localScores.add(new Pair<String, Integer>(thisScore[0], Integer.parseInt(thisScore[1])));
-                logger.info("New score record added to localScores. Key:{}, value:{}",thisScore[0],Integer.parseInt(thisScore[1]));
+                logger.info("New score record added to localScores. Key:{}, value:{}", thisScore[0],
+                        Integer.parseInt(thisScore[1]));
             }
 
             scoreFile.close();
@@ -124,6 +197,29 @@ public class ScoreScene extends BaseScene {
     }
 
     /**
+     * Write score data in property localScores to the score file.
+     */
+    private void writeScore() {
+        try {
+            FileWriter nFileWriter = new FileWriter("score.txt");
+
+            // Clear the content of score file.
+            nFileWriter.write("");
+
+            var scoreIerable = this.localScores.iterator();
+            while (scoreIerable.hasNext()) {
+                var thisScore = scoreIerable.next();
+                nFileWriter.append(thisScore.getKey() + ":" + thisScore.getValue() + "\n");
+            }
+
+            nFileWriter.close();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+
+    }
+
+    /**
      * Write specific score data to the score file.
      * 
      * @param scores Score data to be wrote.
@@ -144,6 +240,35 @@ public class ScoreScene extends BaseScene {
             nFileWriter.close();
         } catch (IOException e) {
             logger.error(e.getMessage());
+        }
+
+    }
+
+    /**
+     * Check if game score beats any saved scores.
+     * 
+     * @return index of the score beaten, or -1 if defeated.
+     */
+    public int checkScore() {
+        logger.info("Checking score..");
+        // When number of saved scores less than 5 score
+        if (this.localScores.size() < 5) {
+            for (int i = 0; i < this.localScores.size(); i++) {
+                if (localScores.get(i).getValue() < game.getScore().get()) {
+                    return i;
+                }
+            }
+            return this.localScores.size();
+        } else {
+            // Check if game score beats any saved score.
+            for (int i = 0; i < this.localScores.size(); i++) {
+                if (localScores.get(i).getValue() < game.getScore().get()) {
+                    return i;
+                }
+            }
+
+            return -1;
+
         }
 
     }

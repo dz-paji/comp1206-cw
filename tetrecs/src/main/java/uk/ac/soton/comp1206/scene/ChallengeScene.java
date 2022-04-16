@@ -16,6 +16,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -130,9 +136,17 @@ public class ChallengeScene extends BaseScene {
         score.getStyleClass().add("score");
         score_text.getStyleClass().add("heading");
 
+        var highScore = new Text();
+        var highScore_text = new Text(
+                "Highest score:");
+        highScore.textProperty().bind(game.getHighScore().asString());
+        highScore.getStyleClass().add("hiscore");
+        highScore_text.getStyleClass().add("heading");
+
+
         var statsBox = new VBox();
         statsBox.getChildren().addAll(level_text, level, lives_text, lives, multiplier_text, multiplier, score_text,
-                score);
+                score, highScore_text, highScore);
 
         // Show current Piece
         pieceBoard.setPiece(game.getPiece());
@@ -148,7 +162,7 @@ public class ChallengeScene extends BaseScene {
         followingPieceBoard.setOnBlockClick(this::pieceBoardClicked);
 
         // Implementing Timer Bar
-        timerBar = new Rectangle(gameWindow.getWidth(), 5, Color.GREEN);
+        timerBar = new Rectangle(gameWindow.getWidth(), 10, Color.GREEN);
 
         statsBox.getChildren().addAll(pieceBoard, followingPieceBoard);
         statsBox.setAlignment(Pos.CENTER);
@@ -204,6 +218,8 @@ public class ChallengeScene extends BaseScene {
         logger.info("Initialising Challenge");
         game.start();
         Multimedia.playBGM();
+
+        getHighestScore();
 
         // Key board support
         gameWindow.getScene().setOnKeyPressed((e) -> {
@@ -382,5 +398,18 @@ public class ChallengeScene extends BaseScene {
         this.timerLine.play();
         turningYellow.play();
 
+    }
+
+    private void getHighestScore() {
+        try {
+            BufferedReader scoreReader = new BufferedReader(new FileReader("score.txt"));
+            game.setHighestScore(Integer.parseInt(scoreReader.readLine().split(":")[1]));
+            scoreReader.close();
+        } catch (FileNotFoundException e) {
+            logger.error(e.getMessage());
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+        // TODO: Read file, get highest score, bind it to the ui, register it to the game.
     }
 }
