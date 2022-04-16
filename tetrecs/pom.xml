@@ -133,7 +133,14 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>uk.ac.soton.comp1206/uk.ac.soton.comp1206.App</mainClass>
+                    <compress>2</compress>
+                    <noHeaderFiles>true</noHeaderFiles>
+                    <stripDebug>true</stripDebug>
+                    <noManPages>true</noManPages>
+                    <launcher>tetrecs</launcher>
+                    <mainClass>uk.ac.soton.comp1206/uk.ac.soton.comp1206.Launcher</mainClass>
+                    <jlinkImageName>tetrecs</jlinkImageName>
+                    <jlinkZipName>tetrecs</jlinkZipName>
                 </configuration>
             </plugin>
             <plugin>
@@ -149,6 +156,24 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <name>TeTrecs</name>
+                    <appVersion>1.0.0</appVersion>
+                    <vendor>com.mntpaji</vendor>
+                    <destination>target/dist</destination>
+                    <module>uk.ac.soton.comp1206/uk.ac.soton.comp1206.Launcher</module>
+                    <runtimeImage>target/tetrecs</runtimeImage>
+                    <icon>${project.basedir}/NHS.png</icon>
+                    <javaOptions>
+                        <option>-Dfile.encoding=UTF-8</option>
+                    </javaOptions>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>
