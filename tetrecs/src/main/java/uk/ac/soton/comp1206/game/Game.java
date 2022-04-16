@@ -3,6 +3,8 @@ package uk.ac.soton.comp1206.game;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.beans.property.IntegerProperty;
 import org.apache.logging.log4j.LogManager;
@@ -85,6 +87,8 @@ public class Game {
 
     private final Set<GameBlockCoordinate> clearedCoordinates = new HashSet<GameBlockCoordinate>();
 
+    private Timer countdownTimer;
+
     /**
      * Create a new game with the specified rows and columns. Creates a
      * corresponding grid model.
@@ -105,6 +109,8 @@ public class Game {
 
         // Initialise mediaplayer
         soundPlayer = new Multimedia();
+
+        gameLoop();
     }
 
     /**
@@ -146,6 +152,9 @@ public class Game {
             this.grid.playPiece(this.currentPiece, x, y);
             logger.info("{} will be placed at {},{}", this.currentPiece.toString(), x, y);
             playSound("place.wav");
+
+            // Reset countdownTimer
+            resetTimer();
 
             // Check for lines to clear
             afterPiece();
@@ -218,7 +227,6 @@ public class Game {
         int xCount = 0;
         int yCount = 0;
         int numBlockCount = 0;
-
 
         // Check for vertical lines
         for (int x = 0; x < this.cols; x++) {
@@ -337,6 +345,14 @@ public class Game {
     public void setLives(int lives) {
         logger.info("New lives set to {}", lives);
         this.lives.set(lives);
+    }
+
+    /**
+     * Deduct current lives by 1.
+     */
+    public void loseLife() {
+        logger.info("A life is lost");
+        this.lives.set(this.lives.get() - 1);
     }
 
     /**
@@ -471,9 +487,54 @@ public class Game {
 
     /**
      * Handles the Line cleared event.
+     * 
+     * @param listener the listener to be added
      */
     public void setOnLineCleared(LineClearedListener listener) {
         this.lineClearedListener = listener;
+    }
+
+    /**
+     * Calculate the timer delay
+     * 
+     * @return the timer delay
+     */
+    private int getTimerDelay() {
+        int delay = 12000 - 500 * this.level.get();
+        // Check if reaching the minimum delay time
+        if (delay <= 2500) {
+            delay = 2500;
+        }
+
+        logger.info("Current timer delay is: {}.", delay);
+        return delay;
+    }
+
+    /**
+     * Countdown time specified by getTimerDelay() method and perform pre-defined
+     * countdown task.
+     */
+    private void gameLoop() {
+        this.countdownTimer = new Timer();
+        TimerTask countdownTask = new TimerTask() {
+            @Override
+            public void run() {
+                logger.info("Countdown time reached!");
+                loseLife();
+                multiplier.set(1);
+                resetTimer();
+            }
+        };
+        this.countdownTimer.schedule(countdownTask, getTimerDelay());
+    }
+
+    /**
+     * Reset the time after a piece is placed in case on delay changes.
+     */
+    private void resetTimer() {
+        this.countdownTimer.cancel();
+        logger.info("Timer cancelled.");
+        gameLoop();
     }
 
 }
