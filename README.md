@@ -23,5 +23,5 @@
 - [x] Enhance ESC by binding it to each scene and specify new scene to load
 - [x] Add tiles to the game
 - [x] Add hovering
-- [ ] Add animation on clearing to show tiles cleared
+- [x] Add animation on clearing to show tiles cleared
 - [ ] Add Konami cheat code
