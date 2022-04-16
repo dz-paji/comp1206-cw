@@ -1,12 +1,20 @@
 package uk.ac.soton.comp1206.scene;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WritableValue;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.Set;
 
@@ -47,6 +55,10 @@ public class ChallengeScene extends BaseScene {
     private IntegerProperty[] aimWare = { new SimpleIntegerProperty(0), new SimpleIntegerProperty(0) };
 
     private GameBoard board;
+
+    private final Timeline timerLine = new Timeline();
+
+    private Rectangle timerBar;
 
     /**
      * Create a new Single Player challenge scene
@@ -89,9 +101,6 @@ public class ChallengeScene extends BaseScene {
             game.rotateCurrentPiece();
         });
 
-        // Handle fadeOut animation
-        game.setOnLineCleared(this::lineCleared);
-
         // Show stats
         var level = new Text();
         var level_text = new Text(
@@ -117,7 +126,7 @@ public class ChallengeScene extends BaseScene {
         var score = new Text();
         var score_text = new Text(
                 "Current score:");
-        score.textProperty().bind(game.getLevel().asString());
+        score.textProperty().bind(game.getScore().asString());
         score.getStyleClass().add("score");
         score_text.getStyleClass().add("heading");
 
@@ -138,9 +147,14 @@ public class ChallengeScene extends BaseScene {
         // Swap GamePieces when clicking followingPieceBoard
         followingPieceBoard.setOnBlockClick(this::pieceBoardClicked);
 
+        // Implementing Timer Bar
+        timerBar = new Rectangle(gameWindow.getWidth(), 5);
+
         statsBox.getChildren().addAll(pieceBoard, followingPieceBoard);
         statsBox.setAlignment(Pos.CENTER);
         mainPane.setRight(statsBox);
+        mainPane.setTop(timerBar);
+        BorderPane.setAlignment(timerBar, Pos.TOP_CENTER);
     }
 
     /**
@@ -174,6 +188,12 @@ public class ChallengeScene extends BaseScene {
             pieceBoard.toggleIndicator();
             followingPieceBoard.setPiece(game.getFollowingPiece());
         });
+
+        // Handle fadeOut animation
+        game.setOnLineCleared(this::lineCleared);
+
+        // Register timer
+        game.setOnGameLoop(this::animateTimerBar);
     }
 
     /**
@@ -231,7 +251,7 @@ public class ChallengeScene extends BaseScene {
                 case OPEN_BRACKET:
                     game.rotateCurrentPiece();
                     break;
-                    
+
                 case Q:
                     game.rotateCurrentPiece();
                     break;
@@ -281,6 +301,8 @@ public class ChallengeScene extends BaseScene {
     public void endGame() {
         logger.info("Cleanning up the game...");
         Multimedia.stopBGM();
+        game.endGame();
+        Platform.runLater(() -> gameWindow.startMenu());
     }
 
     /**
@@ -330,5 +352,35 @@ public class ChallengeScene extends BaseScene {
 
     private void lineCleared(Set<GameBlockCoordinate> coordinates) {
         board.fadeOut(coordinates);
+    }
+
+    private void animateTimerBar(int delay) {
+        if (delay == -1) {
+            endGame();
+            this.timerLine.stop();
+            return;
+        }
+
+        this.timerLine.stop();
+        this.timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(0),
+                (e) -> {
+                    this.timerBar.setFill(Color.GREEN);
+                },
+                new KeyValue(this.timerBar.widthProperty(), gameWindow.getWidth())));
+
+        this.timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(delay / 2),
+                (e) -> {
+                    this.timerBar.setFill(Color.YELLOW);
+                },
+                new KeyValue(this.timerBar.widthProperty(), gameWindow.getWidth() / 2)));
+
+        this.timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(delay),
+                (e) -> {
+                    this.timerBar.setFill(Color.RED);
+                },
+                new KeyValue(this.timerBar.widthProperty(), 0)));
+
+        this.timerLine.play();
+
     }
 }

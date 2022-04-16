@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.beans.property.SimpleIntegerProperty;
 import uk.ac.soton.comp1206.component.GameBlock;
 import uk.ac.soton.comp1206.component.GameBlockCoordinate;
+import uk.ac.soton.comp1206.event.GameLoopListener;
 import uk.ac.soton.comp1206.event.LineClearedListener;
 import uk.ac.soton.comp1206.event.NextPieceListener;
 
@@ -85,9 +86,9 @@ public class Game {
 
     private LineClearedListener lineClearedListener;
 
-    private final Set<GameBlockCoordinate> clearedCoordinates = new HashSet<GameBlockCoordinate>();
-
     private Timer countdownTimer;
+
+    private GameLoopListener gameLoopListener;
 
     /**
      * Create a new game with the specified rows and columns. Creates a
@@ -109,8 +110,6 @@ public class Game {
 
         // Initialise mediaplayer
         soundPlayer = new Multimedia();
-
-        gameLoop();
     }
 
     /**
@@ -128,13 +127,16 @@ public class Game {
         logger.info("Initialising game");
 
         this.score.addListener((event) -> {
-            logger.info("Score got changed!");
-            int changedScore = this.score.get() % 1000;
+            logger.info("Score got changed, new score: {}", score.get());
+            int changedScore = this.score.get() / 1000;
             if (changedScore - this.scoreTracker > 0) {
                 this.scoreTracker += changedScore;
-                this.level.set(this.level.get() + changedScore);
+                setLevel(getLevel().get() + changedScore);
             }
         });
+
+        gameLoop();
+
     }
 
     /**
@@ -152,9 +154,6 @@ public class Game {
             this.grid.playPiece(this.currentPiece, x, y);
             logger.info("{} will be placed at {},{}", this.currentPiece.toString(), x, y);
             playSound("place.wav");
-
-            // Reset countdownTimer
-            resetTimer();
 
             // Check for lines to clear
             afterPiece();
@@ -219,6 +218,9 @@ public class Game {
      * Clear any fully occupied lines.
      */
     public void afterPiece() {
+        // Set representing coordinates of cleared blocks
+        Set<GameBlockCoordinate> clearedCoordinates = new HashSet<GameBlockCoordinate>();
+
         // Array tracks if the indexed vertical line is full
         Boolean[] xFull = new Boolean[this.rows];
 
@@ -259,7 +261,7 @@ public class Game {
             if (yFull[y] == true) {
                 logger.info("Horizontal line no.{} will be cleared", y);
                 for (int x = 0; x < this.cols; x++) {
-                    this.clearedCoordinates.add(new GameBlockCoordinate(x, y));
+                    clearedCoordinates.add(new GameBlockCoordinate(x, y));
                     this.grid.set(x, y, 0);
                 }
                 yCount++;
@@ -270,7 +272,7 @@ public class Game {
             if (xFull[x] == true) {
                 logger.info("Vertical line no.{} will be cleared", x);
                 for (int y = 0; y < this.rows; y++) {
-                    this.clearedCoordinates.add(new GameBlockCoordinate(x, y));
+                    clearedCoordinates.add(new GameBlockCoordinate(x, y));
                     this.grid.set(x, y, 0);
                 }
                 xCount++;
@@ -284,12 +286,6 @@ public class Game {
             numBlockCount = yCount * this.cols + xCount * this.rows;
         }
 
-        // Play sound when any line is cleared
-        if (numBlockCount != 0) {
-            playSound("clear.wav");
-            this.lineClearedListener.clearedLine(this.clearedCoordinates);
-        }
-
         this.currentPiece = this.followingPiece;
         this.followingPiece();
 
@@ -297,6 +293,16 @@ public class Game {
         updatePieceBoard();
         score(yCount + xCount, numBlockCount);
         checkMultiplier(yCount + xCount);
+
+        // Reset countdownTimer
+        resetTimer();
+
+        // Events after line cleared.
+        if (numBlockCount != 0) {
+            playSound("clear.wav");
+            this.lineClearedListener.clearedLine(clearedCoordinates);
+        }
+
     }
 
     /**
@@ -515,17 +521,33 @@ public class Game {
      * countdown task.
      */
     private void gameLoop() {
+
+        int delay = getTimerDelay();
         this.countdownTimer = new Timer();
         TimerTask countdownTask = new TimerTask() {
             @Override
             public void run() {
                 logger.info("Countdown time reached!");
                 loseLife();
+
+                // When no life remains, pass -1 as parameter to gameLoopListener to stop the
+                // challenge.
+                if (lives.get() == 0) {
+                    endGame();
+                    gameLoopListener.gameLoops(-1);
+                    return;
+                }
+
                 multiplier.set(1);
+                afterPiece();
                 resetTimer();
             }
         };
-        this.countdownTimer.schedule(countdownTask, getTimerDelay());
+
+        this.gameLoopListener.gameLoops(delay);
+
+        // Start the timer
+        this.countdownTimer.schedule(countdownTask, delay);
     }
 
     /**
@@ -537,4 +559,19 @@ public class Game {
         gameLoop();
     }
 
+    /**
+     * Stop the challenge and ends the game.
+     */
+    public void endGame() {
+        this.countdownTimer.cancel();
+    }
+
+    /**
+     * Link the GameLoop timer with UI timer
+     * 
+     * @param listener the lisenter links timers
+     */
+    public void setOnGameLoop(GameLoopListener listener) {
+        this.gameLoopListener = listener;
+    }
 }

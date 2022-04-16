@@ -132,6 +132,7 @@ public class GameBlock extends Canvas {
 
         // Fill
         gc.setFill(new Color(0.4, 0.4, 0.4, 0.4));
+        // gc.setFill(Color.TRANSPARENT);
         gc.fillRect(0, 0, width, height);
 
         // Border
@@ -258,10 +259,15 @@ public class GameBlock extends Canvas {
                 gc.clearRect(0, 0, width, height);
                 gc.setFill(Color.web("00ffff", opacity));
                 gc.fillRect(0, 0, width, height);
-                opacity -= 0.01;
-                logger.info("{} opacity is now {}", this.toString(), opacity);
 
-                if (opacity - 0.01 < 0) {
+                // Border
+                gc.setStroke(Color.WHITE);
+                gc.strokeRect(0, 0, width, height);
+
+                opacity -= 0.05;
+
+                if (opacity - 0.05 < 0) {
+                    paintEmpty();
                     stop();
                 }
             }
