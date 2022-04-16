@@ -1,11 +1,13 @@
 package uk.ac.soton.comp1206.scene;
 
+import javafx.animation.FillTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableValue;
 import javafx.geometry.Pos;
@@ -16,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.util.HexFormat;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -148,7 +151,7 @@ public class ChallengeScene extends BaseScene {
         followingPieceBoard.setOnBlockClick(this::pieceBoardClicked);
 
         // Implementing Timer Bar
-        timerBar = new Rectangle(gameWindow.getWidth(), 5);
+        timerBar = new Rectangle(gameWindow.getWidth(), 5, Color.GREEN);
 
         statsBox.getChildren().addAll(pieceBoard, followingPieceBoard);
         statsBox.setAlignment(Pos.CENTER);
@@ -362,25 +365,24 @@ public class ChallengeScene extends BaseScene {
         }
 
         this.timerLine.stop();
+
+        // Animate length
         this.timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(0),
-                (e) -> {
-                    this.timerBar.setFill(Color.GREEN);
-                },
                 new KeyValue(this.timerBar.widthProperty(), gameWindow.getWidth())));
 
-        this.timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(delay / 2),
-                (e) -> {
-                    this.timerBar.setFill(Color.YELLOW);
-                },
-                new KeyValue(this.timerBar.widthProperty(), gameWindow.getWidth() / 2)));
 
         this.timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(delay),
-                (e) -> {
-                    this.timerBar.setFill(Color.RED);
-                },
                 new KeyValue(this.timerBar.widthProperty(), 0)));
 
+        // Animate color
+        FillTransition turningYellow = new FillTransition(Duration.millis(delay / 2), this.timerBar, Color.GREEN, Color.YELLOW);
+        FillTransition turningRed = new FillTransition(Duration.millis(delay / 2), this.timerBar, Color.YELLOW, Color.RED);
+        turningYellow.setOnFinished((e) -> {
+            turningRed.play();
+        });
+
         this.timerLine.play();
+        turningYellow.play();
 
     }
 }
