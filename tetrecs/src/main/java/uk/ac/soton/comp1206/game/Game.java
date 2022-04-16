@@ -1,6 +1,8 @@
 package uk.ac.soton.comp1206.game;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import javafx.beans.property.IntegerProperty;
 import org.apache.logging.log4j.LogManager;
@@ -8,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import uk.ac.soton.comp1206.component.GameBlock;
+import uk.ac.soton.comp1206.component.GameBlockCoordinate;
 import uk.ac.soton.comp1206.event.LineClearedListener;
 import uk.ac.soton.comp1206.event.NextPieceListener;
 
@@ -79,6 +82,8 @@ public class Game {
     private final Multimedia soundPlayer;
 
     private LineClearedListener lineClearedListener;
+
+    private final Set<GameBlockCoordinate> clearedCoordinates = new HashSet<GameBlockCoordinate>();
 
     /**
      * Create a new game with the specified rows and columns. Creates a
@@ -246,6 +251,7 @@ public class Game {
             if (yFull[y] == true) {
                 logger.info("Horizontal line no.{} will be cleared", y);
                 for (int x = 0; x < this.cols; x++) {
+                    this.clearedCoordinates.add(new GameBlockCoordinate(x, y));
                     this.grid.set(x, y, 0);
                 }
                 yCount++;
@@ -256,6 +262,7 @@ public class Game {
             if (xFull[x] == true) {
                 logger.info("Vertical line no.{} will be cleared", x);
                 for (int y = 0; y < this.rows; y++) {
+                    this.clearedCoordinates.add(new GameBlockCoordinate(x, y));
                     this.grid.set(x, y, 0);
                 }
                 xCount++;
@@ -272,6 +279,7 @@ public class Game {
         // Play sound when any line is cleared
         if (numBlockCount != 0) {
             playSound("clear.wav");
+            this.lineClearedListener.clearedLine(this.clearedCoordinates);
         }
 
         this.currentPiece = this.followingPiece;

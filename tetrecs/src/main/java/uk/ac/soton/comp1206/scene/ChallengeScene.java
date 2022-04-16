@@ -1,6 +1,5 @@
 package uk.ac.soton.comp1206.scene;
 
-import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
@@ -9,9 +8,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.GameBlock;
+import uk.ac.soton.comp1206.component.GameBlockCoordinate;
 import uk.ac.soton.comp1206.component.GameBoard;
 import uk.ac.soton.comp1206.component.PieceBoard;
 import uk.ac.soton.comp1206.game.Game;
@@ -86,6 +88,9 @@ public class ChallengeScene extends BaseScene {
         board.setOnRightClick((e) -> {
             game.rotateCurrentPiece();
         });
+
+        // Handle fadeOut animation
+        game.setOnLineCleared(this::lineCleared);
 
         // Show stats
         var level = new Text();
@@ -182,7 +187,6 @@ public class ChallengeScene extends BaseScene {
 
         // Key board support
         gameWindow.getScene().setOnKeyPressed((e) -> {
-            // board.setOnMouseExited();
             switch (e.getCode()) {
                 case UP:
                     aimUp();
@@ -322,5 +326,9 @@ public class ChallengeScene extends BaseScene {
         board.rePaintAll();
         board.getBlock(aimWare[0].get(), aimWare[1].get()).highlight();
         board.getBlock(aimWare[0].get(), oldNumber.intValue()).paint();
+    }
+
+    private void lineCleared(Set<GameBlockCoordinate> coordinates) {
+        board.fadeOut(coordinates);
     }
 }

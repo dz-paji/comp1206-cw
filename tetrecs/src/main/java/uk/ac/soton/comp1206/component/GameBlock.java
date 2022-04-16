@@ -255,11 +255,13 @@ public class GameBlock extends Canvas {
 
             @Override
             public void handle(long now) {
+                gc.clearRect(0, 0, width, height);
                 gc.setFill(Color.web("00ffff", opacity));
                 gc.fillRect(0, 0, width, height);
-                opacity -= 0.1;
+                opacity -= 0.01;
+                logger.info("{} opacity is now {}", this.toString(), opacity);
 
-                if (opacity == 0){
+                if (opacity - 0.01 < 0) {
                     stop();
                 }
             }
