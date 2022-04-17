@@ -24,4 +24,4 @@
 - [x] Add tiles to the game
 - [x] Add hovering
 - [x] Add animation on clearing to show tiles cleared
-- [ ] Add Konami cheat code
+- [x] Add Konami cheat code
