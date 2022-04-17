@@ -162,7 +162,7 @@
                 <version>1.4.0</version>
                 <configuration>
                     <name>TeTrecs</name>
-                    <appVersion>1.0.0</appVersion>
+                    <appVersion>1.1.0</appVersion>
                     <vendor>com.mntpaji</vendor>
                     <destination>target/dist</destination>
                     <module>uk.ac.soton.comp1206/uk.ac.soton.comp1206.Launcher</module>
@@ -171,6 +171,40 @@
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
                     </javaOptions>
+                    <!--
+                Enable adding a dialog to choose a directory in which
+                the product is installed.
+                Default value: false
+              -->
+                    <windirchooser>true</windirchooser>
+
+                    <!--
+                Enable adding the application to the system menu.
+                Default value: false
+              -->
+                    <winmenu>true</winmenu>
+
+                    <!--
+                Start menu group this application is placed in.
+              -->
+                    <winmenugroup>Paji/TeTrecs</winmenugroup>
+
+                    <!--
+                Enable requesting to perform an install on a per-user basis.
+                Default value: false
+              -->
+                    <winperuserinstall>true</winperuserinstall>
+
+                    <!--
+                Enable creating a desktop shortcut for the application.
+                Default value: false
+              -->
+                    <winshortcut>true</winshortcut>
+
+                    <!--
+                UUID associated with upgrades for this package.
+              -->
+                    <winupgradeuuid>8CF81762-0B19-46A6-875E-1F839A1700D0</winupgradeuuid>
                 </configuration>
             </plugin>
 
