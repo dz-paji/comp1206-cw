@@ -17,8 +17,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;

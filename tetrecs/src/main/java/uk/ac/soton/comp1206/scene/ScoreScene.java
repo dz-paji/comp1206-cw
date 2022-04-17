@@ -22,6 +22,7 @@ import javafx.scene.text.Text;
 import javafx.util.Pair;
 import uk.ac.soton.comp1206.component.ScoreList;
 import uk.ac.soton.comp1206.game.Game;
+import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
@@ -38,6 +39,9 @@ public class ScoreScene extends BaseScene {
     private Game game;
     private ObservableList<Pair<String, Integer>> localScores;
     private ScoreList scoreList;
+    private ObservableList<Pair<String, Integer>> remoteScores;
+    private Communicator communicator;
+    private ScoreList remoScoreList;
 
     /**
      * Create a new instance of ScoreScene
@@ -50,7 +54,9 @@ public class ScoreScene extends BaseScene {
 
         var scorePairs = new ArrayList<Pair<String, Integer>>();
         localScores = new SimpleListProperty<Pair<String, Integer>>(FXCollections.observableArrayList(scorePairs));
+        remoteScores = new SimpleListProperty<Pair<String, Integer>>();
         loadScore();
+        loadOnlineScore();
     }
 
     /**
@@ -84,6 +90,7 @@ public class ScoreScene extends BaseScene {
                 String name = nameTextField.getText();
                 localScores.add(scoreListIndex, new Pair<String, Integer>(name, game.getScore().get()));
                 writeScore();
+                writeOnlineScore(name, game.getScore().get());
 
                 Platform.runLater(() -> {
                     displayScoreList();
@@ -108,13 +115,27 @@ public class ScoreScene extends BaseScene {
     public void initialise() {
         logger.info("Initialising..");
         scoreList = new ScoreList(localScores);
+
+        // Update scoreList when localScores changed
         localScores.addListener(new ListChangeListener<Pair<String, Integer>>() {
             @Override
             public void onChanged(Change<? extends Pair<String, Integer>> c) {
-                scoreList.build();
+                scoreList.update(localScores);
+                scoreList.reveal();
 
             };
         });
+
+        // Update scoreList when remoteScores changed
+        remoteScores.addListener(new ListChangeListener<Pair<String, Integer>>() {
+            @Override
+            public void onChanged(Change<? extends Pair<String, Integer>> c) {
+                remoScoreList.update(remoteScores);
+                remoScoreList.setVisible(true);
+                remoScoreList.reveal();
+            };
+        });
+
 
         gameWindow.getScene().setOnKeyPressed((e) -> {
             switch (e.getCode()) {
@@ -126,6 +147,27 @@ public class ScoreScene extends BaseScene {
 
             }
         });
+
+        this.communicator = gameWindow.getCommunicator();
+
+        // Handle HISCORES responce
+        this.communicator.addListener((msg) -> {
+            if (msg.startsWith("HISCORES")) {
+                logger.info("HISCORES received. Updating lists");
+                // Pharse the message.
+                String remoteScoreString = msg.split(" ")[1];
+                String[] remoteScoresArr = remoteScoreString.split("\n");
+                
+                for (int i = 0; i < remoteScoresArr.length; i ++) {
+                    var thisScore = remoteScoresArr[i].split(":");
+                    remoteScores.add(new Pair<String,Integer>(thisScore[0], Integer.parseInt(thisScore[1])));
+                }
+            } else if (msg.startsWith("NEWSCORE")) {
+                logger.info("New Score submission success.");
+                logger.info(msg);
+            }
+        });
+
     }
 
     public void displayScoreList() {
@@ -149,8 +191,12 @@ public class ScoreScene extends BaseScene {
         // Score list
         scoreList = new ScoreList(localScores);
         scoreList.getStyleClass().add("scorelist");
+        remoScoreList = new ScoreList(remoteScores);
+        remoScoreList.getStyleClass().add("scorelist");
+        remoScoreList.setVisible(false);
 
-        mainPane.setCenter(scoreList);
+        mainPane.setLeft(scoreList);
+        mainPane.setRight(remoScoreList);
 
         scoreList.reveal();
     }
@@ -271,6 +317,25 @@ public class ScoreScene extends BaseScene {
 
         }
 
+    }
+
+    /**
+     * Request score from server using communicator.
+     */
+    public void loadOnlineScore() {
+        logger.info("Loading online scores");
+        this.communicator.send("HISCORES");
+
+    }
+
+    /**
+     * Submit a higher score to remote server
+     * 
+     * @param name Name of the player
+     * @param score Score of the game
+     */
+    public void writeOnlineScore(String name, int score) {
+        this.communicator.send("HISCORE " + name + ":" + score);
     }
 
 }

@@ -66,4 +66,14 @@ public class ScoreList extends BorderPane {
         this.setCenter(localScoreBox);
     }
 
+    /**
+     * Allow update this score list.
+     * 
+     * @param scoresList new score list
+     */
+    public void update(ObservableList<Pair<String, Integer>> scoresList) {
+        this.scoresList = scoresList;
+        build();
+    }
+
 }
