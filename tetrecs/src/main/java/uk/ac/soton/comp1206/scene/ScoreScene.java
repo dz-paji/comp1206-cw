@@ -16,14 +16,12 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
 import uk.ac.soton.comp1206.component.ScoreList;
 import uk.ac.soton.comp1206.game.Game;
-import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
@@ -40,10 +38,6 @@ public class ScoreScene extends BaseScene {
     private Game game;
     private ListProperty<Pair<String, Integer>> localScores;
     private ScoreList scoreList;
-    private ListProperty<Pair<String, Integer>> remoteScores;
-    private Communicator communicator;
-    private ScoreList remoScoreList;
-
     /**
      * Create a new instance of ScoreScene
      * 
@@ -55,9 +49,6 @@ public class ScoreScene extends BaseScene {
 
         var localScorePairs = new ArrayList<Pair<String, Integer>>();
         localScores = new SimpleListProperty<Pair<String, Integer>>(FXCollections.observableArrayList(localScorePairs));
-        var remoteScorePairs = new ArrayList<Pair<String, Integer>>();
-        remoteScores = new SimpleListProperty<Pair<String, Integer>>(
-                FXCollections.observableArrayList(remoteScorePairs));
         loadScore();
     }
 
@@ -75,21 +66,6 @@ public class ScoreScene extends BaseScene {
         root.getChildren().add(mainPane);
         mainPane.getStyleClass().add("menu-background");
 
-        // Get communicator
-        this.communicator = gameWindow.getCommunicator();
-        // Handle HISCORES responce
-        this.communicator.addListener((msg) -> {
-            if (msg.startsWith("HISCORES")) {
-                logger.info("HISCORES received. Updating lists");
-                // Pharse the message.
-                Platform.runLater(() -> {
-                    pharseOnlineScore(msg);
-                });
-            } else if (msg.startsWith("NEWSCORE")) {
-                logger.info("New Score submission success.");
-            }
-        });
-
         int scoreListIndex = checkScore();
         if (scoreListIndex != -1) {
             // Scene texts
@@ -106,7 +82,6 @@ public class ScoreScene extends BaseScene {
                 String name = nameTextField.getText();
                 localScores.add(scoreListIndex, new Pair<String, Integer>(name, game.getScore().get()));
                 writeScore();
-                writeOnlineScore(name, game.getScore().get());
 
                 Platform.runLater(() -> {
                     displayScoreList();
@@ -139,17 +114,6 @@ public class ScoreScene extends BaseScene {
                 scoreList.update(localScores);
                 scoreList.reveal();
 
-            };
-        });
-
-        // Update scoreList when remoteScores changed
-        remoteScores.addListener(new ListChangeListener<Pair<String, Integer>>() {
-            @Override
-            public void onChanged(Change<? extends Pair<String, Integer>> c) {
-                logger.info("remoteScores changed. Update RemoScoreList now.");
-                remoScoreList.update(remoteScores);
-                remoScoreList.setVisible(true);
-                remoScoreList.reveal();
             };
         });
 
@@ -192,13 +156,12 @@ public class ScoreScene extends BaseScene {
         localScoreBox.getChildren().addAll(localScoreTxt, scoreList);
         localScoreBox.setStyle("-fx-padding: 30;");
 
-        remoScoreList = new ScoreList(remoteScores);
-        remoScoreList.getStyleClass().add("scorelist");
-        requestOnlineScore();
         var remoScoreTxt = new Text("Online High Scores");
+        var notAvailable = new Text("Not available");
+        notAvailable.getStyleClass().add("scorelist");
         remoScoreTxt.getStyleClass().add("title");
         var remoScoreBox = new VBox();
-        remoScoreBox.getChildren().addAll(remoScoreTxt, remoScoreList);
+        remoScoreBox.getChildren().addAll(remoScoreTxt, notAvailable);
         remoScoreBox.setStyle("-fx-padding: 30;");
 
         var scorePane = new BorderPane();
@@ -334,45 +297,5 @@ public class ScoreScene extends BaseScene {
 
         }
 
-    }
-
-    /**
-     * Request score from server using communicator.
-     */
-    public void requestOnlineScore() {
-        logger.info("Loading online scores");
-        this.communicator.send("HISCORES");
-    }
-
-    /**
-     * Submit a higher score to remote server
-     * 
-     * @param name  Name of the player
-     * @param score Score of the game
-     */
-    public void writeOnlineScore(String name, int score) {
-        this.communicator.send("HISCORE " + name + ":" + score);
-    }
-
-    /**
-     * Pharse online scores and store it to ListProperty.
-     * 
-     * @param msg Message from communicator containing score information.
-     */
-    private void pharseOnlineScore(String msg) {
-        logger.info("Pharsing online scores");
-        String remoteScoreString = msg.split(" ")[1];
-        String[] remoteScoresArr = remoteScoreString.split("\n");
-
-        for (int i = 0; i < remoteScoresArr.length; i++) {
-            var thisScore = remoteScoresArr[i].split(":");
-            if (thisScore[1] == "") {
-                thisScore[1] = thisScore[0];
-                thisScore[0] = "invalid player name";
-            }
-            remoteScores.add(new Pair<String, Integer>(thisScore[0], Integer.parseInt(thisScore[1])));
-        }
-        remoScoreList.update(remoteScores);
-        remoScoreList.reveal();
     }
 }
