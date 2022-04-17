@@ -245,4 +245,15 @@ public class GameBoard extends GridPane {
             blocks[nextCoordinate.getX()][nextCoordinate.getY()].fadeOut();
         }
     }
+
+    /**
+     * Reset this GameBoard
+     */
+    public void resetBoard() {
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                this.grid.set(i, j, 0);
+            }
+        }
+    }
 }

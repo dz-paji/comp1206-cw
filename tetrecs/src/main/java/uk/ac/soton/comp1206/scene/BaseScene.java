@@ -1,7 +1,7 @@
 package uk.ac.soton.comp1206.scene;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+// import org.apache.logging.log4j.LogManager;
+// import org.apache.logging.log4j.Logger;
 
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -32,7 +32,7 @@ public abstract class BaseScene {
      * Previous scene
      */
     protected Scene prevScene;
-    private final Logger logger = LogManager.getLogger(BaseScene.class);
+    // private final Logger logger = LogManager.getLogger(BaseScene.class);
 
     /**
      * Create a new scene, passing in the GameWindow the scene will be displayed in

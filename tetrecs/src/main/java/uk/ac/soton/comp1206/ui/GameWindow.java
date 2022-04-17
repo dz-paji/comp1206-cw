@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -14,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import uk.ac.soton.comp1206.App;
 import uk.ac.soton.comp1206.game.Game;
+import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.scene.*;
 
 /**
@@ -38,7 +38,7 @@ public class GameWindow {
     private BaseScene prevScene;
     private Scene scene;
 
-    // final Communicator communicator;
+    final Communicator communicator;
 
     /**
      * Create a new GameWindow attached to the given stage with the specified width
@@ -64,7 +64,7 @@ public class GameWindow {
         setupDefaultScene();
 
         // Setup communicator
-        // communicator = new Communicator("ws://ofb-labs.soton.ac.uk:9700");
+        communicator = new Communicator("ws://ofb-labs.soton.ac.uk:9700");
 
         // Go to menu
         startMenu();
@@ -155,7 +155,7 @@ public class GameWindow {
      */
     public void cleanup() {
         logger.info("Clearing up previous scene");
-        // communicator.clearListeners();
+        communicator.clearListeners();
     }
 
     /**
@@ -208,9 +208,9 @@ public class GameWindow {
      * 
      * @return communicator
      */
-    // public Communicator getCommunicator() {
-    // return communicator;
-    // }
+    public Communicator getCommunicator() {
+    return communicator;
+    }
 
     /**
      * Depending on whether previous scene exists, exit the game or load the
@@ -218,6 +218,7 @@ public class GameWindow {
      */
     public void endGame() {
         cleanup();
+        this.communicator.disconnect();
         stage.close();
 
     }

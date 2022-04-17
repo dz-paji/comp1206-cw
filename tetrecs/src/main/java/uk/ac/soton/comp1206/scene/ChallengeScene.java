@@ -6,9 +6,13 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -17,11 +21,10 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -65,6 +68,8 @@ public class ChallengeScene extends BaseScene {
     private final Timeline timerLine = new Timeline();
 
     private Rectangle timerBar;
+
+    private ListProperty<KeyCode> konamiList;
 
     /**
      * Create a new Single Player challenge scene
@@ -143,7 +148,6 @@ public class ChallengeScene extends BaseScene {
         highScore.getStyleClass().add("hiscore");
         highScore_text.getStyleClass().add("heading");
 
-
         var statsBox = new VBox();
         statsBox.getChildren().addAll(level_text, level, lives_text, lives, multiplier_text, multiplier, score_text,
                 score, highScore_text, highScore);
@@ -162,7 +166,7 @@ public class ChallengeScene extends BaseScene {
         followingPieceBoard.setOnBlockClick(this::pieceBoardClicked);
 
         // Implementing Timer Bar
-        timerBar = new Rectangle(gameWindow.getWidth(), 10, Color.GREEN);
+        timerBar = new Rectangle(gameWindow.getWidth(), 10, Color.BLUE);
 
         statsBox.getChildren().addAll(pieceBoard, followingPieceBoard);
         statsBox.setAlignment(Pos.CENTER);
@@ -221,88 +225,126 @@ public class ChallengeScene extends BaseScene {
 
         getHighestScore();
 
+        // Initialise konami cheat code list
+        konamiList = new SimpleListProperty<KeyCode>(FXCollections.observableArrayList(new ArrayList<KeyCode>()));
+
         // Key board support
         gameWindow.getScene().setOnKeyPressed((e) -> {
-            logger.info("Key {} pressed",e.getCharacter());
+            logger.info("Key {} pressed", e.getCharacter());
             switch (e.getCode()) {
                 case UP:
+                    addKeyPress(e.getCode());
+
                     aimUp();
                     break;
 
                 case DOWN:
+                    addKeyPress(e.getCode());
+
                     aimDown();
                     break;
 
                 case LEFT:
+                    addKeyPress(e.getCode());
+
                     aimLeft();
                     break;
 
                 case RIGHT:
+                    addKeyPress(e.getCode());
+
                     aimRight();
                     break;
 
                 case W:
+                    addKeyPress(e.getCode());
+
                     aimUp();
                     break;
 
                 case A:
+                    addKeyPress(e.getCode());
+
                     aimLeft();
                     break;
 
                 case S:
+                    addKeyPress(e.getCode());
+
                     aimDown();
                     break;
 
                 case D:
+                    addKeyPress(e.getCode());
+
                     aimRight();
                     break;
 
                 case ENTER:
                     blockClicked(board.getBlock(aimWare[0].get(), aimWare[1].get()));
+                    konamiCheck();
                     break;
 
                 case X:
+                    addKeyPress(e.getCode());
+
                     blockClicked(board.getBlock(aimWare[0].get(), aimWare[1].get()));
                     break;
 
                 case OPEN_BRACKET:
+                    addKeyPress(e.getCode());
+
                     game.rotateCurrentPiece();
                     break;
 
                 case Q:
+                    addKeyPress(e.getCode());
+
                     game.rotateCurrentPiece();
                     break;
 
                 case Z:
+                    addKeyPress(e.getCode());
+
                     game.rotateCurrentPiece();
                     break;
 
                 case E:
+                    addKeyPress(e.getCode());
+
                     game.rotateCurrentPiece();
                     break;
 
                 case C:
+                    addKeyPress(e.getCode());
+
                     game.rotateCurrentPiece();
                     break;
 
                 case CLOSE_BRACKET:
+                    addKeyPress(e.getCode());
+
                     game.rotateCurrentPiece();
                     break;
 
                 case SPACE:
+                    addKeyPress(e.getCode());
+
                     game.swapPiece();
                     break;
 
                 case R:
+                    addKeyPress(e.getCode());
+
                     game.swapPiece();
                     break;
 
                 case ESCAPE:
                     endGame();
-                    gameWindow.startMenu();
                     break;
 
                 default:
+                    addKeyPress(e.getCode());
                     break;
             }
         });
@@ -317,9 +359,12 @@ public class ChallengeScene extends BaseScene {
      */
     public void endGame() {
         logger.info("Cleanning up the game...");
+        game.playSound("explode.wav");
         Multimedia.stopBGM();
         game.endGame();
-        Platform.runLater(() -> gameWindow.startScore(game));
+        Platform.runLater(() -> {
+            gameWindow.startScore(game);
+        });
     }
 
     /**
@@ -384,16 +429,17 @@ public class ChallengeScene extends BaseScene {
         this.timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(0),
                 new KeyValue(this.timerBar.widthProperty(), gameWindow.getWidth())));
 
-
         this.timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(delay),
                 new KeyValue(this.timerBar.widthProperty(), 0)));
 
         // Animate color
-        FillTransition turningYellow = new FillTransition(Duration.millis(delay / 2), this.timerBar, Color.GREEN, Color.YELLOW);
-        FillTransition turningRed = new FillTransition(Duration.millis(delay / 2), this.timerBar, Color.YELLOW, Color.RED);
-        turningYellow.setOnFinished((e) -> {
-            turningRed.play();
-        });
+        FillTransition turningYellow = new FillTransition(Duration.millis(delay), this.timerBar, Color.GREEN,
+                Color.RED);
+        // FillTransition turningRed = new FillTransition(Duration.millis(delay / 2),
+        // this.timerBar, Color.YELLOW, Color.RED);
+        // turningYellow.setOnFinished((e) -> {
+        // turningRed.play();
+        // });
 
         this.timerLine.play();
         turningYellow.play();
@@ -403,13 +449,41 @@ public class ChallengeScene extends BaseScene {
     private void getHighestScore() {
         try {
             BufferedReader scoreReader = new BufferedReader(new FileReader("score.txt"));
-            game.setHighestScore(Integer.parseInt(scoreReader.readLine().split(":")[1]));
+            var scoreRecord = scoreReader.readLine();
+
+            if (scoreRecord == null) {
+                game.setHighestScore(0);
+            } else {
+                game.setHighestScore(Integer.parseInt(scoreRecord.split(":")[1]));
+            }
             scoreReader.close();
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-        // TODO: Read file, get highest score, bind it to the ui, register it to the game.
+    }
+
+    private void konamiCheck() {
+        logger.info("checking konami code");
+        if (this.konamiList.size() < 10) {
+            this.konamiList.clear();
+        } else {
+            KeyCode[] ruleList = {KeyCode.UP, KeyCode.UP, KeyCode.DOWN, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT, KeyCode.LEFT, KeyCode.RIGHT, KeyCode.B, KeyCode.A};
+            for (int i = 0; i < 10; i ++) {
+                if (ruleList[i] != konamiList.get(i)) {
+                    konamiList.clear();
+                    break;
+                }
+            }
+
+            logger.info("konami code triggered.");
+            game.setLives(999);
+            board.resetBoard();
+        }
+    }
+
+    private void addKeyPress(KeyCode key) {
+        this.konamiList.add(key);
     }
 }
