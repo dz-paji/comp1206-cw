@@ -1,5 +1,12 @@
+pa:3370
+pajipajipa:3320
+paji:2450
+pa:2120
 lala:2040
+bo:1370
 Dev:1024
+paji:960
+invalid player name:450
 paji:200
 123:0
 123:0

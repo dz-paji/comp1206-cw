@@ -8,14 +8,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -37,9 +38,9 @@ public class ScoreScene extends BaseScene {
     private static final Logger logger = LogManager.getLogger(ScoreScene.class);
 
     private Game game;
-    private ObservableList<Pair<String, Integer>> localScores;
+    private ListProperty<Pair<String, Integer>> localScores;
     private ScoreList scoreList;
-    private ObservableList<Pair<String, Integer>> remoteScores;
+    private ListProperty<Pair<String, Integer>> remoteScores;
     private Communicator communicator;
     private ScoreList remoScoreList;
 
@@ -52,11 +53,12 @@ public class ScoreScene extends BaseScene {
         super(gameWindow);
         this.game = game;
 
-        var scorePairs = new ArrayList<Pair<String, Integer>>();
-        localScores = new SimpleListProperty<Pair<String, Integer>>(FXCollections.observableArrayList(scorePairs));
-        remoteScores = new SimpleListProperty<Pair<String, Integer>>();
+        var localScorePairs = new ArrayList<Pair<String, Integer>>();
+        localScores = new SimpleListProperty<Pair<String, Integer>>(FXCollections.observableArrayList(localScorePairs));
+        var remoteScorePairs = new ArrayList<Pair<String, Integer>>();
+        remoteScores = new SimpleListProperty<Pair<String, Integer>>(
+                FXCollections.observableArrayList(remoteScorePairs));
         loadScore();
-        loadOnlineScore();
     }
 
     /**
@@ -73,8 +75,22 @@ public class ScoreScene extends BaseScene {
         root.getChildren().add(mainPane);
         mainPane.getStyleClass().add("menu-background");
 
-        int scoreListIndex = checkScore();
+        // Get communicator
+        this.communicator = gameWindow.getCommunicator();
+        // Handle HISCORES responce
+        this.communicator.addListener((msg) -> {
+            if (msg.startsWith("HISCORES")) {
+                logger.info("HISCORES received. Updating lists");
+                // Pharse the message.
+                Platform.runLater(() -> {
+                    pharseOnlineScore(msg);
+                });
+            } else if (msg.startsWith("NEWSCORE")) {
+                logger.info("New Score submission success.");
+            }
+        });
 
+        int scoreListIndex = checkScore();
         if (scoreListIndex != -1) {
             // Scene texts
             var gameOver = new Text("Game Over");
@@ -130,12 +146,12 @@ public class ScoreScene extends BaseScene {
         remoteScores.addListener(new ListChangeListener<Pair<String, Integer>>() {
             @Override
             public void onChanged(Change<? extends Pair<String, Integer>> c) {
+                logger.info("remoteScores changed. Update RemoScoreList now.");
                 remoScoreList.update(remoteScores);
                 remoScoreList.setVisible(true);
                 remoScoreList.reveal();
             };
         });
-
 
         gameWindow.getScene().setOnKeyPressed((e) -> {
             switch (e.getCode()) {
@@ -147,27 +163,6 @@ public class ScoreScene extends BaseScene {
 
             }
         });
-
-        this.communicator = gameWindow.getCommunicator();
-
-        // Handle HISCORES responce
-        this.communicator.addListener((msg) -> {
-            if (msg.startsWith("HISCORES")) {
-                logger.info("HISCORES received. Updating lists");
-                // Pharse the message.
-                String remoteScoreString = msg.split(" ")[1];
-                String[] remoteScoresArr = remoteScoreString.split("\n");
-                
-                for (int i = 0; i < remoteScoresArr.length; i ++) {
-                    var thisScore = remoteScoresArr[i].split(":");
-                    remoteScores.add(new Pair<String,Integer>(thisScore[0], Integer.parseInt(thisScore[1])));
-                }
-            } else if (msg.startsWith("NEWSCORE")) {
-                logger.info("New Score submission success.");
-                logger.info(msg);
-            }
-        });
-
     }
 
     public void displayScoreList() {
@@ -191,13 +186,28 @@ public class ScoreScene extends BaseScene {
         // Score list
         scoreList = new ScoreList(localScores);
         scoreList.getStyleClass().add("scorelist");
+        var localScoreTxt = new Text("Local High Scores");
+        localScoreTxt.getStyleClass().add("title");
+        var localScoreBox = new VBox();
+        localScoreBox.getChildren().addAll(localScoreTxt, scoreList);
+        localScoreBox.setStyle("-fx-padding: 30;");
+
         remoScoreList = new ScoreList(remoteScores);
         remoScoreList.getStyleClass().add("scorelist");
-        remoScoreList.setVisible(false);
+        requestOnlineScore();
+        var remoScoreTxt = new Text("Online High Scores");
+        remoScoreTxt.getStyleClass().add("title");
+        var remoScoreBox = new VBox();
+        remoScoreBox.getChildren().addAll(remoScoreTxt, remoScoreList);
+        remoScoreBox.setStyle("-fx-padding: 30;");
 
-        mainPane.setLeft(scoreList);
-        mainPane.setRight(remoScoreList);
+        var scorePane = new BorderPane();
+        scorePane.setLeft(localScoreBox);
+        scorePane.setRight(remoScoreBox);
+        mainPane.setCenter(scorePane);
 
+        // mainPane.setLeft(localScoreBox);
+        // mainPane.setRight(remoScoreBox);
         scoreList.reveal();
     }
 
@@ -214,9 +224,15 @@ public class ScoreScene extends BaseScene {
             String nextLine;
             while ((nextLine = scoreFileReader.readLine()) != null) {
                 String[] thisScore = nextLine.split(":");
+                for (int i = 0; i < thisScore.length; i++) {
+                }
+                // Check for invalid player name
+                if (thisScore[0] == "") {
+                    thisScore[1] = thisScore[thisScore.length - 1];
+                    thisScore[0] = "invalid player name";
+                }
+
                 localScores.add(new Pair<String, Integer>(thisScore[0], Integer.parseInt(thisScore[1])));
-                logger.info("New score record added to localScores. Key:{}, value:{}", thisScore[0],
-                        Integer.parseInt(thisScore[1]));
             }
 
             scoreFile.close();
@@ -270,7 +286,7 @@ public class ScoreScene extends BaseScene {
      * 
      * @param scores Score data to be wrote.
      */
-    public void writeScore(ObservableList<Pair<String, Integer>> scores) {
+    public void writeScore(ListProperty<Pair<String, Integer>> scores) {
         try {
             FileWriter nFileWriter = new FileWriter("score.txt");
 
@@ -322,20 +338,40 @@ public class ScoreScene extends BaseScene {
     /**
      * Request score from server using communicator.
      */
-    public void loadOnlineScore() {
+    public void requestOnlineScore() {
         logger.info("Loading online scores");
         this.communicator.send("HISCORES");
-
     }
 
     /**
      * Submit a higher score to remote server
      * 
-     * @param name Name of the player
+     * @param name  Name of the player
      * @param score Score of the game
      */
     public void writeOnlineScore(String name, int score) {
         this.communicator.send("HISCORE " + name + ":" + score);
     }
 
+    /**
+     * Pharse online scores and store it to ListProperty.
+     * 
+     * @param msg Message from communicator containing score information.
+     */
+    private void pharseOnlineScore(String msg) {
+        logger.info("Pharsing online scores");
+        String remoteScoreString = msg.split(" ")[1];
+        String[] remoteScoresArr = remoteScoreString.split("\n");
+
+        for (int i = 0; i < remoteScoresArr.length; i++) {
+            var thisScore = remoteScoresArr[i].split(":");
+            if (thisScore[1] == "") {
+                thisScore[1] = thisScore[0];
+                thisScore[0] = "invalid player name";
+            }
+            remoteScores.add(new Pair<String, Integer>(thisScore[0], Integer.parseInt(thisScore[1])));
+        }
+        remoScoreList.update(remoteScores);
+        remoScoreList.reveal();
+    }
 }

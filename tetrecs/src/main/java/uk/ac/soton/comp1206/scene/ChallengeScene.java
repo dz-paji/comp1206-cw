@@ -160,7 +160,7 @@ public class ChallengeScene extends BaseScene {
         followingPieceBoard.setOnBlockClick(this::pieceBoardClicked);
 
         // Implementing Timer Bar
-        timerBar = new Rectangle(gameWindow.getWidth(), 10, Color.GREEN);
+        timerBar = new Rectangle(gameWindow.getWidth(), 10, Color.BLUE);
 
         statsBox.getChildren().addAll(pieceBoard, followingPieceBoard);
         statsBox.setAlignment(Pos.CENTER);
@@ -297,7 +297,6 @@ public class ChallengeScene extends BaseScene {
 
                 case ESCAPE:
                     endGame();
-                    gameWindow.startMenu();
                     break;
 
                 default:
@@ -317,7 +316,9 @@ public class ChallengeScene extends BaseScene {
         logger.info("Cleanning up the game...");
         Multimedia.stopBGM();
         game.endGame();
-        Platform.runLater(() -> gameWindow.startScore(game));
+        Platform.runLater(() -> {
+            gameWindow.startScore(game);
+        });
     }
 
     /**
@@ -387,11 +388,11 @@ public class ChallengeScene extends BaseScene {
                 new KeyValue(this.timerBar.widthProperty(), 0)));
 
         // Animate color
-        FillTransition turningYellow = new FillTransition(Duration.millis(delay / 2), this.timerBar, Color.GREEN, Color.YELLOW);
-        FillTransition turningRed = new FillTransition(Duration.millis(delay / 2), this.timerBar, Color.YELLOW, Color.RED);
-        turningYellow.setOnFinished((e) -> {
-            turningRed.play();
-        });
+        FillTransition turningYellow = new FillTransition(Duration.millis(delay), this.timerBar, Color.GREEN, Color.RED);
+        // FillTransition turningRed = new FillTransition(Duration.millis(delay / 2), this.timerBar, Color.YELLOW, Color.RED);
+        // turningYellow.setOnFinished((e) -> {
+        //     turningRed.play();
+        // });
 
         this.timerLine.play();
         turningYellow.play();
@@ -408,6 +409,5 @@ public class ChallengeScene extends BaseScene {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-        // TODO: Read file, get highest score, bind it to the ui, register it to the game.
     }
 }

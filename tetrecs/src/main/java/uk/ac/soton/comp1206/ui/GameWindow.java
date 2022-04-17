@@ -218,6 +218,7 @@ public class GameWindow {
      */
     public void endGame() {
         cleanup();
+        this.communicator.disconnect();
         stage.close();
 
     }

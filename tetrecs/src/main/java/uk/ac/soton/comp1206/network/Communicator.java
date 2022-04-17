@@ -107,6 +107,13 @@ public class Communicator {
         this.handlers.clear();
     }
 
+    /**
+     * Disconnect the ws.
+     */
+    public void disconnect() {
+        ws.disconnect();
+    }
+
     /** Receive a message from the server. Relay to any attached listeners
      *
      * @param websocket the socket
