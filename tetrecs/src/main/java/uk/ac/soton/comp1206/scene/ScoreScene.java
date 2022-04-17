@@ -313,8 +313,9 @@ public class ScoreScene extends BaseScene {
      */
     public int checkScore() {
         logger.info("Checking score..");
+        // Only store local score up to 5 entries.
         // When number of saved scores less than 5 score
-        if (this.localScores.size() < 5) {
+        if (this.localScores.size() < 4) {
             for (int i = 0; i < this.localScores.size(); i++) {
                 if (localScores.get(i).getValue() < game.getScore().get()) {
                     return i;
@@ -323,7 +324,7 @@ public class ScoreScene extends BaseScene {
             return this.localScores.size();
         } else {
             // Check if game score beats any saved score.
-            for (int i = 0; i < this.localScores.size(); i++) {
+            for (int i = 0; i < 5; i++) {
                 if (localScores.get(i).getValue() < game.getScore().get()) {
                     return i;
                 }

@@ -134,6 +134,7 @@ public class Game {
             if (changedScore - this.scoreTracker > 0) {
                 this.scoreTracker += changedScore;
                 setLevel(getLevel().get() + changedScore);
+                playSound("level.wav");
             }
 
             if (score.get() > highestScore.get()) {

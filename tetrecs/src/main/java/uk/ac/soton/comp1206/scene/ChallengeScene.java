@@ -141,7 +141,6 @@ public class ChallengeScene extends BaseScene {
         highScore.getStyleClass().add("hiscore");
         highScore_text.getStyleClass().add("heading");
 
-
         var statsBox = new VBox();
         statsBox.getChildren().addAll(level_text, level, lives_text, lives, multiplier_text, multiplier, score_text,
                 score, highScore_text, highScore);
@@ -221,7 +220,7 @@ public class ChallengeScene extends BaseScene {
 
         // Key board support
         gameWindow.getScene().setOnKeyPressed((e) -> {
-            logger.info("Key {} pressed",e.getCharacter());
+            logger.info("Key {} pressed", e.getCharacter());
             switch (e.getCode()) {
                 case UP:
                     aimUp();
@@ -314,6 +313,7 @@ public class ChallengeScene extends BaseScene {
      */
     public void endGame() {
         logger.info("Cleanning up the game...");
+        game.playSound("explode.wav");
         Multimedia.stopBGM();
         game.endGame();
         Platform.runLater(() -> {
@@ -383,15 +383,16 @@ public class ChallengeScene extends BaseScene {
         this.timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(0),
                 new KeyValue(this.timerBar.widthProperty(), gameWindow.getWidth())));
 
-
         this.timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(delay),
                 new KeyValue(this.timerBar.widthProperty(), 0)));
 
         // Animate color
-        FillTransition turningYellow = new FillTransition(Duration.millis(delay), this.timerBar, Color.GREEN, Color.RED);
-        // FillTransition turningRed = new FillTransition(Duration.millis(delay / 2), this.timerBar, Color.YELLOW, Color.RED);
+        FillTransition turningYellow = new FillTransition(Duration.millis(delay), this.timerBar, Color.GREEN,
+                Color.RED);
+        // FillTransition turningRed = new FillTransition(Duration.millis(delay / 2),
+        // this.timerBar, Color.YELLOW, Color.RED);
         // turningYellow.setOnFinished((e) -> {
-        //     turningRed.play();
+        // turningRed.play();
         // });
 
         this.timerLine.play();
@@ -402,7 +403,13 @@ public class ChallengeScene extends BaseScene {
     private void getHighestScore() {
         try {
             BufferedReader scoreReader = new BufferedReader(new FileReader("score.txt"));
-            game.setHighestScore(Integer.parseInt(scoreReader.readLine().split(":")[1]));
+            var scoreRecord = scoreReader.readLine();
+
+            if (scoreRecord == null) {
+                game.setHighestScore(0);
+            } else {
+                game.setHighestScore(Integer.parseInt(scoreRecord.split(":")[1]));
+            }
             scoreReader.close();
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage());
