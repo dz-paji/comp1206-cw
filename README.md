@@ -25,3 +25,6 @@
 - [x] Add hovering
 - [x] Add animation on clearing to show tiles cleared
 - [x] Add Konami cheat code
+- [ ] Multiplayer Lobby
+- [ ] Multiplayer Game
+- [ ] Extension
