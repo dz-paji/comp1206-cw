@@ -52,17 +52,33 @@ public class Multimedia {
     /**
      * Method plays BGM.
      */
-    public static void playMenu() {
-        Media bgm = new Media(Multimedia.class.getResource("/music/menu_phoenix.mp3").toExternalForm());
+    public static void playMenuIntro() {
+        Media bgm = new Media(Multimedia.class.getResource("/music/tendo_intro.mp3").toExternalForm());
         bgmPlayer = new MediaPlayer(bgm);
-        bgmPlayer.setVolume(0.3);
+        // bgmPlayer.setVolume(0.3);
         bgmPlayer.play();
-        logger.info("Playing BGM");
+        logger.info("Playing BGM intro");
 
         bgmPlayer.setOnEndOfMedia(() -> {
-            playMenu();
+            playMenuMain();
+        });
+    }
+
+    /**
+     * Play main part of menu and loop it.
+     */
+    public static void playMenuMain() {
+        Media bgm = new Media(Multimedia.class.getResource("/music/tendo_main.mp3").toExternalForm());
+        bgmPlayer = new MediaPlayer(bgm);
+        // bgmPlayer.setVolume(0.3);
+        bgmPlayer.play();
+        logger.info("Playing BGM main");
+
+        bgmPlayer.setOnEndOfMedia(() -> {
+            playMenuMain();
             logger.info("BGM ends, restarting..");
         });
+
     }
 
     /**

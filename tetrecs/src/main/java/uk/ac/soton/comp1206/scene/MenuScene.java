@@ -93,7 +93,7 @@ public class MenuScene extends BaseScene {
     @Override
     public void initialise() {
         if (!Multimedia.isMenuPlaying()) {
-            Multimedia.playMenu();
+            Multimedia.playMenuIntro();
         }
 
         gameWindow.getScene().setOnKeyTyped((e) -> {
