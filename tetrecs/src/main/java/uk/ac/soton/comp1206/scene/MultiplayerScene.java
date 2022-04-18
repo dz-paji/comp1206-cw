@@ -1,33 +1,25 @@
 package uk.ac.soton.comp1206.scene;
 
 import javafx.application.Platform;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import uk.ac.soton.comp1206.game.Grid;
+import uk.ac.soton.comp1206.component.ChannelPane;
 import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 
 public class MultiplayerScene extends BaseScene {
     private final Communicator communicator;
@@ -36,14 +28,13 @@ public class MultiplayerScene extends BaseScene {
 
     private ScrollPane channelScrollPane = new ScrollPane();
 
-    private ListProperty<Button> channelButtons;
+    private ChannelPane chanPane = new ChannelPane();
 
     private final VBox channelBox = new VBox();
 
     public MultiplayerScene(GameWindow gameWindow) {
         super(gameWindow);
         this.communicator = gameWindow.getCommunicator();
-        this.channelButtons = new SimpleListProperty<Button>(FXCollections.observableList(new ArrayList<Button>()));
     }
 
     /**
@@ -87,8 +78,21 @@ public class MultiplayerScene extends BaseScene {
         joinPane.add(channelScrollPane, 1, 2);
         channelScrollPane.setContent(channelBox);
         channelScrollPane.getStyleClass().add("scroller");
+        chanPane.setVisible(false);
 
-        mainPane.add(joinPane, 0, 0,2,4);
+        mainPane.add(joinPane, 1, 1, 2, 4);
+        mainPane.add(chanPane, 4, 1, 2, 4);
+
+        // Setting up grid
+        ColumnConstraints border = new ColumnConstraints();
+        border.setPercentWidth(15);
+        ColumnConstraints joinPaneConstraints = new ColumnConstraints();
+        joinPaneConstraints.setPrefWidth(25);
+        ColumnConstraints gap = new ColumnConstraints();
+        gap.setPrefWidth(30);
+        ColumnConstraints chanPaneConstraints = new ColumnConstraints();
+        chanPaneConstraints.setPercentWidth(40);
+        mainPane.getColumnConstraints().addAll(border, joinPaneConstraints, gap);
     }
 
     /**
@@ -111,10 +115,17 @@ public class MultiplayerScene extends BaseScene {
                     msgJoinHandler(msg);
                 });
                 break;
+            case "USER":
+                Platform.runLater(() -> {
+                    chanPane.updatePlayer(msg);
+                });
         }
     }
 
     private void msgJoinHandler(String msg) {
+        logger.info("Joining new channel");
+        this.chanPane.updateName(msg.split(" ")[1]);
+        this.chanPane.setVisible(true);
     }
 
     public void msgChannelHandler(String msg) {
@@ -127,16 +138,15 @@ public class MultiplayerScene extends BaseScene {
         }
 
         String[] channels = msg.split(" ")[1].split("\n");
-        for (int i = 0; i < channels.length; i ++) {
+        for (int i = 0; i < channels.length; i++) {
             var buttonBox = new HBox();
             var button = new Button(channels[i]);
-            button.setId(channels[i]);
             buttonBox.getChildren().add(button);
             buttonBox.setAlignment(Pos.CENTER);
             channelBox.getChildren().add(buttonBox);
-            
+
             button.getStyleClass().add("channelItem");
-            
+
             button.setOnMouseClicked((e) -> {
                 joinChannel(((Button) e.getSource()).getText());
             });

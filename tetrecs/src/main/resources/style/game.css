@@ -237,6 +237,7 @@ TextField {
 .playerBox {
     -fx-font-size: 14px;
     -fx-font-family: 'Orbitron';
+    -fx-background-color: transparent;
 }
 
 .playerBox Text {
