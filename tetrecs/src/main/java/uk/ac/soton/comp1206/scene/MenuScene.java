@@ -63,16 +63,19 @@ public class MenuScene extends BaseScene {
         this.logoRT(logoRT);
 
         var button = new Button("Single Player");
+        var multiPlayerButton = new Button("Multiplayer");
         var instructionButton = new Button("Instructions");
 
         // Bind the button action to the startGame method in the menu
         button.setOnAction(this::startGame);
         button.getStyleClass().add("menuItem");
         instructionButton.setOnAction(this::startInstruction);
-        instructionButton.getStyleClass().addAll("menuItem");
+        instructionButton.getStyleClass().add("menuItem");
+        multiPlayerButton.setOnAction(this::startMultiplayer);
+        multiPlayerButton.getStyleClass().add("menuItem");
 
         var buttonBox = new VBox();
-        buttonBox.getChildren().addAll(button, instructionButton);
+        buttonBox.getChildren().addAll(button, multiPlayerButton, instructionButton);
         buttonBox.setAlignment(Pos.CENTER);
         GridPane.setHalignment(buttonBox, HPos.CENTER);
 
@@ -115,6 +118,15 @@ public class MenuScene extends BaseScene {
      */
     private void startInstruction(ActionEvent event) {
         gameWindow.startInstruction();
+    }
+
+    /**
+     * Handle when the start multiplayer game button is pressed
+     * 
+     * @param event event
+     */
+    private void startMultiplayer(ActionEvent event) {
+        gameWindow.startMultiplayer();
     }
 
     private void logoRT(RotateTransition logoRT) {

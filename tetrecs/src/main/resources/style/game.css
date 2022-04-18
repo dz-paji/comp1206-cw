@@ -16,6 +16,23 @@
     -fx-background-size: cover;
 }
 
+.multiplayer-background {
+    -fx-background-image: url("../images/3.jpg");
+    -fx-background-size: cover;
+}
+
+.join-gridpane {
+    -fx-background-color: #f57b003d;
+    -fx-padding: 30;
+    -fx-effect: dropshadow(gaussian, #bb4e004a,1,1,1,1);
+}
+
+.joinpaneTitle {
+    -fx-font-family: Orbitron;
+    -fx-font-sie: 15px;
+    -fx-stroke: white;
+}
+
 .menu {
     -fx-padding: 10;
 }
@@ -160,15 +177,24 @@
 }
 
 .channelItem {
-    -fx-fill: white;
+    -fx-fill: transparent;
+    -fx-background-color: transparent;
     -fx-font-family: 'Orbitron';
     -fx-font-size: 16px;
     -fx-font-weight: 700;
+    -fx-text-fill: white;
     -fx-border-color: black;
-    -fx-stroke: black;
+    -fx-stroke: rgb(255, 255, 255);
 }
 .channelItem.selected {
     -fx-fill: yellow;
+}
+
+.channelItem:hover {
+
+    -fx-fill: yellow;
+    -fx-text-fill: RED;
+    
 }
 
 .leaderboard {

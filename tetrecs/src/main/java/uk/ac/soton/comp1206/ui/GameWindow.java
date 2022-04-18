@@ -105,6 +105,13 @@ public class GameWindow {
     }
 
     /**
+     * Display the multiplayer scene
+     */
+    public void startMultiplayer() {
+        loadScene(new MultiplayerScene(this));
+    }
+
+    /**
      * Display the scores.
      */
     public void startScore(Game game) {
