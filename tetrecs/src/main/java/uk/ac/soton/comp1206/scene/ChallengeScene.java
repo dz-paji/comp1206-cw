@@ -271,13 +271,17 @@ public class ChallengeScene extends BaseScene {
                     addKeyPress(e.getCode());
                     blockClicked(board.getBlock(aimWare[0].get(), aimWare[1].get()));
                 }
-                case OPEN_BRACKET, Q, Z, E, C, CLOSE_BRACKET -> {
+                case Z, C, CLOSE_BRACKET -> {
                     addKeyPress(e.getCode());
                     game.rotateCurrentPiece();
                 }
                 case SPACE, R -> {
                     addKeyPress(e.getCode());
                     game.swapPiece();
+                }
+                case OPEN_BRACKET, Q, E -> {
+                    addKeyPress(e.getCode());
+                    rotateAnticlockwise();
                 }
                 case ESCAPE -> endGame();
                 default -> addKeyPress(e.getCode());
@@ -452,5 +456,9 @@ public class ChallengeScene extends BaseScene {
 
     private void addKeyPress(KeyCode key) {
         this.konamiList.add(key);
+    }
+
+    private void rotateAnticlockwise() {
+        game.rotateCurrentPieceAnticlockwise();
     }
 }

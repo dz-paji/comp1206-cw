@@ -484,6 +484,20 @@ public class Game {
     }
 
     /**
+     * Rotate the current GamePiece
+     */
+    public void rotateCurrentPieceAnticlockwise() {
+        logger.info("Rotating currentPiece.");
+        this.currentPiece.rotate(3);
+
+        updatePieceBoard();
+
+        // play rotate sound
+        playSound("rotate.wav");
+    }
+
+
+    /**
      * Initialise the piece after currentPiece.
      */
     public void followingPiece() {

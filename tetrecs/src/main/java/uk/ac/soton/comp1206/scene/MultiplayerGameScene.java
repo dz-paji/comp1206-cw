@@ -74,13 +74,6 @@ public class MultiplayerGameScene extends ChallengeScene {
         lives.getStyleClass().add("lives");
         lives_text.getStyleClass().add("heading");
 
-        var multiplier = new Text();
-        var multiplier_text = new Text(
-                "Current multiplier:");
-        multiplier.textProperty().bind(game.getMultiplier().asString());
-        multiplier.getStyleClass().add("multiplier");
-        multiplier_text.getStyleClass().add("heading");
-
         var score = new Text();
         var score_text = new Text(
                 "Current score:");
@@ -90,13 +83,13 @@ public class MultiplayerGameScene extends ChallengeScene {
 
         var highScore = new Text();
         var highScore_text = new Text(
-                "Highest score:");
+                "Versus players:");
         highScore.textProperty().bind(game.getHighScore().asString());
         highScore.getStyleClass().add("hiscore");
         highScore_text.getStyleClass().add("heading");
 
         var statsBox = new VBox();
-        statsBox.getChildren().addAll(level_text, level, lives_text, lives, multiplier_text, multiplier, score_text,
+        statsBox.getChildren().addAll(level_text, level, lives_text, lives, score_text,
                 score, highScore_text, highScore);
 
         // Show current Piece
