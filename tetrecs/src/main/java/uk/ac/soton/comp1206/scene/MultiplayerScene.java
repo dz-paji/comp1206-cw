@@ -4,7 +4,6 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -39,6 +38,8 @@ public class MultiplayerScene extends BaseScene {
 
     private final VBox erroMsgView = new VBox();
 
+    private Timer pollPlaTimer = new Timer();
+
     public MultiplayerScene(GameWindow gameWindow) {
         super(gameWindow);
         this.communicator = gameWindow.getCommunicator();
@@ -61,6 +62,30 @@ public class MultiplayerScene extends BaseScene {
         };
         timer.scheduleAtFixedRate(reqChannels, 500, 10000);
 
+        this.chanPane.setChannelMsgListener((msg) -> {
+            this.communicator.send(msg);
+        });
+
+        this.chanPane.visibleProperty().addListener((listener, oldValue, newValue) -> {
+            // When chanPane is visible, polling player data
+            if (newValue == true) {
+                Platform.runLater(() -> {
+                    TimerTask pollPlayer = new TimerTask() {
+
+                        @Override
+                        public void run() {
+                            communicator.send("USERS");
+                        }
+
+                    };
+                    pollPlaTimer = new Timer();
+                    pollPlaTimer.schedule(pollPlayer, 10000, 15000);
+                    
+                });
+            } else if (newValue == false) {
+                pollPlaTimer.cancel();
+            }
+        });
     }
 
     /**
@@ -150,6 +175,16 @@ public class MultiplayerScene extends BaseScene {
             case "MSG ":
                 Platform.runLater(() -> {
                     chanMsgHandler(msg);
+                });
+                break;
+            case "PART":
+                Platform.runLater(() -> {
+                    this.chanPane.setVisible(false);
+                });
+                break;
+            case "HOST":
+                Platform.runLater(() -> {
+                    this.chanPane.setHost();
                 });
                 break;
         }

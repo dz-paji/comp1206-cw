@@ -24,13 +24,13 @@
 .join-gridpane {
     -fx-background-color: #f57b0056;
     -fx-padding: 10;
-    -fx-effect: dropshadow(gaussian, #bb4e00be, 10, 0, 5, 5);
+    /* -fx-effect: dropshadow(gaussian, #bb4e00be, 10, 0, 5, 5); */
 }
 
 .chan-gridpane {
     -fx-background-color: #ffa20091;
     -fx-padding: 10;
-    -fx-effect: dropshadow(gaussian, #c67000c0, 10, 0, 5, 5);
+    /* -fx-effect: dropshadow(gaussian, #c67000c0, 10, 0, 5, 5); */
 }
 
 .chanpaneTitle {
