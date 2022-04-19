@@ -92,6 +92,9 @@ public class MultiplayerScene extends BaseScene {
                 pollPlaTimer.cancel();
             }
         });
+
+        // Listen for ESC key press.
+        gameWindow.getScene().setOnKeyPressed((event) -> quit());
     }
 
     /**
@@ -270,6 +273,14 @@ public class MultiplayerScene extends BaseScene {
      */
     public void chanMsgHandler(String msg) {
         this.chanPane.addMsg(msg);
+    }
+
+    public void quit() {
+        this.communicator.send("QUIT");
+        gameWindow.cleanup();
+        gameWindow.startMenu();
+        this.timer.cancel();
+        this.pollPlaTimer.cancel();
     }
 
 }

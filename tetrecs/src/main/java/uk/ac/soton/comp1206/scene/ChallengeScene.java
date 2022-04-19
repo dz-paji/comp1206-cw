@@ -54,21 +54,36 @@ public class ChallengeScene extends BaseScene {
     /**
      * The PieceBoard displays the current piece.
      */
-    private final PieceBoard pieceBoard;
+    protected final PieceBoard pieceBoard;
 
     /**
      * The PieceBoard displays the following piece.
      */
-    private final PieceBoard followingPieceBoard;
+    protected final PieceBoard followingPieceBoard;
 
-    private IntegerProperty[] aimWare = { new SimpleIntegerProperty(0), new SimpleIntegerProperty(0) };
+    /**
+     * A pair of integer keeping track of current aim
+     */
+    protected IntegerProperty[] aimWare = { new SimpleIntegerProperty(0), new SimpleIntegerProperty(0) };
 
-    private GameBoard board;
+    /**
+     * GameBoard of the game.
+     */
+    protected GameBoard board;
 
-    private final Timeline timerLine = new Timeline();
+    /**
+     * Timeline to animate the timer
+     */
+    protected final Timeline timerLine = new Timeline();
 
-    private Rectangle timerBar;
+    /**
+     * Actual representation of timer
+     */
+    protected Rectangle timerBar;
 
+    /**
+     * A list of keycodes which stores series of keys pressed.
+     */
     private ListProperty<KeyCode> konamiList;
 
     /**
@@ -232,120 +247,40 @@ public class ChallengeScene extends BaseScene {
         gameWindow.getScene().setOnKeyPressed((e) -> {
             logger.info("Key {} pressed", e.getCharacter());
             switch (e.getCode()) {
-                case UP:
+                case UP, W -> {
                     addKeyPress(e.getCode());
-
                     aimUp();
-                    break;
-
-                case DOWN:
+                }
+                case DOWN, S -> {
                     addKeyPress(e.getCode());
-
                     aimDown();
-                    break;
-
-                case LEFT:
+                }
+                case LEFT, A -> {
                     addKeyPress(e.getCode());
-
                     aimLeft();
-                    break;
-
-                case RIGHT:
+                }
+                case RIGHT, D -> {
                     addKeyPress(e.getCode());
-
                     aimRight();
-                    break;
-
-                case W:
-                    addKeyPress(e.getCode());
-
-                    aimUp();
-                    break;
-
-                case A:
-                    addKeyPress(e.getCode());
-
-                    aimLeft();
-                    break;
-
-                case S:
-                    addKeyPress(e.getCode());
-
-                    aimDown();
-                    break;
-
-                case D:
-                    addKeyPress(e.getCode());
-
-                    aimRight();
-                    break;
-
-                case ENTER:
+                }
+                case ENTER -> {
                     blockClicked(board.getBlock(aimWare[0].get(), aimWare[1].get()));
                     konamiCheck();
-                    break;
-
-                case X:
+                }
+                case X -> {
                     addKeyPress(e.getCode());
-
                     blockClicked(board.getBlock(aimWare[0].get(), aimWare[1].get()));
-                    break;
-
-                case OPEN_BRACKET:
+                }
+                case OPEN_BRACKET, Q, Z, E, C, CLOSE_BRACKET -> {
                     addKeyPress(e.getCode());
-
                     game.rotateCurrentPiece();
-                    break;
-
-                case Q:
+                }
+                case SPACE, R -> {
                     addKeyPress(e.getCode());
-
-                    game.rotateCurrentPiece();
-                    break;
-
-                case Z:
-                    addKeyPress(e.getCode());
-
-                    game.rotateCurrentPiece();
-                    break;
-
-                case E:
-                    addKeyPress(e.getCode());
-
-                    game.rotateCurrentPiece();
-                    break;
-
-                case C:
-                    addKeyPress(e.getCode());
-
-                    game.rotateCurrentPiece();
-                    break;
-
-                case CLOSE_BRACKET:
-                    addKeyPress(e.getCode());
-
-                    game.rotateCurrentPiece();
-                    break;
-
-                case SPACE:
-                    addKeyPress(e.getCode());
-
                     game.swapPiece();
-                    break;
-
-                case R:
-                    addKeyPress(e.getCode());
-
-                    game.swapPiece();
-                    break;
-
-                case ESCAPE:
-                    endGame();
-                    break;
-
-                default:
-                    addKeyPress(e.getCode());
-                    break;
+                }
+                case ESCAPE -> endGame();
+                default -> addKeyPress(e.getCode());
             }
         });
 
@@ -376,47 +311,79 @@ public class ChallengeScene extends BaseScene {
         logger.info("Key being pressed is: {}", e.getCharacter());
     }
 
-    private void aimUp() {
+    /**
+     * Aim at the block higher than above
+     */
+    protected void aimUp() {
         if (aimWare[1].get() > 0) {
             aimWare[1].set(aimWare[1].get() - 1);
         }
     }
 
-    private void aimDown() {
+    /**
+     * Aim at the block in the below
+     */
+    protected void aimDown() {
         if (aimWare[1].get() < game.getRows() - 1) {
             aimWare[1].set(aimWare[1].get() + 1);
         }
     }
 
-    private void aimLeft() {
+    /**
+     * Aim at the block in the left
+     */
+    protected void aimLeft() {
         if (aimWare[0].get() > 0) {
             aimWare[0].set(aimWare[0].get() - 1);
         }
     }
 
-    private void aimRight() {
+    /**
+     * Aim at the block to the right
+     */
+    protected void aimRight() {
         if (aimWare[0].get() < game.getCols() - 1) {
             aimWare[0].set(aimWare[0].get() + 1);
         }
     }
 
-    private void aimXUpdate(ObservableValue<? extends Number> observable, Number oldNumber, Number newNumber) {
+    /**
+     * Draw the aim indication at game board when x changed.
+     * @param observable The observable value
+     * @param oldNumber old x coordinate
+     * @param newNumber new x coordinate
+     */
+    protected void aimXUpdate(ObservableValue<? extends Number> observable, Number oldNumber, Number newNumber) {
         board.rePaintAll();
         board.getBlock(aimWare[0].get(), aimWare[1].get()).highlight();
         board.getBlock(oldNumber.intValue(), aimWare[1].get()).paint();
     }
 
-    private void aimYUpdate(ObservableValue<? extends Number> observable, Number oldNumber, Number newNumber) {
+    /**
+     * Draw the aim indication at game board when y changed
+     * @param observable the observable value
+     * @param oldNumber old y coordinate
+     * @param newNumber new y coordinate
+     */
+    protected void aimYUpdate(ObservableValue<? extends Number> observable, Number oldNumber, Number newNumber) {
         board.rePaintAll();
         board.getBlock(aimWare[0].get(), aimWare[1].get()).highlight();
         board.getBlock(aimWare[0].get(), oldNumber.intValue()).paint();
     }
 
-    private void lineCleared(Set<GameBlockCoordinate> coordinates) {
+    /**
+     * Do the fade out animation when a line is cleared
+     * @param coordinates Set of GameBlockCoordinate which got cleared.
+     */
+    protected void lineCleared(Set<GameBlockCoordinate> coordinates) {
         board.fadeOut(coordinates);
     }
 
-    private void animateTimerBar(int delay) {
+    /**
+     * Bring animation to timer
+     * @param delay duration of animation
+     */
+    protected void animateTimerBar(int delay) {
         if (delay == -1) {
             endGame();
             this.timerLine.stop();
