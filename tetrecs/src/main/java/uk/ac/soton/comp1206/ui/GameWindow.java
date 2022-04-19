@@ -105,6 +105,11 @@ public class GameWindow {
     }
 
     /**
+     * Start a multiplayer game
+     */
+    public void startMultiplayerGame() {loadScene(new MultiplayerGameScene(this));}
+
+    /**
      * Display the multiplayer scene
      */
     public void startMultiplayer() {

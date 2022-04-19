@@ -55,42 +55,54 @@ public class Game {
      * Tracks previous interval of score. 0 means score is between 0-999, 1 means
      * score is between 1000-1999.
      */
-    private int scoreTracker = 0;
+    protected int scoreTracker = 0;
 
     /**
      * Score of current game
      */
-    private SimpleIntegerProperty score = new SimpleIntegerProperty(0);
+    protected SimpleIntegerProperty score = new SimpleIntegerProperty(0);
 
     /**
      * Level of current game
      */
-    private SimpleIntegerProperty level = new SimpleIntegerProperty(0);
+    protected SimpleIntegerProperty level = new SimpleIntegerProperty(0);
 
     /**
      * Lives remaining of this game
      */
-    private SimpleIntegerProperty lives = new SimpleIntegerProperty(3);
+    protected SimpleIntegerProperty lives = new SimpleIntegerProperty(3);
 
     /**
      * Score multiplier of this game
      */
-    private SimpleIntegerProperty multiplier = new SimpleIntegerProperty(1);
+    protected SimpleIntegerProperty multiplier = new SimpleIntegerProperty(1);
 
     /**
      * Listener updates the current GamePiece.
      */
-    private NextPieceListener nextPieceListener;
+    protected NextPieceListener nextPieceListener;
 
-    private final Multimedia soundPlayer;
+    /**
+     * Sound player to play sound
+     */
+    protected final Multimedia soundPlayer;
 
-    private LineClearedListener lineClearedListener;
+    /**
+     * Handles line cleared events
+     */
+    protected LineClearedListener lineClearedListener;
 
-    private Timer countdownTimer;
+    /**
+     * Schedule time to deduct time and swap piece.
+     */
+    protected Timer countdownTimer;
 
-    private GameLoopListener gameLoopListener;
+    /**
+     * Handles gameloop events
+     */
+    protected GameLoopListener gameLoopListener;
 
-    private IntegerProperty highestScore = new SimpleIntegerProperty(0);
+    private final IntegerProperty highestScore = new SimpleIntegerProperty(0);
 
     /**
      * Create a new game with the specified rows and columns. Creates a
@@ -110,7 +122,7 @@ public class Game {
         this.currentPiece = spawnPiece();
         this.followingPiece();
 
-        // Initialise mediaplayer
+        // Initialise media-player
         soundPlayer = new Multimedia();
     }
 
@@ -544,7 +556,7 @@ public class Game {
      * 
      * @return the timer delay
      */
-    private int getTimerDelay() {
+    protected int getTimerDelay() {
         int delay = 12000 - 500 * this.level.get();
         // Check if reaching the minimum delay time
         if (delay <= 2500) {
@@ -592,7 +604,7 @@ public class Game {
     /**
      * Reset the time after a piece is placed in case on delay changes.
      */
-    private void resetTimer() {
+    public void resetTimer() {
         this.countdownTimer.cancel();
         logger.info("Timer cancelled.");
         gameLoop();

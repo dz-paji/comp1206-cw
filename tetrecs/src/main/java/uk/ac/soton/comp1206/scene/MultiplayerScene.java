@@ -181,6 +181,9 @@ public class MultiplayerScene extends BaseScene {
             case "NICK" -> Platform.runLater(() -> {
                 this.chanPane.msgNickHandler(msg);
             });
+            case "STAR" -> Platform.runLater(() -> {
+                gameWindow.startMultiplayerGame();
+            });
         }
     }
 

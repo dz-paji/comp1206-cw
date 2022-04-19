@@ -1,5 +1,6 @@
 package uk.ac.soton.comp1206.scene;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -11,6 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.GameBlock;
 import uk.ac.soton.comp1206.component.GameBoard;
+import uk.ac.soton.comp1206.game.MultiplayerGame;
+import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
@@ -18,7 +21,13 @@ import uk.ac.soton.comp1206.ui.GameWindow;
  * Hold the UI, interaction and logic of a Multiplayer Game.
  */
 public class MultiplayerGameScene extends ChallengeScene {
+
+    private final VBox versusScoreBox = new VBox();
     private static final Logger logger = LogManager.getLogger(MenuScene.class);
+
+    private final Communicator communicator;
+
+    private MultiplayerGame game;
 
 
     /**
@@ -28,6 +37,7 @@ public class MultiplayerGameScene extends ChallengeScene {
      */
     public MultiplayerGameScene(GameWindow gameWindow) {
         super(gameWindow);
+        this.communicator = gameWindow.getCommunicator();
     }
 
     /**
@@ -81,16 +91,13 @@ public class MultiplayerGameScene extends ChallengeScene {
         score.getStyleClass().add("score");
         score_text.getStyleClass().add("heading");
 
-        var highScore = new Text();
-        var highScore_text = new Text(
+        var versusText = new Text(
                 "Versus players:");
-        highScore.textProperty().bind(game.getHighScore().asString());
-        highScore.getStyleClass().add("hiscore");
-        highScore_text.getStyleClass().add("heading");
+        versusText.getStyleClass().add("heading");
 
         var statsBox = new VBox();
         statsBox.getChildren().addAll(level_text, level, lives_text, lives, score_text,
-                score, highScore_text, highScore);
+                score, versusText, versusScoreBox);
 
         // Show current Piece
         pieceBoard.setPiece(game.getPiece());
@@ -121,7 +128,47 @@ public class MultiplayerGameScene extends ChallengeScene {
      */
     @Override
     public void setupGame() {
+        game = new MultiplayerGame(5,5);
 
+        // Bind NextPieceListener.
+        game.setNextPieceListener((message, e) -> {
+            pieceBoard.setPiece(game.getPiece());
+            pieceBoard.toggleIndicator();
+            followingPieceBoard.setPiece(game.getFollowingPiece());
+        });
+
+        // Handle fadeOut animation
+        game.setOnLineCleared(this::lineCleared);
+
+        // Register timer
+        game.setOnGameLoop(this::animateTimerBar);
+
+        game.setCommuListener((msg) -> {
+            communicator.send(msg);
+        });
+
+    }
+
+    /**
+     * Initialise the game
+     */
+    @Override
+    public void initialise() {
+        this.communicator.addListener((msg) -> {
+            switch (msg.substring(0,4)) {
+                case "SCOR" -> {
+
+                }
+                case "PIEC" -> {
+                    Platform.runLater(() -> {
+                        game.enqueuePiece(Integer.parseInt(msg.split(" ")[1]));
+                    });
+                }
+                case "MSG " -> {
+
+                }
+            }
+        });
     }
 
     private void blockClicked(GameBlock block) {
@@ -131,4 +178,6 @@ public class MultiplayerGameScene extends ChallengeScene {
     private void pieceBoardClicked(GameBlock block) {
         game.swapPiece();
     }
+
+
 }
