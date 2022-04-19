@@ -1,11 +1,15 @@
 package uk.ac.soton.comp1206.scene;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import uk.ac.soton.comp1206.component.ChannelPane;
 import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
@@ -20,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 public class MultiplayerScene extends BaseScene {
     private final Communicator communicator;
@@ -31,6 +36,8 @@ public class MultiplayerScene extends BaseScene {
     private ChannelPane chanPane = new ChannelPane();
 
     private final VBox channelBox = new VBox();
+
+    private final VBox erroMsgView = new VBox();
 
     public MultiplayerScene(GameWindow gameWindow) {
         super(gameWindow);
@@ -74,25 +81,40 @@ public class MultiplayerScene extends BaseScene {
         joinPane.getStyleClass().add("join-gridpane");
         var currGameText = new Text("Current Games");
         currGameText.getStyleClass().add("joinpaneTitle");
+        var createChanButton = new Button("Host game");
+        var chanNameField = new TextField();
+        // this.erroMsgView.getStyleClass().add("error-listview");
+
         joinPane.add(currGameText, 1, 0);
         joinPane.add(channelScrollPane, 1, 2);
+        joinPane.add(createChanButton, 2, 3);
+        joinPane.add(chanNameField, 1, 3);
         channelScrollPane.setContent(channelBox);
         channelScrollPane.getStyleClass().add("scroller");
         chanPane.setVisible(false);
 
-        mainPane.add(joinPane, 1, 1, 2, 4);
-        mainPane.add(chanPane, 4, 1, 2, 4);
+        // Handles host new game interaction
+        createChanButton.setOnMouseClicked((e) -> {
+            this.communicator.send("CREATE " + chanNameField.getText());
+        });
+
+        mainPane.add(erroMsgView, 0, 1);
+        mainPane.add(joinPane, 1, 1);
+        mainPane.add(chanPane, 3, 1);
 
         // Setting up grid
         ColumnConstraints border = new ColumnConstraints();
         border.setPercentWidth(15);
         ColumnConstraints joinPaneConstraints = new ColumnConstraints();
-        joinPaneConstraints.setPrefWidth(25);
+        joinPaneConstraints.setPercentWidth(35);
         ColumnConstraints gap = new ColumnConstraints();
         gap.setPrefWidth(30);
         ColumnConstraints chanPaneConstraints = new ColumnConstraints();
         chanPaneConstraints.setPercentWidth(40);
-        mainPane.getColumnConstraints().addAll(border, joinPaneConstraints, gap);
+        mainPane.getColumnConstraints().addAll(border, joinPaneConstraints, gap, chanPaneConstraints);
+
+        GridPane.setVgrow(joinPane, Priority.ALWAYS);
+        GridPane.setVgrow(chanPane, Priority.ALWAYS);
     }
 
     /**
@@ -119,6 +141,17 @@ public class MultiplayerScene extends BaseScene {
                 Platform.runLater(() -> {
                     chanPane.updatePlayer(msg);
                 });
+                break;
+            case "ERRO":
+                Platform.runLater(() -> {
+                    msgErroHandler(msg);
+                });
+                break;
+            case "MSG ":
+                Platform.runLater(() -> {
+                    chanMsgHandler(msg);
+                });
+                break;
         }
     }
 
@@ -154,7 +187,37 @@ public class MultiplayerScene extends BaseScene {
     }
 
     public void joinChannel(String name) {
+        logger.info("Requesting joinning channel {}", name);
         this.communicator.send("JOIN " + name);
+    }
+
+    public void msgErroHandler(String msg) {
+        logger.info("Handeling error message.");
+        Text errorMsg = new Text(msg.split("ERROR ")[1]);
+        Text error = new Text("Error!");
+        error.getStyleClass().add("joinpaneTitle");
+        errorMsg.getStyleClass().add("errorMsg");
+        var errorBox = new VBox();
+        errorBox.getChildren().addAll(error, errorMsg);
+        errorBox.getStyleClass().add("errorMsgBox");
+        erroMsgView.getChildren().add(errorBox);
+
+        FadeTransition fadeError = new FadeTransition(Duration.millis(3000), errorBox);
+        fadeError.setFromValue(0);
+        fadeError.setToValue(1);
+        logger.info("Play error effect now");
+        fadeError.setAutoReverse(true);
+        fadeError.setCycleCount(2);
+        fadeError.play();
+
+        fadeError.setOnFinished((e) -> {
+            logger.info("play effect finished, delete this error");
+            erroMsgView.getChildren().remove(errorBox);
+        });
+    }
+
+    public void chanMsgHandler(String msg) {
+        this.chanPane.addMsg(msg);
     }
 
 }

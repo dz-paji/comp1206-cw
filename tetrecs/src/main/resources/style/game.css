@@ -22,15 +22,41 @@
 }
 
 .join-gridpane {
-    -fx-background-color: #f57b003d;
-    -fx-padding: 30;
-    -fx-effect: dropshadow(gaussian, #bb4e004a,1,1,1,1);
+    -fx-background-color: #f57b0056;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, #bb4e00be, 10, 0, 5, 5);
+}
+
+.chan-gridpane {
+    -fx-background-color: #ffa20091;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, #c67000c0, 10, 0, 5, 5);
+}
+
+.chanpaneTitle {
+    -fx-font-family: Orbitron;
+    -fx-font-sie: 15px;
+    -fx-stroke: black;
 }
 
 .joinpaneTitle {
     -fx-font-family: Orbitron;
     -fx-font-sie: 15px;
     -fx-stroke: white;
+}
+
+.errorMsgBox {
+    -fx-stroke: white;
+    -fx-background-color: #ff000080;
+}
+
+.errorMsg{
+    -fx-strole: white;
+    -fx-font-size: 12px;
+}
+
+.error-listview {
+    -fx-background-color: transparent;
 }
 
 .menu {
@@ -153,13 +179,9 @@
     -fx-stroke: black;
 }
 
-.scoreitem {
+.scoreitem {}
 
-}
-
-.scorer {
-
-}
+.scorer {}
 
 .myscore {
     -fx-font-weight: 700;
@@ -169,12 +191,9 @@
     -fx-strikethrough: true;
 }
 
-.points {
-}
+.points {}
 
-.channelList {
-
-}
+.channelList {}
 
 .channelItem {
     -fx-fill: transparent;
@@ -186,6 +205,7 @@
     -fx-border-color: black;
     -fx-stroke: rgb(255, 255, 255);
 }
+
 .channelItem.selected {
     -fx-fill: yellow;
 }
@@ -194,7 +214,7 @@
 
     -fx-fill: yellow;
     -fx-text-fill: RED;
-    
+
 }
 
 .leaderboard {
@@ -229,7 +249,7 @@
 TextField {
     -fx-border-color: white;
     -fx-border-width: 1px;
-    -fx-background-color: rgba(0,0,0,0.5);
+    -fx-background-color: rgba(0, 0, 0, 0.5);
     -fx-text-fill: white;
     -fx-prompt-text-fill: grey;
 }
