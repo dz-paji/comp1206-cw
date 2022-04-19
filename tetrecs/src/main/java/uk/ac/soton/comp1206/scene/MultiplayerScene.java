@@ -25,14 +25,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
+/**
+ * This class contains UI, interaction and logic of a multiplayer lobby.
+ */
 public class MultiplayerScene extends BaseScene {
     private final Communicator communicator;
     private static final Logger logger = LogManager.getLogger(MenuScene.class);
     private final Timer timer = new Timer();
 
-    private ScrollPane channelScrollPane = new ScrollPane();
+    private final ScrollPane channelScrollPane = new ScrollPane();
 
-    private ChannelPane chanPane = new ChannelPane();
+    private final ChannelPane chanPane = new ChannelPane();
 
     private final VBox channelBox = new VBox();
 
@@ -40,6 +43,11 @@ public class MultiplayerScene extends BaseScene {
 
     private Timer pollPlaTimer = new Timer();
 
+    /**
+     * Initialise the scene
+     *
+     * @param gameWindow Game window
+     */
     public MultiplayerScene(GameWindow gameWindow) {
         super(gameWindow);
         this.communicator = gameWindow.getCommunicator();
@@ -62,13 +70,11 @@ public class MultiplayerScene extends BaseScene {
         };
         timer.scheduleAtFixedRate(reqChannels, 500, 10000);
 
-        this.chanPane.setChannelMsgListener((msg) -> {
-            this.communicator.send(msg);
-        });
+        this.chanPane.setChannelMsgListener(this.communicator::send);
 
         this.chanPane.visibleProperty().addListener((listener, oldValue, newValue) -> {
             // When chanPane is visible, polling player data
-            if (newValue == true) {
+            if (newValue) {
                 Platform.runLater(() -> {
                     TimerTask pollPlayer = new TimerTask() {
 
@@ -80,9 +86,9 @@ public class MultiplayerScene extends BaseScene {
                     };
                     pollPlaTimer = new Timer();
                     pollPlaTimer.schedule(pollPlayer, 10000, 15000);
-                    
+
                 });
-            } else if (newValue == false) {
+            } else if (!newValue) {
                 pollPlaTimer.cancel();
             }
         });
@@ -149,62 +155,57 @@ public class MultiplayerScene extends BaseScene {
      */
     public void msgHandler(String msg) {
         switch (msg.substring(0, 4)) {
-            default:
-                logger.info("Unhandled msg. Msg starts with {}", msg.substring(0, 4));
-                break;
-            case "CHAN":
-                Platform.runLater(() -> {
-                    msgChannelHandler(msg);
-                });
-                break;
-            case "JOIN":
-                Platform.runLater(() -> {
-                    msgJoinHandler(msg);
-                });
-                break;
-            case "USER":
-                Platform.runLater(() -> {
-                    chanPane.updatePlayer(msg);
-                });
-                break;
-            case "ERRO":
-                Platform.runLater(() -> {
-                    msgErroHandler(msg);
-                });
-                break;
-            case "MSG ":
-                Platform.runLater(() -> {
-                    chanMsgHandler(msg);
-                });
-                break;
-            case "PART":
-                Platform.runLater(() -> {
-                    this.chanPane.setVisible(false);
-                });
-                break;
-            case "HOST":
-                Platform.runLater(() -> {
-                    this.chanPane.setHost();
-                });
-                break;
+            default -> logger.info("Unhandled msg. Msg starts with {}", msg.substring(0, 4));
+            case "CHAN" -> Platform.runLater(() -> {
+                msgChannelHandler(msg);
+            });
+            case "JOIN" -> Platform.runLater(() -> {
+                msgJoinHandler(msg);
+            });
+            case "USER" -> Platform.runLater(() -> {
+                chanPane.updatePlayer(msg);
+            });
+            case "ERRO" -> Platform.runLater(() -> {
+                msgErroHandler(msg);
+            });
+            case "MSG " -> Platform.runLater(() -> {
+                chanMsgHandler(msg);
+            });
+            case "PART" -> Platform.runLater(() -> {
+                this.chanPane.setVisible(false);
+            });
+            case "HOST" -> Platform.runLater(this.chanPane::setHost);
+            case "NICK" -> Platform.runLater(() -> {
+                this.chanPane.msgNickHandler(msg);
+            });
         }
     }
 
+    /**
+     * Handles JOIN message
+     *
+     * @param msg message
+     */
     private void msgJoinHandler(String msg) {
         logger.info("Joining new channel");
         this.chanPane.updateName(msg.split(" ")[1]);
         this.chanPane.setVisible(true);
     }
 
+    /**
+     * Handle CHANNELS message. Update channels
+     *
+     * @param msg message
+     */
     public void msgChannelHandler(String msg) {
         logger.info("Handling CHANNELS message.");
         channelBox.getChildren().clear();
 
         if (msg.split(" ").length < 2) {
-            logger.info("No channel available.");
             return;
         }
 
+        // Refresh channel box.
         String[] channels = msg.split(" ")[1].split("\n");
         for (int i = 0; i < channels.length; i++) {
             var buttonBox = new HBox();
@@ -221,13 +222,25 @@ public class MultiplayerScene extends BaseScene {
         }
     }
 
+    /**
+     * Attempting to jon a channel
+     *
+     * @param name name of that channel
+     */
     public void joinChannel(String name) {
         logger.info("Requesting joinning channel {}", name);
         this.communicator.send("JOIN " + name);
     }
 
+    /**
+     * Handles ERROR message
+     *
+     * @param msg message
+     */
     public void msgErroHandler(String msg) {
         logger.info("Handeling error message.");
+
+        // Get error content
         Text errorMsg = new Text(msg.split("ERROR ")[1]);
         Text error = new Text("Error!");
         error.getStyleClass().add("joinpaneTitle");
@@ -237,20 +250,24 @@ public class MultiplayerScene extends BaseScene {
         errorBox.getStyleClass().add("errorMsgBox");
         erroMsgView.getChildren().add(errorBox);
 
+        // Fade in the message then fade out and delete it.
         FadeTransition fadeError = new FadeTransition(Duration.millis(3000), errorBox);
         fadeError.setFromValue(0);
         fadeError.setToValue(1);
-        logger.info("Play error effect now");
         fadeError.setAutoReverse(true);
         fadeError.setCycleCount(2);
         fadeError.play();
 
         fadeError.setOnFinished((e) -> {
-            logger.info("play effect finished, delete this error");
             erroMsgView.getChildren().remove(errorBox);
         });
     }
 
+    /**
+     * Handles MSG messages. Pass it to channel pane to deal with.
+     *
+     * @param msg message.
+     */
     public void chanMsgHandler(String msg) {
         this.chanPane.addMsg(msg);
     }
