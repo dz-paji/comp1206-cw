@@ -1,6 +1,8 @@
 package uk.ac.soton.comp1206.game;
 
 
+import javafx.beans.property.ListProperty;
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.event.ChannelMsgListener;
@@ -18,6 +20,8 @@ public class MultiplayerGame extends Game {
     private final ArrayDeque<GamePiece> pieceQueue = new ArrayDeque<>();
 
     private ChannelMsgListener listener;
+
+    private ListProperty<Pair<String, Integer>> scoreList;
 
 
     /**
@@ -95,7 +99,7 @@ public class MultiplayerGame extends Game {
 
     @Override
     public void initialiseGame() {
-        this.logger.info("Initialising game");
+        logger.info("Initialising game");
 
         this.score.addListener((event) -> {
             logger.info("Score got changed, new score: {}", score.get());
@@ -111,7 +115,11 @@ public class MultiplayerGame extends Game {
         gameLoop();
     }
 
-    public boolean isMultiplayer() {
-        return true;
+    public void saveScore(ListProperty<Pair<String, Integer>> scores) {
+        this.scoreList = scores;
+    }
+
+    public ListProperty<Pair<String, Integer>> getScoreList() {
+        return scoreList;
     }
 }

@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import uk.ac.soton.comp1206.App;
 import uk.ac.soton.comp1206.game.Game;
+import uk.ac.soton.comp1206.game.MultiplayerGame;
 import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.scene.*;
 
@@ -118,8 +119,22 @@ public class GameWindow {
 
     /**
      * Display the scores.
+     *
+     * @param game Game object
      */
     public void startScore(Game game) {
+        logger.info("Loading score for local game");
+
+        loadScene(new ScoreScene(this, game));
+    }
+
+    /**
+     * Display the score for multiplayer object
+     *
+     * @param game Multiplayer game object
+     */
+    public void startScore(MultiplayerGame game) {
+        logger.info("Loading score for multiplayer game");
         loadScene(new ScoreScene(this, game));
     }
     /**

@@ -1,9 +1,11 @@
 package uk.ac.soton.comp1206.scene;
 
 import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -13,22 +15,25 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.GameBlock;
 import uk.ac.soton.comp1206.component.GameBoard;
+import uk.ac.soton.comp1206.component.ScoreList;
 import uk.ac.soton.comp1206.game.Multimedia;
 import uk.ac.soton.comp1206.game.MultiplayerGame;
 import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
+import java.util.ArrayList;
+
 /**
  * Hold the UI, interaction and logic of a Multiplayer Game.
  */
 public class MultiplayerGameScene extends ChallengeScene {
 
-    private final VBox versusScoreBox = new VBox();
     private static final Logger logger = LogManager.getLogger(MultiplayerGameScene.class);
 
     private final Communicator communicator;
@@ -39,6 +44,9 @@ public class MultiplayerGameScene extends ChallengeScene {
 
     private final ScrollPane msgPane = new ScrollPane(new Text("Press \"T\" to start typing and ENTER to send."));
 
+    private final ListProperty<Pair<String, Integer>> scoreList = new SimpleListProperty<>(FXCollections.observableList(new ArrayList<>()));
+
+    private final ScoreList versusScore = new ScoreList(scoreList);
 
     /**
      * Create a new instance of Multiplayer Game.
@@ -112,7 +120,7 @@ public class MultiplayerGameScene extends ChallengeScene {
                 "Versus players:");
         versusText.getStyleClass().add("heading");
         var versusBox = new VBox();
-        versusBox.getChildren().addAll(versusText, versusScoreBox);
+        versusBox.getChildren().addAll(versusText, versusScore);
         versusBox.getStyleClass().add("playerBox");
         mainPane.setLeft(versusBox);
 
@@ -179,17 +187,9 @@ public class MultiplayerGameScene extends ChallengeScene {
         logger.info("Initialise game");
         Multimedia.playBGM();
 
-        game.start();
         this.communicator.send("SCORES");
         // Show current Piece
-        if (game.getPiece() == null) {
-            try {
-                gameWindow.wait(5000);
-            } catch (InterruptedException e){
-                logger.error(e.getStackTrace());
-            }
-
-        }
+        game.start();
         pieceBoard.setPiece(game.getPiece());
         pieceBoard.toggleIndicator();
         followingPieceBoard.setPiece(game.getFollowingPiece());
@@ -239,32 +239,34 @@ public class MultiplayerGameScene extends ChallengeScene {
             logger.info("Processing a score update message");
             String[] thisScore = msg.split(" ")[1].split(":");
 
-            for (Node thisNode : versusScoreBox.getChildren()) {
-                Text thisLabel = (Text) thisNode;
-                if (thisLabel.getId().equals(thisScore[0])) {
-                    thisLabel.setText(thisScore[0] + ": " + thisScore[1]);
+            for (int i = 0; i < this.scoreList.size(); i++) {
+                var thisPair = scoreList.get(i);
+                if (thisPair.getKey().equals(thisScore[0])) {
+                    var newPair = new Pair<String, Integer>(thisScore[0], Integer.parseInt(thisScore[1]));
+                    scoreList.set(i, newPair);
+                    scoreList.remove(thisPair);
                 }
             }
         } else {
             logger.info("Processing a score list message");
-            versusScoreBox.getChildren().clear();
+            scoreList.clear();
 
             for (String thisScore : msg.split(" ")[1].split("\n")) {
                 logger.info("this score object contains: {}", thisScore);
                 String[] scoreInfo = thisScore.split(":");
-                var playerLabel = new Text();
-                playerLabel.setId(scoreInfo[0]);
+                Pair<String, Integer> newPair;
 
                 // Check whether the player died
                 if (scoreInfo[2].equals("DEAD")) {
-                    playerLabel.setText(scoreInfo[0] + ": " + scoreInfo[2]);
+                    newPair = new Pair<String, Integer>(scoreInfo[0], -1);
                 } else {
-                    playerLabel.setText(scoreInfo[0] + ": " + scoreInfo[1]);
+                    newPair = new Pair<String, Integer>(scoreInfo[0], Integer.parseInt(scoreInfo[1]));
                 }
 
-                versusScoreBox.getChildren().add(playerLabel);
+                scoreList.add(newPair);
             }
         }
+        versusScore.update(scoreList);
     }
 
     private void chatMsgHandler(String msg) {
@@ -291,10 +293,9 @@ public class MultiplayerGameScene extends ChallengeScene {
         logger.info("Cleanning up the game...");
         game.playSound("explode.wav");
         Multimedia.stopBGM();
+        game.saveScore(scoreList);
         game.endGame();
-        Platform.runLater(() -> {
-            gameWindow.startScore(game);
-        });
+        Platform.runLater(() -> gameWindow.startScore(game));
     }
 
 }

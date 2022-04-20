@@ -53,6 +53,9 @@ public class ScoreList extends BorderPane {
 
             var playerName = new Text(newPair.getKey() + ": ");
             var playerScore = new Text(newPair.getValue().toString());
+            if (newPair.getValue() == -1) {
+                playerScore.setText("Dead");
+            }
             playerName.getStyleClass().add("scorelist");
             playerScore.getStyleClass().add("scorelist");
             thisScore.getChildren().addAll(playerName, playerScore);

@@ -23,6 +23,7 @@ import javafx.scene.text.Text;
 import javafx.util.Pair;
 import uk.ac.soton.comp1206.component.ScoreList;
 import uk.ac.soton.comp1206.game.Game;
+import uk.ac.soton.comp1206.game.MultiplayerGame;
 import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
@@ -44,9 +45,11 @@ public class ScoreScene extends BaseScene {
     private Communicator communicator;
     private ScoreList remoScoreList;
 
+    private MultiplayerGame multiplayerGame;
+
     /**
      * Create a new instance of ScoreScene
-     * 
+     *
      * @param gameWindow The GameWindow it belongs to
      */
     public ScoreScene(GameWindow gameWindow, Game game) {
@@ -59,6 +62,17 @@ public class ScoreScene extends BaseScene {
         remoteScores = new SimpleListProperty<Pair<String, Integer>>(
                 FXCollections.observableArrayList(remoteScorePairs));
         loadScore();
+    }
+
+    public ScoreScene(GameWindow gameWindow, MultiplayerGame game) {
+        super(gameWindow);
+        this.multiplayerGame = game;
+
+        localScores = game.getScoreList();
+        var remoteScorePairs = new ArrayList<Pair<String, Integer>>();
+        remoteScores = new SimpleListProperty<Pair<String, Integer>>(
+                FXCollections.observableArrayList(remoteScorePairs));
+
     }
 
     /**
@@ -89,35 +103,37 @@ public class ScoreScene extends BaseScene {
                 logger.info("New Score submission success.");
             }
         });
+        if (this.game != null) {
+            int scoreListIndex = checkScore();
 
-        int scoreListIndex = checkScore();
-        if (scoreListIndex != -1) {
-            // Scene texts
-            var gameOver = new Text("Game Over");
-            gameOver.getStyleClass().add("bigtitle");
-            var highScorePromot = new Text("You beats a historic high score!");
-            var savePromot = new Text("Save it to proceed.");
-            savePromot.getStyleClass().add("title");
-            highScorePromot.getStyleClass().add("title");
+            if (scoreListIndex != -1 && this.game != null) {
+                // Scene texts
+                var gameOver = new Text("Game Over");
+                gameOver.getStyleClass().add("bigtitle");
+                var highScorePromot = new Text("You beats a historic high score!");
+                var savePromot = new Text("Save it to proceed.");
+                savePromot.getStyleClass().add("title");
+                highScorePromot.getStyleClass().add("title");
 
-            var nameTextField = new TextField("Your unique identifier");
-            var saveName = new Button("Save");
-            saveName.setOnMouseClicked((e) -> {
-                String name = nameTextField.getText();
-                localScores.add(scoreListIndex, new Pair<String, Integer>(name, game.getScore().get()));
-                writeScore();
-                writeOnlineScore(name, game.getScore().get());
+                var nameTextField = new TextField("Your unique identifier");
+                var saveName = new Button("Save");
+                saveName.setOnMouseClicked((e) -> {
+                    String name = nameTextField.getText();
+                    localScores.add(scoreListIndex, new Pair<String, Integer>(name, game.getScore().get()));
+                    writeScore();
+                    writeOnlineScore(name, game.getScore().get());
 
-                Platform.runLater(() -> {
-                    displayScoreList();
+                    Platform.runLater(() -> {
+                        displayScoreList();
+                    });
                 });
-            });
 
-            var titleBox = new VBox();
-            titleBox.getChildren().addAll(gameOver, highScorePromot, savePromot, nameTextField, saveName);
-            VBox.setVgrow(nameTextField, Priority.ALWAYS);
-            mainPane.setTop(titleBox);
-            titleBox.setAlignment(Pos.CENTER);
+                var titleBox = new VBox();
+                titleBox.getChildren().addAll(gameOver, highScorePromot, savePromot, nameTextField, saveName);
+                VBox.setVgrow(nameTextField, Priority.ALWAYS);
+                mainPane.setTop(titleBox);
+                titleBox.setAlignment(Pos.CENTER);
+            }
         } else {
             displayScoreList();
         }
@@ -139,7 +155,9 @@ public class ScoreScene extends BaseScene {
                 scoreList.update(localScores);
                 scoreList.reveal();
 
-            };
+            }
+
+            ;
         });
 
         // Update scoreList when remoteScores changed
@@ -150,7 +168,9 @@ public class ScoreScene extends BaseScene {
                 remoScoreList.update(remoteScores);
                 remoScoreList.setVisible(true);
                 remoScoreList.reveal();
-            };
+            }
+
+            ;
         });
 
         gameWindow.getScene().setOnKeyPressed((e) -> {
@@ -187,6 +207,9 @@ public class ScoreScene extends BaseScene {
         scoreList = new ScoreList(localScores);
         scoreList.getStyleClass().add("scorelist");
         var localScoreTxt = new Text("Local High Scores");
+        if (this.multiplayerGame != null) {
+            localScoreTxt.setText("Multiplayer scores");
+        }
         localScoreTxt.getStyleClass().add("title");
         var localScoreBox = new VBox();
         localScoreBox.getChildren().addAll(localScoreTxt, scoreList);
@@ -283,7 +306,7 @@ public class ScoreScene extends BaseScene {
 
     /**
      * Write specific score data to the score file.
-     * 
+     *
      * @param scores Score data to be wrote.
      */
     public void writeScore(ListProperty<Pair<String, Integer>> scores) {
@@ -308,7 +331,7 @@ public class ScoreScene extends BaseScene {
 
     /**
      * Check if game score beats any saved scores.
-     * 
+     *
      * @return index of the score beaten, or -1 if defeated.
      */
     public int checkScore() {
@@ -346,7 +369,7 @@ public class ScoreScene extends BaseScene {
 
     /**
      * Submit a higher score to remote server
-     * 
+     *
      * @param name  Name of the player
      * @param score Score of the game
      */
@@ -356,7 +379,7 @@ public class ScoreScene extends BaseScene {
 
     /**
      * Pharse online scores and store it to ListProperty.
-     * 
+     *
      * @param msg Message from communicator containing score information.
      */
     private void pharseOnlineScore(String msg) {
