@@ -1,8 +1,9 @@
 package uk.ac.soton.comp1206.game;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.event.ChannelMsgListener;
-import uk.ac.soton.comp1206.event.CommunicationsListener;
 
 import java.util.ArrayDeque;
 import java.util.Timer;
@@ -12,9 +13,12 @@ import java.util.TimerTask;
  * Contains multiplayer game logic.
  */
 public class MultiplayerGame extends Game {
+    private static final Logger logger = LogManager.getLogger(MultiplayerGame.class);
+
     private final ArrayDeque<GamePiece> pieceQueue = new ArrayDeque<>();
 
     private ChannelMsgListener listener;
+
 
     /**
      * Create a new instance of MultiplayerGame
@@ -24,6 +28,7 @@ public class MultiplayerGame extends Game {
      */
     public MultiplayerGame(int cols, int rows) {
         super(cols, rows);
+
     }
 
     /**
@@ -32,19 +37,9 @@ public class MultiplayerGame extends Game {
      * @param pieceValue value of incoming piece
      */
     public void enqueuePiece(int pieceValue) {
+        logger.info("Adding new piece {} to the game", pieceValue);
         pieceQueue.add(GamePiece.createPiece(pieceValue));
     }
-
-    /**
-     * Get the next GamePiece in queue
-     *
-     * @return
-     */
-    @Override
-    public GamePiece getPiece() {
-        return pieceQueue.getFirst();
-    }
-
     @Override
     public GamePiece spawnPiece() {
         this.listener.msgToSend("PIECE");
@@ -90,4 +85,33 @@ public class MultiplayerGame extends Game {
         this.countdownTimer.schedule(countdownTask, delay);
     }
 
+    @Override
+    public void loseLife() {
+        logger.info("A life is lost");
+        this.lives.set(this.lives.get() - 1);
+        this.listener.msgToSend("LIVES " + this.lives.get());
+        playSound("lifelose.wav");
+    }
+
+    @Override
+    public void initialiseGame() {
+        this.logger.info("Initialising game");
+
+        this.score.addListener((event) -> {
+            logger.info("Score got changed, new score: {}", score.get());
+            int changedScore = this.score.get() / 1000;
+            if (changedScore - this.scoreTracker > 0) {
+                this.scoreTracker += changedScore;
+                setLevel(getLevel().get() + changedScore);
+                playSound("level.wav");
+            }
+            this.listener.msgToSend("SCORE " + this.score.get());
+        });
+
+        gameLoop();
+    }
+
+    public boolean isMultiplayer() {
+        return true;
+    }
 }

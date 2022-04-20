@@ -118,10 +118,6 @@ public class Game {
         // Create a new grid model to represent the game state
         this.grid = new Grid(cols, rows);
 
-        // Spawn a new piece
-        this.currentPiece = spawnPiece();
-        this.followingPiece();
-
         // Initialise media-player
         soundPlayer = new Multimedia();
     }
@@ -131,6 +127,12 @@ public class Game {
      */
     public void start() {
         logger.info("Starting game");
+
+        // Spawn a new piece
+        this.followingPiece();
+        this.currentPiece = this.followingPiece;
+        followingPiece();
+
         initialiseGame();
     }
 
@@ -169,15 +171,15 @@ public class Game {
         int y = gameBlock.getY();
 
         // Check if the new piece can be placed
-        if (this.grid.canPlayPiece(this.currentPiece, x, y)) {
-            this.grid.playPiece(this.currentPiece, x, y);
-            logger.info("{} will be placed at {},{}", this.currentPiece.toString(), x, y);
+        if (this.grid.canPlayPiece(currentPiece, x, y)) {
+            this.grid.playPiece(currentPiece, x, y);
+            logger.info("{} will be placed at {},{}", currentPiece.toString(), x, y);
             playSound("place.wav");
 
             // Check for lines to clear
             afterPiece();
         } else {
-            logger.warn("{} can't be placed at {},{}", this.currentPiece.toString(), x, y);
+            logger.warn("{} can't be placed at {},{}", currentPiece.toString(), x, y);
             playSound("fail.wav");
         }
 

@@ -296,7 +296,7 @@ public class ChallengeScene extends BaseScene {
     /**
      * End the challenge and display scores.
      */
-    public void endGame() {
+    private void endGame() {
         logger.info("Cleanning up the game...");
         game.playSound("explode.wav");
         Multimedia.stopBGM();
@@ -458,7 +458,10 @@ public class ChallengeScene extends BaseScene {
         this.konamiList.add(key);
     }
 
-    private void rotateAnticlockwise() {
+    /**
+     * Rotate current piece in anti-clockwise direction
+     */
+    public void rotateAnticlockwise() {
         game.rotateCurrentPieceAnticlockwise();
     }
 }

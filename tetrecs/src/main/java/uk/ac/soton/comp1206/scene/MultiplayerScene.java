@@ -6,10 +6,12 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import uk.ac.soton.comp1206.component.ChannelPane;
+import uk.ac.soton.comp1206.game.Multimedia;
 import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
@@ -94,7 +96,11 @@ public class MultiplayerScene extends BaseScene {
         });
 
         // Listen for ESC key press.
-        gameWindow.getScene().setOnKeyPressed((event) -> quit());
+        gameWindow.getScene().setOnKeyPressed((event) -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                quit();
+            }
+        });
     }
 
     /**
@@ -106,7 +112,7 @@ public class MultiplayerScene extends BaseScene {
 
         root = new GamePane(gameWindow.getWidth(), gameWindow.getHeight());
         var mainPane = new GridPane();
-        mainPane.setGridLinesVisible(true);
+        // mainPane.setGridLinesVisible(true);
         mainPane.getStyleClass().add("multiplayer-background");
         root.getChildren().add(mainPane);
 
@@ -182,6 +188,9 @@ public class MultiplayerScene extends BaseScene {
                 this.chanPane.msgNickHandler(msg);
             });
             case "STAR" -> Platform.runLater(() -> {
+                this.pollPlaTimer.cancel();
+                this.timer.cancel();
+                Multimedia.stopMenu();
                 gameWindow.startMultiplayerGame();
             });
         }
