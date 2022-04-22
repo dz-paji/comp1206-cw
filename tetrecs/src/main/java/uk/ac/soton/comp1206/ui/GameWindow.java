@@ -21,7 +21,7 @@ import uk.ac.soton.comp1206.scene.*;
  * The GameWindow is the single window for the game where everything takes
  * place. To move between screens in the game,
  * we simply change the scene.
- *
+ * <p>
  * The GameWindow has methods to launch each of the different parts of the game
  * by switching scenes. You can add more
  * methods here to add more screens to the game.
@@ -30,8 +30,8 @@ public class GameWindow {
 
     private static final Logger logger = LogManager.getLogger(GameWindow.class);
 
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
 
     private final Stage stage;
 
@@ -44,7 +44,7 @@ public class GameWindow {
     /**
      * Create a new GameWindow attached to the given stage with the specified width
      * and height
-     * 
+     *
      * @param stage  stage
      * @param width  width
      * @param height height
@@ -108,13 +108,22 @@ public class GameWindow {
     /**
      * Start a multiplayer game
      */
-    public void startMultiplayerGame() {loadScene(new MultiplayerGameScene(this));}
+    public void startMultiplayerGame() {
+        loadScene(new MultiplayerGameScene(this));
+    }
 
     /**
      * Display the multiplayer scene
      */
     public void startMultiplayer() {
         loadScene(new MultiplayerScene(this));
+    }
+
+    /**
+     * Display settings scene
+     */
+    public void startSettings() {
+        loadScene(new SettingsScene(this));
     }
 
     /**
@@ -137,6 +146,7 @@ public class GameWindow {
         logger.info("Loading score for multiplayer game");
         loadScene(new ScoreScene(this, game));
     }
+
     /**
      * Setup the default settings for the stage itself (the window), such as the
      * title and minimum width and height.
@@ -150,7 +160,7 @@ public class GameWindow {
 
     /**
      * Load a given scene which extends BaseScene and switch over.
-     * 
+     *
      * @param newScene new scene to load
      */
     public void loadScene(BaseScene newScene) {
@@ -187,7 +197,7 @@ public class GameWindow {
 
     /**
      * Get the current scene being displayed
-     * 
+     *
      * @return scene
      */
     public Scene getScene() {
@@ -196,7 +206,7 @@ public class GameWindow {
 
     /**
      * Get the width of the Game Window
-     * 
+     *
      * @return width
      */
     public int getWidth() {
@@ -205,7 +215,7 @@ public class GameWindow {
 
     /**
      * Get the height of the Game Window
-     * 
+     *
      * @return height
      */
     public int getHeight() {
@@ -214,7 +224,7 @@ public class GameWindow {
 
     /**
      * Get the height property of the Game Window
-     * 
+     *
      * @return height property.
      */
     public IntegerProperty getHalfHeIntegerProperty() {
@@ -223,7 +233,7 @@ public class GameWindow {
 
     /**
      * Get the width property of the Game Window
-     * 
+     *
      * @return width property.
      */
     public IntegerProperty getWiIntegerProperty() {
@@ -232,11 +242,11 @@ public class GameWindow {
 
     /**
      * Get the communicator
-     * 
+     *
      * @return communicator
      */
     public Communicator getCommunicator() {
-    return communicator;
+        return communicator;
     }
 
     /**
@@ -248,5 +258,19 @@ public class GameWindow {
         this.communicator.disconnect();
         stage.close();
 
+    }
+
+    /**
+     * Update the width and height of GameWindow
+     *
+     * @param height new height
+     * @param width  new width
+     */
+    public void updateResolution(int height, int width) {
+        this.height = height;
+        this.width = width;
+
+        this.stage.setMinWidth(width);
+        this.stage.setMinHeight(height + 20);
     }
 }
