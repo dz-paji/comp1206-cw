@@ -283,7 +283,7 @@ public class ChallengeScene extends BaseScene {
                     addKeyPress(e.getCode());
                     rotateAnticlockwise();
                 }
-                case ESCAPE -> endGame();
+                case ESCAPE -> exitGame();
                 default -> addKeyPress(e.getCode());
             }
         });
