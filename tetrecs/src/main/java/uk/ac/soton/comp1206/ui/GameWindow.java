@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.App;
 import uk.ac.soton.comp1206.game.Game;
 import uk.ac.soton.comp1206.game.MultiplayerGame;
+import uk.ac.soton.comp1206.game.Settings;
 import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.scene.*;
 
@@ -60,6 +61,8 @@ public class GameWindow {
 
         // Setup resources
         setupResources();
+
+        Settings.applyConfig(this);
 
         // Setup default scene
         setupDefaultScene();
@@ -272,5 +275,8 @@ public class GameWindow {
 
         this.stage.setMinWidth(width);
         this.stage.setMinHeight(height + 20);
+        this.stage.setMaxWidth(width);
+        this.stage.setMaxHeight(height + 20);
+
     }
 }

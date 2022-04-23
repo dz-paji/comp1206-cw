@@ -30,6 +30,7 @@ public class App extends Application {
 
     /**
      * Start the game
+     *
      * @param args commandline arguments
      */
     public static void main(String[] args) {
@@ -39,17 +40,11 @@ public class App extends Application {
 
     /**
      * Called by JavaFX with the primary stage as a parameter. Begins the game by opening the Game Window
+     *
      * @param stage the default stage, main window
      */
     @Override
     public void start(Stage stage) {
-
-        var resolution = Settings.checkResolution();
-        if (resolution != null) {
-            this.height = Integer.parseInt(resolution.split("x")[0]);
-            this.width = Integer.parseInt(resolution.split("x")[1]);
-        }
-
         instance = this;
         this.stage = stage;
 
@@ -64,7 +59,7 @@ public class App extends Application {
         logger.info("Opening game window");
 
         //Change the width and height in this class to change the base rendering resolution for all game parts
-        var gameWindow = new GameWindow(stage,width,height);
+        var gameWindow = new GameWindow(stage, width, height);
 
         //Display the GameWindow
         stage.show();
@@ -80,6 +75,7 @@ public class App extends Application {
 
     /**
      * Get the singleton App instance
+     *
      * @return the app
      */
     public static App getInstance() {

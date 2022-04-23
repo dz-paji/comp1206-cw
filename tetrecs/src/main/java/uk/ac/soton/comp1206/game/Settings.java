@@ -21,6 +21,11 @@ public class Settings {
         try {
             // Read config file
             File confFile = new File("conf.config");
+
+            // break when no config saved
+            if (confFile.length() <= 1) {
+                return;
+            }
             var confFileReader = new FileInputStream(confFile);
             conf.load(confFileReader);
             confFileReader.close();
@@ -28,12 +33,14 @@ public class Settings {
             // Call appropriate methods
             var resolution = conf.getProperty("resolution");
             var resolutionArray = resolution.split("x");
-            gameWindow.updateResolution(Integer.parseInt(resolutionArray[0]), Integer.parseInt(resolutionArray[1]));
+            gameWindow.updateResolution(Integer.parseInt(resolutionArray[1]), Integer.parseInt(resolutionArray[0]));
 
             var bgmVol = conf.getProperty("bgmVol");
             Multimedia.setBGMVol(Double.parseDouble(bgmVol));
             var menuVol = conf.getProperty("menuVol");
             Multimedia.setMenuVol(Double.parseDouble(menuVol));
+            var fxVol = conf.getProperty("fxVol");
+            Multimedia.setFxVol(Double.parseDouble(fxVol));
 
 
         } catch (IOException e) {

@@ -168,9 +168,7 @@ public class ChallengeScene extends BaseScene {
                 score, highScore_text, highScore);
 
         // Show current Piece
-        pieceBoard.setPiece(game.getPiece());
         pieceBoard.toggleIndicator();
-        followingPieceBoard.setPiece(game.getFollowingPiece());
 
         // Rotate currentPiece when clicking PieceBoard
         pieceBoard.setOnBlockClick((e) -> {
@@ -237,6 +235,9 @@ public class ChallengeScene extends BaseScene {
         logger.info("Initialising Challenge");
         game.start();
         Multimedia.playBGM();
+
+        pieceBoard.setPiece(game.getPiece());
+        followingPieceBoard.setPiece(game.getFollowingPiece());
 
         getHighestScore();
 
