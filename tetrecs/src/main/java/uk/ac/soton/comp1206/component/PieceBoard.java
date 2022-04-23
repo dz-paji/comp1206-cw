@@ -9,7 +9,7 @@ public class PieceBoard extends GameBoard {
 
     /**
      * Create a new PieceBoard with its super class GameBoard.
-     * 
+     *
      * @param width  width of this board
      * @param height height of this board
      */
@@ -19,8 +19,32 @@ public class PieceBoard extends GameBoard {
     }
 
     /**
+     * Create a new PieceBoard with given cols and rows
+     *
+     * @param cols   number of rows
+     * @param rows   number of cols
+     * @param width  width of board
+     * @param height height of board
+     */
+    public PieceBoard(int cols, int rows, double width, double height) {
+        super(cols, rows, width, height);
+        this.setStyle("-fx-padding: 10");
+    }
+
+    /**
+     * Update the grid with given value at given location
+     *
+     * @param x x coordinate of block
+     * @param y y coordinate of block
+     * @param value new value to update
+     */
+    public void updateValue(int x, int y, int value) {
+        grid.set(x,y,value);
+    }
+
+    /**
      * Setting the piece displays in the board.
-     * 
+     *
      * @param currentPiece The GamePiece to be displayed.
      */
     public void setPiece(GamePiece currentPiece) {

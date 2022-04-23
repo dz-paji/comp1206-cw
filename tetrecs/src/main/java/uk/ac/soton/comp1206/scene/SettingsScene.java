@@ -87,6 +87,8 @@ public class SettingsScene extends BaseScene {
         fxVolSlider.setMax(1);
         fxVolLabel.getStyleClass().add("settingLabel");
 
+        // Custom volume
+
 
         var saveButton = new Button("Save");
         saveButton.getStyleClass().add("menuItem");

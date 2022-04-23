@@ -104,10 +104,12 @@ public class Game {
 
     private final IntegerProperty highestScore = new SimpleIntegerProperty(0);
 
+    protected Boolean isMultiplayer = true;
+
     /**
      * Create a new game with the specified rows and columns. Creates a
      * corresponding grid model.
-     * 
+     *
      * @param cols number of columns
      * @param rows number of rows
      */
@@ -162,10 +164,10 @@ public class Game {
 
     /**
      * Handle what should happen when a particular block is clicked
-     * 
+     *
      * @param gameBlock the block that was clicked
      */
-    public void blockClicked(GameBlock gameBlock) {
+    public String blockClicked(GameBlock gameBlock) {
         // Get the position of this block
         int x = gameBlock.getX();
         int y = gameBlock.getY();
@@ -183,20 +185,23 @@ public class Game {
             playSound("fail.wav");
         }
 
-        // Get the new value for this block
-        // int previousValue = grid.get(x,y);
-        // int newValue = previousValue + 1;
-        // if (newValue > GamePiece.PIECES) {
-        // newValue = 0;
-        // }
+        StringBuilder boardUpdate = new StringBuilder("BOARD ");
 
-        // Update the grid with the new value
-        // grid.set(x,y,newValue);
+        if (isMultiplayer) {
+            // Submit board block info
+            for (int i = 0; i < this.cols; i++) {
+                for (int j = 0; j < this.rows; j++) {
+                    boardUpdate.append(this.grid.get(i,j));
+                }
+            }
+            logger.info("Board message built: {}", boardUpdate.toString());
+        }
+        return boardUpdate.toString();
     }
 
     /**
      * Get the grid model inside this game representing the game state of the board
-     * 
+     *
      * @return game grid model
      */
     public Grid getGrid() {
@@ -205,7 +210,7 @@ public class Game {
 
     /**
      * Get the number of columns in this game
-     * 
+     *
      * @return number of columns
      */
     public int getCols() {
@@ -214,7 +219,7 @@ public class Game {
 
     /**
      * Get the number of rows in this game
-     * 
+     *
      * @return number of rows
      */
     public int getRows() {
@@ -223,7 +228,7 @@ public class Game {
 
     /**
      * Create a new piece
-     * 
+     *
      * @return the new piece
      */
     public GamePiece spawnPiece() {
@@ -328,7 +333,7 @@ public class Game {
 
     /**
      * Set the score of the game
-     * 
+     *
      * @param score the new score
      */
     public void setScore(int score) {
@@ -338,7 +343,7 @@ public class Game {
 
     /**
      * Get current scores of the game
-     * 
+     *
      * @return score of the game
      */
     public IntegerProperty getScore() {
@@ -347,7 +352,7 @@ public class Game {
 
     /**
      * Set the challenge level of the game
-     * 
+     *
      * @param level The new challenge level
      */
     public void setLevel(int level) {
@@ -357,7 +362,7 @@ public class Game {
 
     /**
      * Get the challenge level of the game
-     * 
+     *
      * @return challenge level
      */
     public IntegerProperty getLevel() {
@@ -366,7 +371,7 @@ public class Game {
 
     /**
      * Set lives reaming of the game
-     * 
+     *
      * @param lives new lives
      */
     public void setLives(int lives) {
@@ -376,7 +381,7 @@ public class Game {
 
     /**
      * Set the highest score
-     * 
+     *
      * @param highScore highest score
      */
     public void setHighestScore(int highScore) {
@@ -384,7 +389,6 @@ public class Game {
     }
 
     /**
-     * 
      * @return
      */
     public IntegerProperty getHighScore() {
@@ -402,7 +406,7 @@ public class Game {
 
     /**
      * Get current lives
-     * 
+     *
      * @return lives
      */
     public IntegerProperty getLives() {
@@ -411,7 +415,7 @@ public class Game {
 
     /**
      * Set the multiplier of the game
-     * 
+     *
      * @param multiplier the new multiplier to be set.
      */
     public void setMultiplier(int multiplier) {
@@ -421,7 +425,7 @@ public class Game {
 
     /**
      * Get current multiplier
-     * 
+     *
      * @return Multiplier
      */
     public IntegerProperty getMultiplier() {
@@ -430,7 +434,7 @@ public class Game {
 
     /**
      * Add score awared for clearing any lines.
-     * 
+     *
      * @param numLines  number of lines cleared by placing a block
      * @param numBlocks number of blocks cleared
      */
@@ -440,7 +444,7 @@ public class Game {
 
     /**
      * Update the multiplier
-     * 
+     *
      * @param numLines number of lines cleared after block click
      */
     public void checkMultiplier(int numLines) {
@@ -454,7 +458,7 @@ public class Game {
 
     /**
      * Get the current GamePiece
-     * 
+     *
      * @return Current GamePiece
      */
     public GamePiece getPiece() {
@@ -463,7 +467,7 @@ public class Game {
 
     /**
      * Get the following GamePiece.
-     * 
+     *
      * @return GamePiece after currentPiece.
      */
     public GamePiece getFollowingPiece() {
@@ -537,7 +541,7 @@ public class Game {
 
     /**
      * Play given sound file
-     * 
+     *
      * @param soundName Name of the sound file
      */
     public void playSound(String soundName) {
@@ -546,7 +550,7 @@ public class Game {
 
     /**
      * Handles the Line cleared event.
-     * 
+     *
      * @param listener the listener to be added
      */
     public void setOnLineCleared(LineClearedListener listener) {
@@ -555,7 +559,7 @@ public class Game {
 
     /**
      * Calculate the timer delay
-     * 
+     *
      * @return the timer delay
      */
     protected int getTimerDelay() {
@@ -621,7 +625,7 @@ public class Game {
 
     /**
      * Link the GameLoop timer with UI timer
-     * 
+     *
      * @param listener the lisenter links timers
      */
     public void setOnGameLoop(GameLoopListener listener) {

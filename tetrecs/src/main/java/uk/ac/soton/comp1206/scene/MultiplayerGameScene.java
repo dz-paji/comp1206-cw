@@ -5,6 +5,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -19,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.GameBlock;
 import uk.ac.soton.comp1206.component.GameBoard;
+import uk.ac.soton.comp1206.component.PieceBoard;
 import uk.ac.soton.comp1206.component.ScoreList;
 import uk.ac.soton.comp1206.game.Multimedia;
 import uk.ac.soton.comp1206.game.MultiplayerGame;
@@ -47,6 +49,9 @@ public class MultiplayerGameScene extends ChallengeScene {
 
     private final ScoreList versusScore = new ScoreList(scoreList);
 
+    private final PieceBoard playerBoard = new PieceBoard(5, 5, 30, 30);
+
+    private final Label playerID = new Label();
     /**
      * Create a new instance of Multiplayer Game.
      *
@@ -122,6 +127,12 @@ public class MultiplayerGameScene extends ChallengeScene {
         versusBox.getChildren().addAll(versusText, versusScore);
         versusBox.getStyleClass().add("playerBox");
         mainPane.setLeft(versusBox);
+
+        // Show other player's board in versus box
+        var playerBox = new VBox();
+        playerBox.getChildren().addAll(playerBoard, playerID);
+        playerBox.setAlignment(Pos.CENTER);
+        versusBox.getChildren().add(playerBox);
 
         // Rotate currentPiece when clicking PieceBoard
         pieceBoard.setOnBlockClick((e) -> game.rotateCurrentPiece());
@@ -225,7 +236,8 @@ public class MultiplayerGameScene extends ChallengeScene {
     }
 
     private void blockClicked(GameBlock block) {
-        game.blockClicked(block);
+        String boardMsg = game.blockClicked(block);
+        this.communicator.send(boardMsg);
     }
 
     private void pieceBoardClicked(GameBlock block) {
@@ -278,10 +290,29 @@ public class MultiplayerGameScene extends ChallengeScene {
             case "SCOR" -> Platform.runLater(() -> scoreMsgHandler(msg));
             case "PIEC" -> Platform.runLater(() -> game.enqueuePiece(Integer.parseInt(msg.split(" ")[1])));
             case "MSG " -> Platform.runLater(() -> chatMsgHandler(msg));
+            case "BOARD" -> Platform.runLater(() -> boardMsgHandler(msg));
             default -> logger.info("Unhandled msg.");
         }
     }
 
+    private void boardMsgHandler(String msg) {
+        var boardMsg = msg.split(" ")[1];
+        var boardInfo = boardMsg.split(":");
+        playerID.setText(boardInfo[0]);
+        playerBoard.resetBoard();
+        var blockIndex = 0;
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                playerBoard.updateValue(i, j, boardInfo[1].charAt(blockIndex));
+                blockIndex++;
+            }
+        }
+    }
+
+    /**
+     * Rotate this piece anti-clockwise
+     */
     @Override
     public void rotateAnticlockwise() {
         game.rotateCurrentPieceAnticlockwise();

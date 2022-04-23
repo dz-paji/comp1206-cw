@@ -32,7 +32,7 @@ public class MultiplayerGame extends Game {
      */
     public MultiplayerGame(int cols, int rows) {
         super(cols, rows);
-
+        this.isMultiplayer = true;
     }
 
     /**
