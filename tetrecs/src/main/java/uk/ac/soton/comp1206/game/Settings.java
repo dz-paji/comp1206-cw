@@ -1,15 +1,11 @@
 package uk.ac.soton.comp1206.game;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.ac.soton.comp1206.scene.MenuScene;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 

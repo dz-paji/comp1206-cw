@@ -9,8 +9,6 @@ import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.game.Settings;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
-import java.util.Objects;
-
 /**
  * JavaFX Application class
  */
