@@ -65,6 +65,7 @@ public class MenuScene extends BaseScene {
         var button = new Button("Single Player");
         var multiPlayerButton = new Button("Multiplayer");
         var instructionButton = new Button("Instructions");
+        var settingsButton = new Button("Settings");
 
         // Bind the button action to the startGame method in the menu
         button.setOnAction(this::startGame);
@@ -73,9 +74,12 @@ public class MenuScene extends BaseScene {
         instructionButton.getStyleClass().add("menuItem");
         multiPlayerButton.setOnAction(this::startMultiplayer);
         multiPlayerButton.getStyleClass().add("menuItem");
+        settingsButton.setOnAction(this::startSettings);
+        settingsButton.getStyleClass().add("menuItem");
+
 
         var buttonBox = new VBox();
-        buttonBox.getChildren().addAll(button, multiPlayerButton, instructionButton);
+        buttonBox.getChildren().addAll(button, multiPlayerButton, instructionButton, settingsButton);
         buttonBox.setAlignment(Pos.CENTER);
         GridPane.setHalignment(buttonBox, HPos.CENTER);
 
@@ -85,6 +89,10 @@ public class MenuScene extends BaseScene {
         mainPane.setHgap(100);
         mainPane.setVgap(50);
         mainPane.setPadding(new Insets(0, 10, 0, 10));
+    }
+
+    private void startSettings(ActionEvent actionEvent) {
+        gameWindow.startSettings();
     }
 
     /**

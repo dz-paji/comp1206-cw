@@ -13,7 +13,22 @@ import javafx.scene.media.MediaPlayer.Status;
 public class Multimedia {
     private static MediaPlayer audioPlayer;
     private static MediaPlayer bgmPlayer;
+
+    private static MediaPlayer menuPlayer;
     private static final Logger logger = LogManager.getLogger(Multimedia.class);
+
+    /**
+     * Set volume of menu media player
+     *
+     * @param vol new volume
+     */
+    public static void setMenuVol(double vol) {
+        menuPlayer.setVolume(vol);
+    }
+
+    public static void setBGMVol(double vol) {
+        bgmPlayer.setVolume(vol);
+    }
 
     /**
      * Method that plays given audio file
@@ -54,12 +69,12 @@ public class Multimedia {
      */
     public static void playMenuIntro() {
         Media bgm = new Media(Multimedia.class.getResource("/music/tendo_intro.mp3").toExternalForm());
-        bgmPlayer = new MediaPlayer(bgm);
+        menuPlayer = new MediaPlayer(bgm);
         // bgmPlayer.setVolume(0.3);
-        bgmPlayer.play();
+        menuPlayer.play();
         logger.info("Playing BGM intro");
 
-        bgmPlayer.setOnEndOfMedia(() -> {
+        menuPlayer.setOnEndOfMedia(() -> {
             playMenuMain();
         });
     }
@@ -69,12 +84,12 @@ public class Multimedia {
      */
     public static void playMenuMain() {
         Media bgm = new Media(Multimedia.class.getResource("/music/tendo_main.mp3").toExternalForm());
-        bgmPlayer = new MediaPlayer(bgm);
+        menuPlayer = new MediaPlayer(bgm);
         // bgmPlayer.setVolume(0.3);
-        bgmPlayer.play();
+        menuPlayer.play();
         logger.info("Playing BGM main");
 
-        bgmPlayer.setOnEndOfMedia(() -> {
+        menuPlayer.setOnEndOfMedia(() -> {
             playMenuMain();
             logger.info("BGM ends, restarting..");
         });
@@ -85,7 +100,7 @@ public class Multimedia {
      * Stop the current playing BGM.
      */
     public static void stopMenu() {
-        bgmPlayer.stop();
+        menuPlayer.stop();
     }
 
     /**
@@ -94,11 +109,11 @@ public class Multimedia {
      * @return status of menu bgm.
      */
     public static boolean isMenuPlaying() {
-        if (bgmPlayer == null) {
+        if (menuPlayer == null) {
             return false;
         }
 
-        Status nStatus = bgmPlayer.getStatus();
+        Status nStatus = menuPlayer.getStatus();
         if (nStatus == MediaPlayer.Status.PLAYING) {
             return true;
         } else {

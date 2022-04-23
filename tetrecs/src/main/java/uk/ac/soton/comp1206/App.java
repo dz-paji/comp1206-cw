@@ -6,7 +6,10 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import uk.ac.soton.comp1206.game.Settings;
 import uk.ac.soton.comp1206.ui.GameWindow;
+
+import java.util.Objects;
 
 /**
  * JavaFX Application class
@@ -16,12 +19,12 @@ public class App extends Application {
     /**
      * Base resolution width
      */
-    private final int width = 800;
+    private int width = 800;
 
     /**
      * Base resolution height
      */
-    private final int height = 600;
+    private int height = 600;
 
     private static App instance;
     private static final Logger logger = LogManager.getLogger(App.class);
@@ -42,6 +45,13 @@ public class App extends Application {
      */
     @Override
     public void start(Stage stage) {
+
+        var resolution = Settings.checkResolution();
+        if (resolution != null) {
+            this.height = Integer.parseInt(resolution.split("x")[0]);
+            this.width = Integer.parseInt(resolution.split("x")[1]);
+        }
+
         instance = this;
         this.stage = stage;
 
