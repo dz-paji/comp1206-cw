@@ -407,11 +407,6 @@ public class ChallengeScene extends BaseScene {
         // Animate color
         FillTransition turningYellow = new FillTransition(Duration.millis(delay), this.timerBar, Color.GREEN,
                 Color.RED);
-        // FillTransition turningRed = new FillTransition(Duration.millis(delay / 2),
-        // this.timerBar, Color.YELLOW, Color.RED);
-        // turningYellow.setOnFinished((e) -> {
-        // turningRed.play();
-        // });
 
         this.timerLine.play();
         turningYellow.play();

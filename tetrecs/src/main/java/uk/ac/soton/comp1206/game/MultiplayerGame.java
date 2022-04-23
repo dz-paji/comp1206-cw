@@ -66,7 +66,6 @@ public class MultiplayerGame extends Game {
             @Override
             public void run() {
                 loseLife();
-                listener.msgToSend("LIVES " + lives.getValue().toString());
 
                 // When no life remains, pass -1 as parameter to gameLoopListener to stop the
                 // challenge.
@@ -77,6 +76,7 @@ public class MultiplayerGame extends Game {
                     return;
                 }
 
+                listener.msgToSend("LIVES " + lives.getValue().toString());
                 multiplier.set(1);
                 afterPiece();
                 resetTimer();
@@ -121,5 +121,10 @@ public class MultiplayerGame extends Game {
 
     public ListProperty<Pair<String, Integer>> getScoreList() {
         return scoreList;
+    }
+
+    @Override
+    public void endGame() {
+        this.countdownTimer.cancel();
     }
 }

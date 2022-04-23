@@ -191,7 +191,7 @@ public class Game {
             // Submit board block info
             for (int i = 0; i < this.cols; i++) {
                 for (int j = 0; j < this.rows; j++) {
-                    boardUpdate.append(this.grid.get(i,j));
+                    boardUpdate.append(this.grid.get(i,j) + " ");
                 }
             }
             logger.info("Board message built: {}", boardUpdate.toString());

@@ -262,6 +262,12 @@ TextField {
 
 .playerBox Text {
     -fx-fill: white;
+    -fx-text-fill: white;
+}
+
+.playerBox Label {
+    -fx-fill: white;
+    -fx-text-fill: white;
 }
 
 .myname {
@@ -274,7 +280,12 @@ TextField {
     -fx-fill: white;
 }
 
-.settingLabel {
+.setting {
+    -fx-background-image: url("../images/4.jpg");
+    -fx-background-size: cover;
+}
+
+.setting Label {
     -fx-font-family: 'Orbitron';
     -fx-font-size: 20px;
     -fx-stroke: white;
@@ -282,3 +293,23 @@ TextField {
     -fx-text-fill: white;
 
 }
+
+.setting Button {
+    -fx-font-family: 'Orbitron';
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-stroke: #ff6f00;
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 1, 1.0, 1, 1);
+
+}
+
+.setting Button:hover {
+    -fx-text-fill: #ff6f00;
+}
+
+.setting Button.selected {
+    -fx-fill: #ff6f00;
+}
+

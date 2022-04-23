@@ -26,7 +26,7 @@ public class MenuScene extends BaseScene {
 
     /**
      * Create a new menu scene
-     * 
+     *
      * @param gameWindow the Game Window this will be displayed in
      */
     public MenuScene(GameWindow gameWindow) {
@@ -62,6 +62,7 @@ public class MenuScene extends BaseScene {
         RotateTransition logoRT = new RotateTransition(Duration.millis(3000), logoView);
         this.logoRT(logoRT);
 
+        // Buttons
         var button = new Button("Single Player");
         var multiPlayerButton = new Button("Multiplayer");
         var instructionButton = new Button("Instructions");
@@ -77,16 +78,16 @@ public class MenuScene extends BaseScene {
         settingsButton.setOnAction(this::startSettings);
         settingsButton.getStyleClass().add("menuItem");
 
-
         var buttonBox = new VBox();
         buttonBox.getChildren().addAll(button, multiPlayerButton, instructionButton, settingsButton);
         buttonBox.setAlignment(Pos.CENTER);
         GridPane.setHalignment(buttonBox, HPos.CENTER);
 
-        mainPane.add(logoView, 2, 1);
-        mainPane.add(buttonBox, 2, 5);
-        mainPane.gridLinesVisibleProperty();
-        mainPane.setHgap(100);
+        mainPane.add(logoView, 1, 1);
+        mainPane.add(buttonBox, 1, 5);
+
+        // Apply some Alignment
+        mainPane.setAlignment(Pos.CENTER);
         mainPane.setVgap(50);
         mainPane.setPadding(new Insets(0, 10, 0, 10));
     }
@@ -111,7 +112,7 @@ public class MenuScene extends BaseScene {
 
     /**
      * Handle when the Start Game button is pressed
-     * 
+     *
      * @param event event
      */
     private void startGame(ActionEvent event) {
@@ -121,7 +122,7 @@ public class MenuScene extends BaseScene {
 
     /**
      * Handle when the start instruction button is pressed
-     * 
+     *
      * @param event event
      */
     private void startInstruction(ActionEvent event) {
@@ -130,7 +131,7 @@ public class MenuScene extends BaseScene {
 
     /**
      * Handle when the start multiplayer game button is pressed
-     * 
+     *
      * @param event event
      */
     private void startMultiplayer(ActionEvent event) {

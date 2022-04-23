@@ -39,7 +39,7 @@ public class MultiplayerGameScene extends ChallengeScene {
 
     private final Communicator communicator;
 
-    private MultiplayerGame game;
+     private MultiplayerGame multiplayerGame;
 
     private final TextField msgField = new TextField();
 
@@ -49,9 +49,10 @@ public class MultiplayerGameScene extends ChallengeScene {
 
     private final ScoreList versusScore = new ScoreList(scoreList);
 
-    private final PieceBoard playerBoard = new PieceBoard(5, 5, 30, 30);
+    private final PieceBoard playerBoard = new PieceBoard(5, 5, 60, 60);
 
     private final Label playerID = new Label();
+
     /**
      * Create a new instance of Multiplayer Game.
      *
@@ -60,6 +61,7 @@ public class MultiplayerGameScene extends ChallengeScene {
     public MultiplayerGameScene(GameWindow gameWindow) {
         super(gameWindow);
         this.communicator = gameWindow.getCommunicator();
+
     }
 
     /**
@@ -87,27 +89,27 @@ public class MultiplayerGameScene extends ChallengeScene {
 
         // Handle block on gameboard grid being clicked
         board.setOnBlockClick(this::blockClicked);
-        board.setOnRightClick((e) -> game.rotateCurrentPiece());
+        board.setOnRightClick((e) -> multiplayerGame.rotateCurrentPiece());
 
         // Show stats
         var level = new Text();
         var level_text = new Text(
                 "Current Level:");
-        level.textProperty().bind(game.getLevel().asString());
+        level.textProperty().bind(multiplayerGame.getLevel().asString());
         level.getStyleClass().add("level");
         level_text.getStyleClass().add("heading");
 
         var lives = new Text();
         var lives_text = new Text(
                 "Lives remain:");
-        lives.textProperty().bind(game.getLives().asString());
+        lives.textProperty().bind(multiplayerGame.getLives().asString());
         lives.getStyleClass().add("lives");
         lives_text.getStyleClass().add("heading");
 
         var score = new Text();
         var score_text = new Text(
                 "Current score:");
-        score.textProperty().bind(game.getScore().asString());
+        score.textProperty().bind(multiplayerGame.getScore().asString());
         score.getStyleClass().add("score");
         score_text.getStyleClass().add("heading");
 
@@ -135,7 +137,7 @@ public class MultiplayerGameScene extends ChallengeScene {
         versusBox.getChildren().add(playerBox);
 
         // Rotate currentPiece when clicking PieceBoard
-        pieceBoard.setOnBlockClick((e) -> game.rotateCurrentPiece());
+        pieceBoard.setOnBlockClick((e) -> multiplayerGame.rotateCurrentPiece());
 
         // Swap GamePieces when clicking followingPieceBoard
         followingPieceBoard.setOnBlockClick(this::pieceBoardClicked);
@@ -163,7 +165,8 @@ public class MultiplayerGameScene extends ChallengeScene {
     @Override
     public void setupGame() {
         logger.info("Setting up game");
-        game = new MultiplayerGame(5, 5);
+        multiplayerGame = new MultiplayerGame(5, 5);
+        game = multiplayerGame;
 
         this.communicator.addListener(this::msgHandler);
 
@@ -174,19 +177,20 @@ public class MultiplayerGameScene extends ChallengeScene {
 
 
         // Bind NextPieceListener.
-        game.setNextPieceListener((message, e) -> {
-            pieceBoard.setPiece(game.getPiece());
+        multiplayerGame.setNextPieceListener((message, e) -> {
+            pieceBoard.setPiece(multiplayerGame.getPiece());
             pieceBoard.toggleIndicator();
-            followingPieceBoard.setPiece(game.getFollowingPiece());
+            followingPieceBoard.setPiece(multiplayerGame.getFollowingPiece());
         });
 
         // Handle fadeOut animation
-        game.setOnLineCleared(this::lineCleared);
+        multiplayerGame.setOnLineCleared(this::lineCleared);
 
         // Register timer
-        game.setOnGameLoop(this::animateTimerBar);
+        multiplayerGame.setOnGameLoop(this::animateTimerBar);
 
-        game.setCommuListener(communicator::send);
+        // Register communicator
+        multiplayerGame.setCommuListener(communicator::send);
     }
 
     /**
@@ -199,10 +203,10 @@ public class MultiplayerGameScene extends ChallengeScene {
 
         this.communicator.send("SCORES");
         // Show current Piece
-        game.start();
-        pieceBoard.setPiece(game.getPiece());
+        multiplayerGame.start();
+        pieceBoard.setPiece(multiplayerGame.getPiece());
         pieceBoard.toggleIndicator();
-        followingPieceBoard.setPiece(game.getFollowingPiece());
+        followingPieceBoard.setPiece(multiplayerGame.getFollowingPiece());
 
 
         // Key press support
@@ -214,8 +218,8 @@ public class MultiplayerGameScene extends ChallengeScene {
                 case LEFT, A -> aimLeft();
                 case RIGHT, D -> aimRight();
                 case X -> blockClicked(board.getBlock(aimWare[0].get(), aimWare[1].get()));
-                case Z, C, CLOSE_BRACKET -> game.rotateCurrentPiece();
-                case SPACE, R -> game.swapPiece();
+                case Z, C, CLOSE_BRACKET -> multiplayerGame.rotateCurrentPiece();
+                case SPACE, R -> multiplayerGame.swapPiece();
                 case OPEN_BRACKET, Q, E -> rotateAnticlockwise();
                 case ESCAPE -> endGame();
                 case T -> this.msgField.setVisible(true);
@@ -225,6 +229,7 @@ public class MultiplayerGameScene extends ChallengeScene {
         aimWare[0].addListener(this::aimXUpdate);
         aimWare[1].addListener(this::aimYUpdate);
 
+        // send by enter
         msgField.setOnKeyPressed((key) -> {
             if (key.getCode() == KeyCode.ENTER) {
                 this.communicator.send("MSG " + msgField.getText());
@@ -235,15 +240,30 @@ public class MultiplayerGameScene extends ChallengeScene {
 
     }
 
+    /**
+     * Handles game logic when gameboard block got clicked
+     *
+     * @param block the block was clicked
+     */
     private void blockClicked(GameBlock block) {
-        String boardMsg = game.blockClicked(block);
+        String boardMsg = multiplayerGame.blockClicked(block);
         this.communicator.send(boardMsg);
     }
 
+    /**
+     * Rotate current piece when pieceboard got clicked
+     *
+     * @param block The block was clicked
+     */
     private void pieceBoardClicked(GameBlock block) {
-        game.swapPiece();
+        multiplayerGame.swapPiece();
     }
 
+    /**
+     * Handles SCORES message
+     *
+     * @param msg message received
+     */
     private void scoreMsgHandler(String msg) {
         if (msg.split(" ")[1].matches("\\w+:\\d+")) {
             // Update player's score
@@ -280,31 +300,52 @@ public class MultiplayerGameScene extends ChallengeScene {
         versusScore.update(scoreList);
     }
 
+    /**
+     * Handles chat message
+     *
+     * @param msg received message
+     */
     private void chatMsgHandler(String msg) {
         Text playerMsg = new Text(msg.split(" ")[1].replace(":", ": "));
         msgPane.setContent(playerMsg);
     }
 
+    /**
+     * Registers message handlers.
+     *
+     * @param msg received message
+     */
     private void msgHandler(String msg) {
         switch (msg.substring(0, 4)) {
             case "SCOR" -> Platform.runLater(() -> scoreMsgHandler(msg));
-            case "PIEC" -> Platform.runLater(() -> game.enqueuePiece(Integer.parseInt(msg.split(" ")[1])));
+            case "PIEC" -> Platform.runLater(() -> multiplayerGame.enqueuePiece(Integer.parseInt(msg.split(" ")[1])));
             case "MSG " -> Platform.runLater(() -> chatMsgHandler(msg));
-            case "BOARD" -> Platform.runLater(() -> boardMsgHandler(msg));
+            case "BOAR" -> Platform.runLater(() -> boardMsgHandler(msg));
             default -> logger.info("Unhandled msg.");
         }
     }
 
+    /**
+     * Handles BOARD message
+     *
+     * @param msg received message
+     */
     private void boardMsgHandler(String msg) {
-        var boardMsg = msg.split(" ")[1];
-        var boardInfo = boardMsg.split(":");
-        playerID.setText(boardInfo[0]);
+        // format validator
+        if (!msg.contains(":")) {
+            return;
+        }
+
+        var blockInfo = msg.split(":")[1].split(" ");
+        var playerName = msg.split(":")[0].split(" ")[1];
+        playerID.setText(playerName);
         playerBoard.resetBoard();
         var blockIndex = 0;
 
+        // Set block value to board
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                playerBoard.updateValue(i, j, boardInfo[1].charAt(blockIndex));
+                playerBoard.updateValue(i, j, Integer.parseInt(blockInfo[blockIndex]));
                 blockIndex++;
             }
         }
@@ -315,16 +356,16 @@ public class MultiplayerGameScene extends ChallengeScene {
      */
     @Override
     public void rotateAnticlockwise() {
-        game.rotateCurrentPieceAnticlockwise();
+        multiplayerGame.rotateCurrentPieceAnticlockwise();
     }
 
     private void endGame() {
         this.communicator.send("DIE");
         logger.info("Cleanning up the game...");
-        game.playSound("explode.wav");
+        multiplayerGame.playSound("explode.wav");
         Multimedia.stopBGM();
-        game.saveScore(scoreList);
-        game.endGame();
+        multiplayerGame.saveScore(scoreList);
+        multiplayerGame.endGame();
         Platform.runLater(() -> gameWindow.startScore(game));
     }
 

@@ -2,6 +2,7 @@ package uk.ac.soton.comp1206.scene;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
@@ -37,6 +38,7 @@ public class SettingsScene extends BaseScene {
     @Override
     public void initialise() {
 
+        // Register exit key bind
         gameWindow.getScene().setOnKeyPressed((e) -> {
             if (e.getCode() == KeyCode.ESCAPE) {
                 gameWindow.startMenu();
@@ -50,6 +52,8 @@ public class SettingsScene extends BaseScene {
      */
     @Override
     public void build() {
+        logger.info("Building settings scene");
+
         root = new GamePane(gameWindow.getWidth(), gameWindow.getHeight());
 
         // Set up UI
@@ -59,7 +63,7 @@ public class SettingsScene extends BaseScene {
         var settingText = new Text("Settings");
         settingText.getStyleClass().add("title");
         settingPane.add(settingText, 0, 1);
-        settingPane.getStyleClass().add("menu-background");
+        settingPane.getStyleClass().add("setting");
 
         // Screen resolution options
         var resolutionLabel = new Label("Screen resolution");
@@ -87,12 +91,12 @@ public class SettingsScene extends BaseScene {
         fxVolSlider.setMax(1);
         fxVolLabel.getStyleClass().add("settingLabel");
 
-        // Custom volume
-
-
+        // save and exit
         var saveButton = new Button("Save");
-        saveButton.getStyleClass().add("menuItem");
+        //saveButton.getStyleClass().add("settingButton");
         saveButton.setOnAction(this::save);
+        var backButton = new Button("Back");
+        backButton.setOnAction((e) -> gameWindow.startMenu());
 
         // Layout menu
         settingPane.add(resolutionLabel, 1, 2);
@@ -103,8 +107,10 @@ public class SettingsScene extends BaseScene {
         settingPane.add(menuVolSlider, 2, 4);
         settingPane.add(fxVolLabel, 1, 5);
         settingPane.add(fxVolSlider, 2, 5);
-        settingPane.add(saveButton, 3, 5);
+        settingPane.add(saveButton, 3, 6);
+        settingPane.add(backButton,0,6);
 
+        settingPane.setAlignment(Pos.CENTER);
     }
 
     private void save(ActionEvent actionEvent) {
@@ -129,7 +135,14 @@ public class SettingsScene extends BaseScene {
             conf.store(confFileWriter, "save config");
             confFileWriter.close();
 
-            Platform.runLater(() -> Settings.applyConfig(gameWindow));
+            Platform.runLater(() -> {
+                Settings.applyConfig(gameWindow);
+
+                // Reload this scene to refresh ui component
+                gameWindow.startSettings();
+            });
+
+
 
         } catch (IOException e) {
             logger.error(e);

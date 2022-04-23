@@ -273,10 +273,11 @@ public class GameWindow {
         this.height = height;
         this.width = width;
 
+        // Resize the window
         this.stage.setMinWidth(width);
-        this.stage.setMinHeight(height + 20);
+        this.stage.setMinHeight(height * 1.034);
         this.stage.setMaxWidth(width);
-        this.stage.setMaxHeight(height + 20);
+        this.stage.setMaxHeight(height * 1.034);
 
     }
 }
