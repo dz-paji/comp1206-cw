@@ -167,8 +167,6 @@ public class ChallengeScene extends BaseScene {
         statsBox.getChildren().addAll(level_text, level, lives_text, lives, multiplier_text, multiplier, score_text,
                 score, highScore_text, highScore);
 
-        // Show current Piece
-        pieceBoard.toggleIndicator();
 
         // Rotate currentPiece when clicking PieceBoard
         pieceBoard.setOnBlockClick((e) -> {
@@ -237,6 +235,7 @@ public class ChallengeScene extends BaseScene {
         Multimedia.playBGM();
 
         pieceBoard.setPiece(game.getPiece());
+        pieceBoard.toggleIndicator();
         followingPieceBoard.setPiece(game.getFollowingPiece());
 
         getHighestScore();
@@ -305,6 +304,19 @@ public class ChallengeScene extends BaseScene {
         Platform.runLater(() -> {
             gameWindow.startScore(game);
         });
+    }
+
+    /**
+     * Exit game on ESC press.
+     */
+    private void exitGame() {
+        logger.info("Exit the game");
+        Multimedia.stopBGM();
+        game.endGame();
+        Platform.runLater(() -> {
+            gameWindow.startMenu();
+        });
+
     }
 
     /**

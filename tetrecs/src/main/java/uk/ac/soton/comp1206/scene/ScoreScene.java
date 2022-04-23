@@ -60,6 +60,7 @@ public class ScoreScene extends BaseScene {
         var remoteScorePairs = new ArrayList<Pair<String, Integer>>();
         remoteScores = new SimpleListProperty<Pair<String, Integer>>(
                 FXCollections.observableArrayList(remoteScorePairs));
+
         loadScore();
     }
 
@@ -132,6 +133,8 @@ public class ScoreScene extends BaseScene {
                 VBox.setVgrow(nameTextField, Priority.ALWAYS);
                 mainPane.setTop(titleBox);
                 titleBox.setAlignment(Pos.CENTER);
+            } else {
+                displayScoreList();
             }
         } else {
             displayScoreList();
@@ -346,11 +349,12 @@ public class ScoreScene extends BaseScene {
             return this.localScores.size();
         } else {
             // Check if game score beats any saved score.
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 4; i++) {
                 if (localScores.get(i).getValue() < game.getScore().get()) {
                     return i;
                 }
             }
+            logger.error(-1);
 
             return -1;
 

@@ -359,6 +359,9 @@ public class MultiplayerGameScene extends ChallengeScene {
         multiplayerGame.rotateCurrentPieceAnticlockwise();
     }
 
+    /**
+     * Ends game when live runs out
+     */
     private void endGame() {
         this.communicator.send("DIE");
         logger.info("Cleanning up the game...");
@@ -367,6 +370,17 @@ public class MultiplayerGameScene extends ChallengeScene {
         multiplayerGame.saveScore(scoreList);
         multiplayerGame.endGame();
         Platform.runLater(() -> gameWindow.startScore(game));
+    }
+
+    /**
+     * Exit the game when ESC is triggered
+     */
+    private void exitGame() {
+        this.communicator.send("DIE");
+        logger.info("Exiting multiplayer game");
+        Multimedia.stopBGM();
+        multiplayerGame.endGame();
+        Platform.runLater(() -> gameWindow.startMenu());
     }
 
 }

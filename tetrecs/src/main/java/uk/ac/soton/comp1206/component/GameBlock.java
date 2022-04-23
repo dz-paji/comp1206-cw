@@ -264,9 +264,9 @@ public class GameBlock extends Canvas {
                 gc.setStroke(Color.WHITE);
                 gc.strokeRect(0, 0, width, height);
 
-                opacity -= 0.05;
+                opacity -= 0.03;
 
-                if (opacity - 0.05 < 0) {
+                if (opacity - 0.03 < 0) {
                     paintEmpty();
                     stop();
                 }
