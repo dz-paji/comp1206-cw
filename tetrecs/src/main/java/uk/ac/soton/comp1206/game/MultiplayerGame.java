@@ -1,6 +1,7 @@
 package uk.ac.soton.comp1206.game;
 
 
+import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -65,21 +66,27 @@ public class MultiplayerGame extends Game {
         TimerTask countdownTask = new TimerTask() {
             @Override
             public void run() {
-                loseLife();
 
                 // When no life remains, pass -1 as parameter to gameLoopListener to stop the
                 // challenge.
-                if (lives.get() == -1) {
+                if (lives.get() <= 0) {
                     endGame();
-                    listener.msgToSend("DIE");
                     gameLoopListener.gameLoops(-1);
+
+                    Platform.runLater(() -> {
+                        listener.msgToSend("DIE");
+                    });
                     return;
                 }
 
-                listener.msgToSend("LIVES " + lives.getValue().toString());
-                multiplier.set(1);
-                afterPiece();
-                resetTimer();
+                loseLife();
+
+                Platform.runLater(() -> {
+                    listener.msgToSend("LIVES " + lives.getValue().toString());
+                    multiplier.set(1);
+                    afterPiece();
+                    resetTimer();    
+                });
             }
         };
 

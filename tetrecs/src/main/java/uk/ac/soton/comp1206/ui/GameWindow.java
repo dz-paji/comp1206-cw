@@ -158,7 +158,10 @@ public class GameWindow {
         stage.setTitle("TetrECS");
         stage.setMinWidth(width);
         stage.setMinHeight(height + 20);
-        stage.setOnCloseRequest(ev -> App.getInstance().shutdown());
+        stage.setOnCloseRequest(ev -> {
+            this.communicator.send("QUIT");
+            App.getInstance().shutdown();
+        });
     }
 
     /**

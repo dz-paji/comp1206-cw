@@ -288,7 +288,6 @@ public class MultiplayerScene extends BaseScene {
     }
 
     public void quit() {
-        this.communicator.send("QUIT");
         gameWindow.cleanup();
         gameWindow.startMenu();
         this.timer.cancel();

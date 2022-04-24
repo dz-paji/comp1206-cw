@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -585,19 +586,21 @@ public class Game {
             @Override
             public void run() {
                 logger.info("Countdown time reached!");
-                loseLife();
 
                 // When no life remains, pass -1 as parameter to gameLoopListener to stop the
                 // challenge.
-                if (lives.get() == -1) {
+                if (lives.get() <= 0 ) {
                     endGame();
                     gameLoopListener.gameLoops(-1);
-                    return;
+                    return;    
                 }
 
-                multiplier.set(1);
-                afterPiece();
-                resetTimer();
+                loseLife();
+                Platform.runLater(() -> {
+                    multiplier.set(1);
+                    afterPiece();
+                    resetTimer();    
+                });
             }
         };
 
