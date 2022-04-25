@@ -70,7 +70,7 @@ public class MultiplayerScene extends BaseScene {
                 communicator.send("LIST");
             }
         };
-        timer.scheduleAtFixedRate(reqChannels, 500, 10000);
+        timer.scheduleAtFixedRate(reqChannels, 500, 1000);
 
         this.chanPane.setChannelMsgListener(this.communicator::send);
 
