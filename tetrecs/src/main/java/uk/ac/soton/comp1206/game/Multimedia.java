@@ -54,7 +54,7 @@ public class Multimedia {
      * @param vol new volume
      */
     public static void setBGMVol(double vol) {
-        bgmVol = bgmVol;
+        bgmVol = vol;
         if (bgmPlayer != null) {
             bgmPlayer.setVolume(vol);
         }
