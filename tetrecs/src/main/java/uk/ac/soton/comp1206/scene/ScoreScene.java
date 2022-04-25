@@ -286,7 +286,7 @@ public class ScoreScene extends BaseScene {
      */
     public void writeDummyScore() {
         var devScorePairs = new ArrayList<Pair<String, Integer>>();
-        devScorePairs.add(new Pair<String, Integer>("Dev", 1024));
+        devScorePairs.add(new Pair<String, Integer>("Dev", 0));
         var devScores = new SimpleListProperty<Pair<String, Integer>>(FXCollections.observableArrayList(devScorePairs));
 
         writeScore(devScores);

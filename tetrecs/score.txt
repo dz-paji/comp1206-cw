@@ -1,3 +1,2 @@
-Dev:1024
-myname:100
-Your unique identifier:0
+name:50
+Dev:0

@@ -24,6 +24,8 @@ public class MultiplayerGame extends Game {
 
     private ListProperty<Pair<String, Integer>> scoreList;
 
+    private Boolean isDead = false;
+
 
     /**
      * Create a new instance of MultiplayerGame
@@ -132,6 +134,16 @@ public class MultiplayerGame extends Game {
 
     @Override
     public void endGame() {
+        this.isDead = true;
         this.countdownTimer.cancel();
+    }
+
+    /**
+     * Return status of this game. Dead or Alive
+     * 
+     * @return true if player dead
+     */
+    public Boolean isDead() {
+        return isDead;
     }
 }

@@ -105,7 +105,7 @@ public class Game {
 
     private final IntegerProperty highestScore = new SimpleIntegerProperty(0);
 
-    protected Boolean isMultiplayer = true;
+    protected Boolean isMultiplayer = false;
 
     /**
      * Create a new game with the specified rows and columns. Creates a

@@ -270,34 +270,47 @@ public class MultiplayerGameScene extends ChallengeScene {
         if (msg.split(" ")[1].matches("\\w+:\\d+")) {
             // Update player's score
             logger.info("Processing a score update message");
-            String[] thisScore = msg.split(" ")[1].split(":");
+            String[] scoreInfo = msg.split(" ")[1].split(":");
 
-            for (int i = 0; i < this.scoreList.size(); i++) {
-                var thisPair = scoreList.get(i);
-                if (thisPair.getKey().equals(thisScore[0])) {
-                    var newPair = new Pair<String, Integer>(thisScore[0], Integer.parseInt(thisScore[1]));
-                    scoreList.set(i, newPair);
-                    scoreList.remove(thisPair);
+            // Loop through scorelist to update score
+            for (int i = 0; i < scoreList.getSize(); i++) {
+                if (scoreInfo[0].equals(scoreList.get(i).getKey())) {
+                    scoreList.set(i, new Pair<String, Integer>(scoreInfo[0], Integer.parseInt(scoreInfo[1])));
                 }
             }
         } else {
             logger.info("Processing a score list message");
             scoreList.clear();
 
-            for (String thisScore : msg.split(" ")[1].split("\n")) {
-                logger.info("this score object contains: {}", thisScore);
-                String[] scoreInfo = thisScore.split(":");
-                Pair<String, Integer> newPair;
+            if (this.multiplayerGame.isDead()) {
+                // Game over
+                for (String thisScore : msg.split(" ")[1].split("\n")) {
+                    logger.info("Handling scores as player dead");
+                    String[] scoreInfo = thisScore.split(":");
+                    Pair<String, Integer> newPair;
 
-                // Check whether the player died
-                if (scoreInfo[2].equals("DEAD")) {
-                    newPair = new Pair<String, Integer>(scoreInfo[0], -1);
-                } else {
+                    // Add score regardless of death
                     newPair = new Pair<String, Integer>(scoreInfo[0], Integer.parseInt(scoreInfo[1]));
+                    scoreList.add(newPair);
                 }
+            } else {
 
-                scoreList.add(newPair);
+                for (String thisScore : msg.split(" ")[1].split("\n")) {
+                    logger.info("Handling scores as game is playing");
+                    String[] scoreInfo = thisScore.split(":");
+                    Pair<String, Integer> newPair;
+
+                    // Check whether the player died
+                    if (scoreInfo[2].equals("DEAD")) {
+                        newPair = new Pair<String, Integer>(scoreInfo[0], -1);
+                    } else {
+                        newPair = new Pair<String, Integer>(scoreInfo[0], Integer.parseInt(scoreInfo[1]));
+                    }
+
+                    scoreList.add(newPair);
+                }
             }
+
         }
         versusScore.update(scoreList);
     }
@@ -323,6 +336,7 @@ public class MultiplayerGameScene extends ChallengeScene {
             case "PIEC" -> Platform.runLater(() -> multiplayerGame.enqueuePiece(Integer.parseInt(msg.split(" ")[1])));
             case "MSG " -> Platform.runLater(() -> chatMsgHandler(msg));
             case "BOAR" -> Platform.runLater(() -> boardMsgHandler(msg));
+            case "NEWS" -> Platform.runLater(() -> scoreMsgHandler(msg));
             default -> logger.info("Unhandled msg.");
         }
     }
@@ -366,10 +380,11 @@ public class MultiplayerGameScene extends ChallengeScene {
      */
     @Override
     public void endGame() {
+        this.communicator.send("SCORES");
         this.communicator.send("DIE");
         logger.info("Cleanning up the game...");
-        multiplayerGame.playSound("explode.wav");
         Multimedia.stopBGM();
+        multiplayerGame.playSound("explode.wav");
 
         // Save multiplayer scores
         multiplayerGame.saveScore(scoreList);
