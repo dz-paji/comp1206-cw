@@ -634,4 +634,13 @@ public class Game {
     public void setOnGameLoop(GameLoopListener listener) {
         this.gameLoopListener = listener;
     }
+
+    /**
+     * Check whether this is a multiplayer game
+     * 
+     * @return true if is a multiplayer game
+     */
+    public Boolean getMultiplayer() {
+        return isMultiplayer;
+    }
 }

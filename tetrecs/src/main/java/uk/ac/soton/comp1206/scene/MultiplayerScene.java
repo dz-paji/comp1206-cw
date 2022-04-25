@@ -129,6 +129,8 @@ public class MultiplayerScene extends BaseScene {
         joinPane.add(channelScrollPane, 1, 2);
         joinPane.add(createChanButton, 2, 3);
         joinPane.add(chanNameField, 1, 3);
+
+        // Channel's pane
         channelScrollPane.setContent(channelBox);
         channelScrollPane.getStyleClass().add("scroller");
         chanPane.setVisible(false);
@@ -228,7 +230,6 @@ public class MultiplayerScene extends BaseScene {
             buttonBox.getChildren().add(button);
             buttonBox.setAlignment(Pos.CENTER);
             channelBox.getChildren().add(buttonBox);
-
             button.getStyleClass().add("channelItem");
 
             button.setOnMouseClicked((e) -> {

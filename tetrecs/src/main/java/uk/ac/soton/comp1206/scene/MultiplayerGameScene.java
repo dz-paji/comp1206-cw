@@ -1,5 +1,9 @@
 package uk.ac.soton.comp1206.scene;
 
+import javafx.animation.FillTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.util.Duration;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -39,13 +43,14 @@ public class MultiplayerGameScene extends ChallengeScene {
 
     private final Communicator communicator;
 
-     private MultiplayerGame multiplayerGame;
+    private MultiplayerGame multiplayerGame;
 
     private final TextField msgField = new TextField();
 
     private final ScrollPane msgPane = new ScrollPane(new Text("Press \"T\" to start typing and ENTER to send."));
 
-    private final ListProperty<Pair<String, Integer>> scoreList = new SimpleListProperty<>(FXCollections.observableList(new ArrayList<>()));
+    private final ListProperty<Pair<String, Integer>> scoreList = new SimpleListProperty<>(
+            FXCollections.observableList(new ArrayList<>()));
 
     private final ScoreList versusScore = new ScoreList(scoreList);
 
@@ -120,7 +125,6 @@ public class MultiplayerGameScene extends ChallengeScene {
         statsBox.setAlignment(Pos.CENTER);
         mainPane.setRight(statsBox);
 
-
         // Show versus scores
         var versusText = new Text(
                 "Versus players:");
@@ -175,7 +179,6 @@ public class MultiplayerGameScene extends ChallengeScene {
         this.communicator.send("PIECE");
         this.communicator.send("SCORES");
 
-
         // Bind NextPieceListener.
         multiplayerGame.setNextPieceListener((message, e) -> {
             pieceBoard.setPiece(multiplayerGame.getPiece());
@@ -208,7 +211,6 @@ public class MultiplayerGameScene extends ChallengeScene {
         pieceBoard.toggleIndicator();
         followingPieceBoard.setPiece(multiplayerGame.getFollowingPiece());
 
-
         // Key press support
         gameWindow.getScene().setOnKeyPressed((e) -> {
             logger.info("Key {} pressed", e.getCharacter());
@@ -221,7 +223,7 @@ public class MultiplayerGameScene extends ChallengeScene {
                 case Z, C, CLOSE_BRACKET -> multiplayerGame.rotateCurrentPiece();
                 case SPACE, R -> multiplayerGame.swapPiece();
                 case OPEN_BRACKET, Q, E -> rotateAnticlockwise();
-                case ESCAPE -> endGame();
+                case ESCAPE -> exitGame();
                 case T -> this.msgField.setVisible(true);
             }
         });
@@ -362,14 +364,17 @@ public class MultiplayerGameScene extends ChallengeScene {
     /**
      * Ends game when live runs out
      */
-    private void endGame() {
+    @Override
+    public void endGame() {
         this.communicator.send("DIE");
         logger.info("Cleanning up the game...");
         multiplayerGame.playSound("explode.wav");
         Multimedia.stopBGM();
+
+        // Save multiplayer scores
         multiplayerGame.saveScore(scoreList);
         multiplayerGame.endGame();
-        Platform.runLater(() -> gameWindow.startScore(game));
+        Platform.runLater(() -> gameWindow.startScore(multiplayerGame));
     }
 
     /**
@@ -381,6 +386,37 @@ public class MultiplayerGameScene extends ChallengeScene {
         Multimedia.stopBGM();
         multiplayerGame.endGame();
         Platform.runLater(() -> gameWindow.startMenu());
+    }
+
+    /**
+     * Bring animation to timer
+     * 
+     * @param delay duration of animation
+     */
+    @Override
+    protected void animateTimerBar(int delay) {
+        if (delay == -1) {
+            endGame();
+            timerLine.stop();
+            return;
+        }
+
+        timerLine.stop();
+
+        // Animate length
+        timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(0),
+                new KeyValue(this.timerBar.widthProperty(), gameWindow.getWidth())));
+
+        timerLine.getKeyFrames().add(new KeyFrame(Duration.millis(delay),
+                new KeyValue(this.timerBar.widthProperty(), 0)));
+
+        // Animate color
+        FillTransition turningYellow = new FillTransition(Duration.millis(delay), this.timerBar, Color.GREEN,
+                Color.RED);
+
+        this.timerLine.play();
+        turningYellow.play();
+
     }
 
 }

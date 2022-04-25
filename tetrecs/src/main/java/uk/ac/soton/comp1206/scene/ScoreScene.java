@@ -50,6 +50,7 @@ public class ScoreScene extends BaseScene {
      * Create a new instance of ScoreScene
      *
      * @param gameWindow The GameWindow it belongs to
+     * @param game Single player game
      */
     public ScoreScene(GameWindow gameWindow, Game game) {
         super(gameWindow);
@@ -64,6 +65,12 @@ public class ScoreScene extends BaseScene {
         loadScore();
     }
 
+    /**
+     * Create a new instance of scorescene
+     * 
+     * @param gameWindow The GameWindow it belongs to
+     * @param game multiplayer game
+     */
     public ScoreScene(GameWindow gameWindow, MultiplayerGame game) {
         super(gameWindow);
         this.multiplayerGame = game;
@@ -103,10 +110,10 @@ public class ScoreScene extends BaseScene {
                 logger.info("New Score submission success.");
             }
         });
-        if (this.game != null) {
+        if (this.game != null && !this.game.getMultiplayer()) {
             int scoreListIndex = checkScore();
 
-            if (scoreListIndex != -1 && this.game != null) {
+            if (scoreListIndex != -1) {
                 // Scene texts
                 var gameOver = new Text("Game Over");
                 gameOver.getStyleClass().add("bigtitle");
@@ -209,6 +216,8 @@ public class ScoreScene extends BaseScene {
         scoreList = new ScoreList(localScores);
         scoreList.getStyleClass().add("scorelist");
         var localScoreTxt = new Text("Local High Scores");
+
+        // Show online highscore when it a multiplayer game
         if (this.multiplayerGame != null) {
             localScoreTxt.setText("Multiplayer scores");
         }
@@ -366,7 +375,7 @@ public class ScoreScene extends BaseScene {
      * Request score from server using communicator.
      */
     public void requestOnlineScore() {
-        logger.info("Loading online scores");
+        logger.info("Loading online high scores");
         this.communicator.send("HISCORES");
     }
 

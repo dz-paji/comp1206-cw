@@ -116,6 +116,7 @@ public class ChannelPane extends GridPane {
      */
     public void updateName(String name) {
         channelName.setText(name);
+        startGame.setVisible(false);
     }
 
     /**

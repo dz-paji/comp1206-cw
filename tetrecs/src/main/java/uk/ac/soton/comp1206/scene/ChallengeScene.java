@@ -296,7 +296,7 @@ public class ChallengeScene extends BaseScene {
     /**
      * End the challenge and display scores.
      */
-    private void endGame() {
+    public void endGame() {
         logger.info("Cleanning up the game...");
         game.playSound("explode.wav");
         Multimedia.stopBGM();
@@ -452,7 +452,7 @@ public class ChallengeScene extends BaseScene {
             for (int i = 0; i < 10; i ++) {
                 if (ruleList[i] != konamiList.get(i)) {
                     konamiList.clear();
-                    break;
+                    return;
                 }
             }
 
