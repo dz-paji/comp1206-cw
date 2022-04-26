@@ -72,6 +72,7 @@ public class MultiplayerGame extends Game {
                 // When no life remains, pass -1 as parameter to gameLoopListener to stop the
                 // challenge.
                 if (lives.get() <= 0) {
+                    // cancel timer, set player to dead
                     endGame();
                     gameLoopListener.gameLoops(-1);
 
@@ -83,6 +84,7 @@ public class MultiplayerGame extends Game {
 
                 loseLife();
 
+                // Update lives to server and reset timer
                 Platform.runLater(() -> {
                     listener.msgToSend("LIVES " + lives.getValue().toString());
                     multiplier.set(1);
@@ -124,10 +126,20 @@ public class MultiplayerGame extends Game {
         gameLoop();
     }
 
+    /**
+     * Save the score of this multiplayer game for scorescene
+     * 
+     * @param scores List of scores
+     */
     public void saveScore(ListProperty<Pair<String, Integer>> scores) {
         this.scoreList = scores;
     }
 
+    /**
+     * Get the scores of this multiplayer game
+     * 
+     * @return list of scores of this game
+     */
     public ListProperty<Pair<String, Integer>> getScoreList() {
         return scoreList;
     }

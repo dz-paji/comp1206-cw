@@ -202,7 +202,7 @@ public class ChannelPane extends GridPane {
         if (!msg.contains(":")) {
             this.myName.setText(msg.split(" ")[1]);
         } else {
-            //
+            // this update isn't for me. update other players' game
             playerView.getText().replaceAll(msg.split(" ")[1].split(":")[0],msg.split(" ")[1].split(":")[1]);
         }
     }

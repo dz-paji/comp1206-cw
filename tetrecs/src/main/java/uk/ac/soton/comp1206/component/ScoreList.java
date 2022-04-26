@@ -12,6 +12,9 @@ import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Contains UI component and logic of a Score list. Used to display scores.
+ */
 public class ScoreList extends BorderPane {
 
     private static final Logger logger = LogManager.getLogger(ScoreList.class);
@@ -42,6 +45,9 @@ public class ScoreList extends BorderPane {
         fadeScore.play();
     }
 
+    /**
+     * Build the layout of the scorelist.
+     */
     public void build() {
         // Build layout
         localScoreBox = new VBox();
