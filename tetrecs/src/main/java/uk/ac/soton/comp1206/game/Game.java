@@ -105,6 +105,10 @@ public class Game {
 
     private final IntegerProperty highestScore = new SimpleIntegerProperty(0);
 
+    /**
+     * Indicates whether this is a multiplayer game.
+     * Default value set to false.
+     */
     protected Boolean isMultiplayer = false;
 
     /**
@@ -192,7 +196,7 @@ public class Game {
             // Submit board block info
             for (int i = 0; i < this.cols; i++) {
                 for (int j = 0; j < this.rows; j++) {
-                    boardUpdate.append(this.grid.get(i,j) + " ");
+                    boardUpdate.append(this.grid.get(i, j) + " ");
                 }
             }
             logger.info("Board message built: {}", boardUpdate.toString());
@@ -390,7 +394,9 @@ public class Game {
     }
 
     /**
-     * @return
+     * Get the highest score pre-loaded.
+     * 
+     * @return the highest score to beat
      */
     public IntegerProperty getHighScore() {
         return this.highestScore;
@@ -408,7 +414,7 @@ public class Game {
     /**
      * Get current lives
      *
-     * @return lives
+     * @return lives remaining
      */
     public IntegerProperty getLives() {
         return this.lives;
@@ -427,7 +433,7 @@ public class Game {
     /**
      * Get current multiplier
      *
-     * @return Multiplier
+     * @return current multiplier
      */
     public IntegerProperty getMultiplier() {
         return this.multiplier;
@@ -515,7 +521,6 @@ public class Game {
         playSound("rotate.wav");
     }
 
-
     /**
      * Initialise the piece after currentPiece.
      */
@@ -589,17 +594,17 @@ public class Game {
 
                 // When no life remains, pass -1 as parameter to gameLoopListener to stop the
                 // challenge.
-                if (lives.get() <= 0 ) {
+                if (lives.get() <= 0) {
                     endGame();
                     gameLoopListener.gameLoops(-1);
-                    return;    
+                    return;
                 }
 
                 loseLife();
                 Platform.runLater(() -> {
                     multiplier.set(1);
                     afterPiece();
-                    resetTimer();    
+                    resetTimer();
                 });
             }
         };

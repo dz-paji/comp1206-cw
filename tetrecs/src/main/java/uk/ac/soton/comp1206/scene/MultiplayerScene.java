@@ -46,9 +46,9 @@ public class MultiplayerScene extends BaseScene {
     private Timer pollPlaTimer = new Timer();
 
     /**
-     * Initialise the scene
+     * Create a new Multiplayer Scene
      *
-     * @param gameWindow Game window
+     * @param gameWindow the Game Window displays this scene
      */
     public MultiplayerScene(GameWindow gameWindow) {
         super(gameWindow);
@@ -201,7 +201,7 @@ public class MultiplayerScene extends BaseScene {
     /**
      * Handles JOIN message
      *
-     * @param msg message
+     * @param msg message received
      */
     private void msgJoinHandler(String msg) {
         logger.info("Joining new channel");
@@ -212,7 +212,7 @@ public class MultiplayerScene extends BaseScene {
     /**
      * Handle CHANNELS message. Update channels
      *
-     * @param msg message
+     * @param msg message received
      */
     public void msgChannelHandler(String msg) {
         logger.info("Handling CHANNELS message.");
@@ -251,7 +251,7 @@ public class MultiplayerScene extends BaseScene {
     /**
      * Handles ERROR message
      *
-     * @param msg message
+     * @param msg message received
      */
     public void msgErroHandler(String msg) {
         logger.info("Handeling error message.");
@@ -282,12 +282,16 @@ public class MultiplayerScene extends BaseScene {
     /**
      * Handles MSG messages. Pass it to channel pane to deal with.
      *
-     * @param msg message.
+     * @param msg message received
      */
     public void chanMsgHandler(String msg) {
         this.chanPane.addMsg(msg);
     }
 
+    /**
+     * Defines what to do incase of quiting this scene. clean up the listeners, load
+     * the menu and cancel poll timer.
+     */
     public void quit() {
         gameWindow.cleanup();
         gameWindow.startMenu();

@@ -11,11 +11,23 @@ import java.util.Properties;
 
 /**
  * Settings handles saving, loading and applying pre-defined configs to the game.
+ * The methods it contains are all static hence no need initialising it.
  */
 public class Settings {
     private static final Logger logger = LogManager.getLogger(Settings.class);
 
+    /**
+     * Initialise a new object of Settings class. 
+     * Which does nothing.
+     */
+    public Settings() {
 
+    }
+    /**
+     * Read the pre-saved config file and apply the settings to game.
+     * 
+     * @param gameWindow the GameWindow this scene will be displayed in.
+     */
     public static void applyConfig(GameWindow gameWindow) {
         Properties conf = new Properties();
         try {
@@ -49,6 +61,10 @@ public class Settings {
 
     }
 
+    /**
+     * Read the config file and get the resolution from it.
+     * @return Resolution set in config or null if not present
+     */
     public static String checkResolution() {
         Properties conf = new Properties();
         try {

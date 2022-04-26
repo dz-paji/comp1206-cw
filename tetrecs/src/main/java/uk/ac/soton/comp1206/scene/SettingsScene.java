@@ -18,7 +18,8 @@ import java.io.*;
 import java.util.Properties;
 
 /**
- * SettingScene contains UI components and relevant logic to Settings scene which allows user to change game settings.
+ * SettingScene contains UI components and relevant logic of Settings scene
+ * which allows user to change game settings.
  */
 public class SettingsScene extends BaseScene {
     private static final Logger logger = LogManager.getLogger(SettingsScene.class);
@@ -31,10 +32,18 @@ public class SettingsScene extends BaseScene {
 
     private Slider fxVolSlider;
 
+    /**
+     * Create a new instance of SettingsScene.
+     * 
+     * @param gameWindow the Game Window displays this scene
+     */
     public SettingsScene(GameWindow gameWindow) {
         super(gameWindow);
     }
 
+    /**
+     * Initialise the Scene and set everything up at the start
+     */
     @Override
     public void initialise() {
 
@@ -48,7 +57,7 @@ public class SettingsScene extends BaseScene {
     }
 
     /**
-     * Build UI components
+     * Build UI the Setting window
      */
     @Override
     public void build() {
@@ -93,7 +102,7 @@ public class SettingsScene extends BaseScene {
 
         // save and exit
         var saveButton = new Button("Save");
-        //saveButton.getStyleClass().add("settingButton");
+        // saveButton.getStyleClass().add("settingButton");
         saveButton.setOnAction(this::save);
         var backButton = new Button("Back");
         backButton.setOnAction((e) -> gameWindow.startMenu());
@@ -108,7 +117,7 @@ public class SettingsScene extends BaseScene {
         settingPane.add(fxVolLabel, 1, 5);
         settingPane.add(fxVolSlider, 2, 5);
         settingPane.add(saveButton, 3, 6);
-        settingPane.add(backButton,0,6);
+        settingPane.add(backButton, 0, 6);
 
         settingPane.setAlignment(Pos.CENTER);
     }
@@ -129,7 +138,6 @@ public class SettingsScene extends BaseScene {
             conf.put("bgmVol", String.valueOf(bgmVolSlider.getValue()));
             conf.put("fxVol", String.valueOf(fxVolSlider.getValue()));
 
-
             // Store configs
             var confFileWriter = new FileOutputStream(confFile);
             conf.store(confFileWriter, "save config");
@@ -142,12 +150,9 @@ public class SettingsScene extends BaseScene {
                 gameWindow.startSettings();
             });
 
-
-
         } catch (IOException e) {
             logger.error(e);
         }
     }
-
 
 }

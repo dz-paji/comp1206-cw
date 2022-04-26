@@ -74,7 +74,7 @@ public class ScoreList extends BorderPane {
     }
 
     /**
-     * Allow update this score list.
+     * Updating this ScoreList with provided information
      * 
      * @param scoresList new score list
      */

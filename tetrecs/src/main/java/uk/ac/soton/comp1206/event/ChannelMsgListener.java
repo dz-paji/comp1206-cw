@@ -7,7 +7,7 @@ public interface ChannelMsgListener {
 
     /**
      * Handles user click send button or press ENTER key
-     * @param msg
+     * @param msg Message constructed for sending to server
      */
     public void msgToSend(String msg);
     

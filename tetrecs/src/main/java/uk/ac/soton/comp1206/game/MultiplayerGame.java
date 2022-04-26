@@ -1,6 +1,5 @@
 package uk.ac.soton.comp1206.game;
 
-
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.util.Pair;
@@ -26,9 +25,9 @@ public class MultiplayerGame extends Game {
 
     private Boolean isDead = false;
 
-
     /**
      * Create a new instance of MultiplayerGame
+     * Automatically creates a Grid
      *
      * @param cols number of columns
      * @param rows number of rows
@@ -39,7 +38,7 @@ public class MultiplayerGame extends Game {
     }
 
     /**
-     * Add a new GamePiece to
+     * Add a new GamePiece to to piece queue
      *
      * @param pieceValue value of incoming piece
      */
@@ -47,6 +46,13 @@ public class MultiplayerGame extends Game {
         logger.info("Adding new piece {} to the game", pieceValue);
         pieceQueue.add(GamePiece.createPiece(pieceValue));
     }
+
+    /**
+     * Dequeue a piece from piecequeue then
+     * Send a PIECE message to server requesting a new GamePiece
+     * 
+     * @return First GamePiece in piece queue
+     */
     @Override
     public GamePiece spawnPiece() {
         this.listener.msgToSend("PIECE");
@@ -55,6 +61,7 @@ public class MultiplayerGame extends Game {
 
     /**
      * Set the listener handling send message events
+     * 
      * @param listener the listener
      */
     public void setCommuListener(ChannelMsgListener listener) {
@@ -89,7 +96,7 @@ public class MultiplayerGame extends Game {
                     listener.msgToSend("LIVES " + lives.getValue().toString());
                     multiplier.set(1);
                     afterPiece();
-                    resetTimer();    
+                    resetTimer();
                 });
             }
         };
@@ -100,6 +107,9 @@ public class MultiplayerGame extends Game {
         this.countdownTimer.schedule(countdownTask, delay);
     }
 
+    /**
+     * Deduct the remaining life by 1 and notify server of life change.
+     */
     @Override
     public void loseLife() {
         logger.info("A life is lost");
@@ -108,6 +118,9 @@ public class MultiplayerGame extends Game {
         playSound("lifelose.wav");
     }
 
+    /**
+     * Initialise a new game and set everything up at the begining of the game.
+     */
     @Override
     public void initialiseGame() {
         logger.info("Initialising game");
@@ -144,6 +157,10 @@ public class MultiplayerGame extends Game {
         return scoreList;
     }
 
+    /**
+     * Handles everything after game over.
+     * Set player death status to true and cancel game timer.
+     */
     @Override
     public void endGame() {
         this.isDead = true;

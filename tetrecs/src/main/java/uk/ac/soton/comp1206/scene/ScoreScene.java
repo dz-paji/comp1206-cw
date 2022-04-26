@@ -47,10 +47,10 @@ public class ScoreScene extends BaseScene {
     private MultiplayerGame multiplayerGame;
 
     /**
-     * Create a new instance of ScoreScene
+     * Create a new instance of ScoreScene of Challenge(Single player) mode
      *
      * @param gameWindow The GameWindow it belongs to
-     * @param game Single player game
+     * @param game       Single player game
      */
     public ScoreScene(GameWindow gameWindow, Game game) {
         super(gameWindow);
@@ -66,10 +66,10 @@ public class ScoreScene extends BaseScene {
     }
 
     /**
-     * Create a new instance of scorescene
+     * Create a new instance of scorescene of multiplayer mode
      * 
      * @param gameWindow The GameWindow it belongs to
-     * @param game multiplayer game
+     * @param game       multiplayer game
      */
     public ScoreScene(GameWindow gameWindow, MultiplayerGame game) {
         super(gameWindow);
@@ -83,7 +83,8 @@ public class ScoreScene extends BaseScene {
     }
 
     /**
-     * Build the Score scene layout
+     * Build the Score scene layout. Checks if the player beat any previous high
+     * scores then call displayScoreList() method to show scores.
      */
     @Override
     public void build() {
@@ -150,7 +151,8 @@ public class ScoreScene extends BaseScene {
     }
 
     /**
-     * Initialise the score screen.
+     * Initialise the score screen by adding esstential listeners and pull online
+     * scores.
      */
     @Override
     public void initialise() {
@@ -194,6 +196,9 @@ public class ScoreScene extends BaseScene {
         });
     }
 
+    /**
+     * Build the scene for displaying score informations.
+     */
     public void displayScoreList() {
         root.getChildren().clear();
         logger.info("Rebuilding {} to display score list", this.getClass().toString());
@@ -372,7 +377,7 @@ public class ScoreScene extends BaseScene {
     }
 
     /**
-     * Request score from server using communicator.
+     * Send request for scores to server using communicator.
      */
     public void requestOnlineScore() {
         logger.info("Loading online high scores");

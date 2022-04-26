@@ -23,6 +23,13 @@ public class Multimedia {
 
     private static double fxVol = 1;
 
+    /**
+     * Create a new instance of Multimedia.
+     * Initialise default volumes to 1.
+     * Doesn't actually create any media player.
+     */
+    public Multimedia() {
+    }
 
     /**
      * Set volume of menu media player
@@ -87,7 +94,6 @@ public class Multimedia {
         return fxVol;
     }
 
-
     /**
      * Method that plays given audio file
      *
@@ -125,7 +131,7 @@ public class Multimedia {
     }
 
     /**
-     * Method plays BGM.
+     * Method plays the introduction part of the Menu music.
      */
     public static void playMenuIntro() {
         Media bgm = new Media(Multimedia.class.getResource("/music/tendo_intro.mp3").toExternalForm());
@@ -140,7 +146,7 @@ public class Multimedia {
     }
 
     /**
-     * Play main part of menu and loop it.
+     * Method plays the recurring part of the Menu music.
      */
     public static void playMenuMain() {
         Media bgm = new Media(Multimedia.class.getResource("/music/tendo_main.mp3").toExternalForm());
@@ -157,16 +163,16 @@ public class Multimedia {
     }
 
     /**
-     * Stop the current playing BGM.
+     * Stop the current playing Menu music.
      */
     public static void stopMenu() {
         menuPlayer.stop();
     }
 
     /**
-     * Check if menu bgm is playing
+     * Check if menu music is playing
      *
-     * @return status of menu bgm.
+     * @return true if menu music is playing
      */
     public static boolean isMenuPlaying() {
         if (menuPlayer == null) {

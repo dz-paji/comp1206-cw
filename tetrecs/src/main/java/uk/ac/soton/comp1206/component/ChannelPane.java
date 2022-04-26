@@ -34,7 +34,7 @@ public class ChannelPane extends GridPane {
     private Boolean isNameSetup = false;
 
     /**
-     * Construct the Pane.
+     * Construct the Pane. Build essential layouts of a channel.
      */
     public ChannelPane() {
         this.getStyleClass().add("chan-gridpane");

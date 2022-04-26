@@ -39,7 +39,7 @@ public class InstructionsScene extends BaseScene {
     }
 
     /**
-     * Initialise this scene
+     * Initialise this scene and set everything up at the start
      */
     @Override
     public void initialise() {
@@ -51,7 +51,7 @@ public class InstructionsScene extends BaseScene {
     }
 
     /**
-     * Construct the layout of the scene
+     * Construct the layout of instruction window
      */
     public void build() {
         logger.info("Building " + this.getClass().getName());

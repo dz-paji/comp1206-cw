@@ -89,7 +89,7 @@ public class ChallengeScene extends BaseScene {
     /**
      * Create a new Single Player challenge scene
      * 
-     * @param gameWindow the Game Window
+     * @param gameWindow the Game Window displays this scene
      */
     public ChallengeScene(GameWindow gameWindow) {
         super(gameWindow);

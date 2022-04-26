@@ -61,7 +61,7 @@ public class MultiplayerGameScene extends ChallengeScene {
     /**
      * Create a new instance of Multiplayer Game.
      *
-     * @param gameWindow the game window
+     * @param gameWindow the Game Window displays this scene
      */
     public MultiplayerGameScene(GameWindow gameWindow) {
         super(gameWindow);
@@ -164,7 +164,7 @@ public class MultiplayerGameScene extends ChallengeScene {
     }
 
     /**
-     * Setup Multiplayer game and add listeners.
+     * Setup Multiplayer game and communication listeners.
      */
     @Override
     public void setupGame() {
@@ -197,7 +197,9 @@ public class MultiplayerGameScene extends ChallengeScene {
     }
 
     /**
-     * Initialise the game
+     * Initialise the game.
+     * Play BGM, get scores, add keybinds to scene, susitute game piece to piece
+     * boards.
      */
     @Override
     public void initialise() {
